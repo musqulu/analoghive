@@ -16,7 +16,7 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
   const [timeLeft, setTimeLeft] = React.useState(0)
   const [nextAgitation, setNextAgitation] = React.useState<number | null>(null)
   
-  const steps = {
+  const steps = React.useMemo(() => ({
     dev: {
       name: "Development",
       time: developmentTime * 60, // Convert to seconds
@@ -51,7 +51,7 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
         duration: 10
       }
     }
-  }
+  }), [developmentTime, temperature, isColor])
 
   React.useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -63,7 +63,7 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
           
           // Update next agitation time
           if (currentStep && steps[currentStep].agitation) {
-            const { initial, interval, duration } = steps[currentStep].agitation;
+            const { initial, interval: agitationInterval, duration } = steps[currentStep].agitation;
             const totalTime = steps[currentStep].time;
             const elapsed = totalTime - newTime;
             
@@ -73,8 +73,14 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
             } else {
               // Calculate time until next interval agitation
               const timeSinceInitial = elapsed - initial;
-              const timeUntilNext = interval - (timeSinceInitial % interval);
-              setNextAgitation(timeUntilNext);
+              const timeUntilNext = agitationInterval - (timeSinceInitial % agitationInterval);
+              if (timeUntilNext <= duration) {
+                // Show agitation instruction
+                setNextAgitation(timeUntilNext);
+              } else {
+                // Show countdown to next agitation
+                setNextAgitation(timeUntilNext);
+              }
             }
           }
           
@@ -134,7 +140,7 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
   const getAgitationInstructions = () => {
     if (!currentStep || !steps[currentStep].agitation) return null;
     
-    const { initial, interval, duration } = steps[currentStep].agitation;
+    const { initial, interval: agitationInterval, duration } = steps[currentStep].agitation;
     const totalTime = steps[currentStep].time;
     const elapsed = totalTime - timeLeft;
     
