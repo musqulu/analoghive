@@ -13,6 +13,26 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
+interface DevelopmentTimes {
+  [key: number]: number;
+}
+
+interface DevelopmentProcess {
+  dilution: string;
+  times: DevelopmentTimes;
+  temperature?: number;
+}
+
+interface Development {
+  [key: string]: DevelopmentProcess;
+}
+
+interface Developer {
+  name: string;
+  type: "Color" | "B&W";
+  development: Development;
+}
+
 const films = [
   { 
     name: "Kodak Tri-X 400", 
@@ -56,7 +76,7 @@ const films = [
   }
 ]
 
-const developers = [
+const developers: Developer[] = [
   { 
     name: "Kodak D-76", 
     type: "B&W",
@@ -206,42 +226,54 @@ export default function Home() {
   }, [selectedFilm])
 
   const getDevelopmentInfo = () => {
-    if (!selectedDeveloperData || !selectedIso) return null
+    if (!selectedDeveloperData || !selectedIso) return null;
 
-    const iso = parseInt(selectedIso)
-    const devData = selectedDeveloperData.development
+    const iso = parseInt(selectedIso);
+    const devData = selectedDeveloperData.development;
 
     // For color film, return the standard C-41 process
     if (selectedDeveloperData.type === "Color") {
-      const colorProcess = devData.kit
+      const colorProcess = devData.kit;
+      if (!colorProcess) return null;
+      
+      const defaultIso = 400;
+      const time = colorProcess.times[iso] || colorProcess.times[defaultIso];
+      
+      if (!time) return null;
+      
       return {
         dilution: colorProcess.dilution,
-        time: colorProcess.times[iso] || colorProcess.times[400], // Default to 400 if ISO not found
-        temperature: colorProcess.temperature
-      }
+        time: time,
+        temperature: colorProcess.temperature ?? 38 // Default to 38°C if not specified
+      };
     }
 
     // For B&W, find the closest matching time for the ISO
-    const dilutions = Object.keys(devData)
+    const dilutions = Object.keys(devData);
     const result = dilutions.map(dilKey => {
-      const dilution = devData[dilKey]
-      const times = dilution.times
-      const availableIsos = Object.keys(times).map(Number)
+      const dilution = devData[dilKey];
+      if (!dilution?.times) return null;
+      
+      const times = dilution.times;
+      const availableIsos = Object.keys(times).map(Number);
       const closestIso = availableIsos.reduce((prev, curr) => {
-        return Math.abs(curr - iso) < Math.abs(prev - iso) ? curr : prev
-      })
+        return Math.abs(curr - iso) < Math.abs(prev - iso) ? curr : prev;
+      });
+
+      const time = times[closestIso];
+      if (!time) return null;
 
       return {
         dilution: dilution.dilution,
-        time: times[closestIso],
+        time: time,
         temperature: 20 // Standard temp for B&W
-      }
-    })
+      };
+    }).filter((item): item is NonNullable<typeof item> => item !== null);
 
-    return result
-  }
+    return result.length > 0 ? result : null;
+  };
 
-  const developmentInfo = getDevelopmentInfo()
+  const developmentInfo = getDevelopmentInfo();
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-8">
@@ -369,8 +401,8 @@ export default function Home() {
                   <h3 className="text-lg font-medium mb-4">Volume Mixer</h3>
                   <VolumeMixer
                     dilution={Array.isArray(developmentInfo) 
-                      ? developmentInfo[0].dilution 
-                      : developmentInfo.dilution}
+                      ? developmentInfo[0]?.dilution ?? "Stock"
+                      : developmentInfo?.dilution ?? "Stock"}
                     totalVolume={totalVolume}
                     onVolumeChange={setTotalVolume}
                   />
@@ -379,11 +411,11 @@ export default function Home() {
                 <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
                   <Timer 
                     developmentTime={Array.isArray(developmentInfo) 
-                      ? developmentInfo[0].time 
-                      : developmentInfo.time}
+                      ? developmentInfo[0]?.time ?? 0
+                      : developmentInfo?.time ?? 0}
                     temperature={Array.isArray(developmentInfo)
-                      ? developmentInfo[0].temperature
-                      : developmentInfo.temperature}
+                      ? developmentInfo[0]?.temperature ?? 20
+                      : developmentInfo?.temperature ?? 20}
                     temperatureUnit={temperatureUnit}
                     isColor={selectedFilmData?.type === "Color"}
                   />
