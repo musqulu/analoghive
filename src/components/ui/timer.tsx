@@ -62,7 +62,7 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
   const steps = React.useMemo(() => ({
     dev: {
       name: "Development",
-      time: customTimes.dev * 60,
+      time: developmentTime * 60,
       temp: temperature,
       agitation: isColor ? {
         initial: 60,
@@ -104,7 +104,7 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
         duration: 10
       }
     }
-  }), [customTimes, temperature, isColor])
+  }), [developmentTime, customTimes, temperature, isColor])
 
   React.useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -120,7 +120,10 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
             const totalTime = steps[currentStep].time;
             const elapsed = totalTime - newTime;
             
-            if (elapsed < initial) {
+            // Start initial agitation immediately
+            if (elapsed === 0) {
+              setNextAgitation(initial);
+            } else if (elapsed < initial) {
               // During initial agitation
               setNextAgitation(initial - elapsed);
             } else {
@@ -191,6 +194,7 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
   const startTimer = (step: 'dev' | 'stop' | 'fix' | 'wash') => {
     setCurrentStep(step);
     setTimeLeft(steps[step].time);
+    // Set initial agitation duration immediately
     setNextAgitation(steps[step].agitation.initial);
     setIsRunning(true);
   };
@@ -216,7 +220,7 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
   const getAgitationInstructions = () => {
     if (!currentStep || !steps[currentStep].agitation) return null;
     
-    const { initial, duration } = steps[currentStep].agitation;
+    const { initial, interval: agitationInterval, duration } = steps[currentStep].agitation;
     const totalTime = steps[currentStep].time;
     const elapsed = totalTime - timeLeft;
     
@@ -260,7 +264,7 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
     if (nextAgitation && nextAgitation <= duration) {
       return (
         <div className="text-orange-600 font-medium">
-          Agitate now for {duration} seconds
+          Agitate for {nextAgitation} seconds
         </div>
       );
     }
@@ -325,17 +329,6 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
             
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Development Time (min)</label>
-                  <input
-                    type="number"
-                    min="0.1"
-                    step="0.1"
-                    value={customTimes.dev}
-                    onChange={(e) => setCustomTimes(prev => ({ ...prev, dev: Number(e.target.value) }))}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  />
-                </div>
                 <div>
                   <label className="text-sm font-medium mb-2 block">Stop Bath Time (min)</label>
                   <input
@@ -566,7 +559,7 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
           <div className="text-center space-y-2">
             <p className="text-lg font-medium">{steps[currentStep].name}</p>
             <p className="text-sm text-gray-600">Temperature: {getStepTemp(currentStep)}</p>
-            {isRunning && getAgitationInstructions()}
+            {(isRunning || nextAgitation) && getAgitationInstructions()}
           </div>
         )}
 
@@ -575,13 +568,15 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
             <>
               <button
                 onClick={toggleTimer}
-                className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                title={isRunning ? "Pause" : "Resume"}
               >
                 {isRunning ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
               </button>
               <button
                 onClick={resetTimer}
-                className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                title="Reset Timer"
               >
                 <RotateCcw className="w-6 h-6" />
               </button>
