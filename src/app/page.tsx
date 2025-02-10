@@ -452,35 +452,42 @@ export default function Home() {
             {developmentInfo && selectedIso && (
               <>
                 <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                  <h3 className="text-lg font-medium mb-4">Volume Mixer</h3>
+                  <VolumeMixer
+                    dilution={Array.isArray(developmentInfo) 
+                      ? developmentInfo[0]?.dilution ?? "Stock"
+                      : developmentInfo?.dilution ?? "Stock"}
+                    totalVolume={totalVolume}
+                    onVolumeChange={setTotalVolume}
+                  />
+                </div>
+
+                <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
                   <h3 className="text-lg font-medium mb-4">Temperature Correction</h3>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Recommended Temp</label>
-                      <input
-                        type="text"
-                        value={formatTemperature(
-                          Array.isArray(developmentInfo) 
-                            ? developmentInfo[0]?.temperature ?? 20 
-                            : developmentInfo?.temperature ?? 20,
-                          temperatureUnit
-                        )}
-                        disabled
-                        className="flex h-10 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground"
-                      />
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm font-medium mb-2">Recommended Temperature</p>
+                        <p className="text-2xl font-mono">
+                          {formatTemperature(
+                            Array.isArray(developmentInfo) 
+                              ? developmentInfo[0]?.temperature ?? 20 
+                              : developmentInfo?.temperature ?? 20,
+                            temperatureUnit
+                          )}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium mb-2">Recommended Time</p>
+                        <p className="text-2xl font-mono">
+                          {Array.isArray(developmentInfo) 
+                            ? developmentInfo[0]?.time ?? 0 
+                            : developmentInfo?.time ?? 0} min
+                        </p>
+                      </div>
                     </div>
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Recommended Time</label>
-                      <input
-                        type="text"
-                        value={`${Array.isArray(developmentInfo) 
-                          ? developmentInfo[0]?.time ?? 0 
-                          : developmentInfo?.time ?? 0} min`}
-                        disabled
-                        className="flex h-10 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Modified Temp</label>
+                      <label className="text-sm font-medium mb-2 block">Modified Temperature</label>
                       <input
                         type="number"
                         value={modifiedTemperature}
@@ -492,25 +499,14 @@ export default function Home() {
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       />
                     </div>
+                    {correctedTime !== null && (
+                      <div className="mt-4 p-3 bg-muted rounded-md">
+                        <p className="text-sm font-medium">
+                          Adjusted development time: {correctedTime.toFixed(1)} minutes
+                        </p>
+                      </div>
+                    )}
                   </div>
-                  {correctedTime !== null && (
-                    <div className="mt-4 p-3 bg-muted rounded-md">
-                      <p className="text-sm font-medium">
-                        Adjusted development time: {correctedTime.toFixed(1)} minutes
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-                  <h3 className="text-lg font-medium mb-4">Volume Mixer</h3>
-                  <VolumeMixer
-                    dilution={Array.isArray(developmentInfo) 
-                      ? developmentInfo[0]?.dilution ?? "Stock"
-                      : developmentInfo?.dilution ?? "Stock"}
-                    totalVolume={totalVolume}
-                    onVolumeChange={setTotalVolume}
-                  />
                 </div>
 
                 <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
