@@ -79,12 +79,12 @@ export default function Home() {
     }, {} as Record<string, typeof times>);
 
     // For each dilution, find the closest ISO time
-    return Object.entries(dilutionTimes).map(([dilution, times]) => {
-      const closestTime = findClosestIsoTime(times, iso);
+    return Object.entries(dilutionTimes).map(([dilution, dilutionTimes]) => {
+      const closestTime = findClosestIsoTime(dilutionTimes, iso);
       if (!closestTime) return null;
 
       return {
-        dilution: closestTime.dilution,
+        dilution,
         time: closestTime.time,
         temperature: closestTime.temperature
       };
