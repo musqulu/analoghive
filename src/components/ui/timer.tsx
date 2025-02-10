@@ -220,7 +220,7 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
   const getAgitationInstructions = () => {
     if (!currentStep || !steps[currentStep].agitation) return null;
     
-    const { initial, interval: agitationInterval, duration } = steps[currentStep].agitation;
+    const { initial, duration } = steps[currentStep].agitation;
     const totalTime = steps[currentStep].time;
     const elapsed = totalTime - timeLeft;
     

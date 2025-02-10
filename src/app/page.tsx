@@ -13,13 +13,13 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { films, findFilmByName } from "@/data/films"
-import { developers, findDeveloperByName, getDeveloperDilutions } from "@/data/developers"
+import { developers, findDeveloperByName } from "@/data/developers"
 import { findDevelopmentTimes, findClosestIsoTime, calculateCorrectedTime } from "@/data/development-times"
 
 interface DevelopmentOption {
-  dilution: string;
-  time: number;
-  temperature: number;
+  dilution: string
+  time: number
+  temperature: number
 }
 
 export default function Home() {
