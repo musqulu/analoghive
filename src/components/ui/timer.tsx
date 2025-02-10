@@ -10,10 +10,12 @@ interface TimerProps {
   isColor?: boolean
 }
 
+type Step = 'dev' | 'stop' | 'fix';
+
 export function Timer({ developmentTime, temperatureUnit, temperature, isColor = false }: TimerProps) {
   const [isRunning, setIsRunning] = React.useState(false)
-  const [currentStep, setCurrentStep] = React.useState<'dev' | 'stop' | 'fix' | null>(null)
-  const [timeLeft, setTimeLeft] = React.useState(0)
+  const [currentStep, setCurrentStep] = React.useState<Step>('dev')
+  const [timeLeft, setTimeLeft] = React.useState(developmentTime * 60)
   const [nextAgitation, setNextAgitation] = React.useState<number | null>(null)
   
   const steps = React.useMemo(() => ({
@@ -21,35 +23,19 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
       name: "Development",
       time: developmentTime * 60, // Convert to seconds
       temp: temperature,
-      agitation: isColor ? {
-        initial: 60, // 1 minute continuous for color
-        interval: 30, // Invert every 30 seconds for color
-        duration: 5 // 5 seconds of agitation
-      } : {
-        initial: 30, // 30 seconds continuous for B&W
-        interval: 30, // Every 30 seconds for B&W
-        duration: 10 // 10 seconds of agitation
-      }
+      agitation: { initial: 30, interval: 30, duration: 10 }
     },
     stop: {
       name: "Stop Bath",
       time: 60, // 1 minute
       temp: 20, // Room temperature
-      agitation: {
-        initial: 30,
-        interval: 30,
-        duration: 5
-      }
+      agitation: { initial: 30, interval: 30, duration: 10 }
     },
     fix: {
       name: "Fixer",
-      time: 300, // 5 minutes
+      time: isColor ? 120 : 300,
       temp: 20, // Room temperature
-      agitation: {
-        initial: 30,
-        interval: 60, // Every minute
-        duration: 10
-      }
+      agitation: { initial: 30, interval: 30, duration: 10 }
     }
   }), [developmentTime, temperature, isColor])
 
@@ -106,7 +92,15 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
     };
   }, [isRunning, timeLeft, currentStep, steps]);
 
+  // Reset timer when development time changes
+  React.useEffect(() => {
+    // Round to nearest second when converting from minutes to seconds
+    setTimeLeft(Math.round(developmentTime * 60));
+  }, [developmentTime]);
+
   const formatTime = (seconds: number) => {
+    // Round to nearest second to avoid floating point precision issues
+    seconds = Math.round(seconds);
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
@@ -125,8 +119,8 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
 
   const resetTimer = () => {
     setIsRunning(false);
-    setCurrentStep(null);
-    setTimeLeft(0);
+    setCurrentStep('dev');
+    setTimeLeft(developmentTime * 60);
     setNextAgitation(null);
   };
 
@@ -166,6 +160,21 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
       </div>
     );
   };
+
+  React.useEffect(() => {
+    if (!isRunning || timeLeft > 0) return;
+
+    // Move to next step when current step is complete
+    if (currentStep === 'dev') {
+      setCurrentStep('stop');
+      setTimeLeft(steps.stop.time);
+    } else if (currentStep === 'stop') {
+      setCurrentStep('fix');
+      setTimeLeft(steps.fix.time);
+    } else {
+      setIsRunning(false);
+    }
+  }, [isRunning, timeLeft, currentStep, steps]);
 
   return (
     <div className="space-y-6">

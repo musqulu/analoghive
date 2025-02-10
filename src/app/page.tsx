@@ -94,7 +94,7 @@ const developers: Developer[] = [
         }
       },
       "1:1": {
-        dilution: "1+1",
+        dilution: "1:1",
         times: {
           200: 11,
           400: 13,
@@ -112,7 +112,7 @@ const developers: Developer[] = [
     type: "B&W",
     development: {
       b: {
-        dilution: "Dilution B (1+31)",
+        dilution: "Dilution B (1:31)",
         times: {
           200: 4.5,
           400: 5.5,
@@ -148,7 +148,7 @@ const developers: Developer[] = [
     type: "B&W",
     development: {
       "1:25": {
-        dilution: "1+25",
+        dilution: "1:25",
         times: {
           200: 5,
           400: 6,
@@ -160,7 +160,7 @@ const developers: Developer[] = [
         }
       },
       "1:50": {
-        dilution: "1+50",
+        dilution: "1:50",
         times: {
           200: 8,
           400: 11,
@@ -209,12 +209,28 @@ const developers: Developer[] = [
   }
 ]
 
+// Add these utility functions after the imports
+const convertToFahrenheit = (celsius: number) => (celsius * 9/5) + 32;
+const convertToCelsius = (fahrenheit: number) => (fahrenheit - 32) * 5/9;
+const formatTemperature = (temp: number, unit: string) => {
+  const value = unit === 'fahrenheit' ? convertToFahrenheit(temp) : temp;
+  return `${value.toFixed(1)}°${unit === 'fahrenheit' ? 'F' : 'C'}`;
+};
+
+// Add this utility function after the existing utility functions
+const roundToNearestSecond = (minutes: number) => {
+  // Convert to seconds, round, then convert back to minutes
+  return Math.round(minutes * 60) / 60;
+};
+
 export default function Home() {
   const [selectedFilm, setSelectedFilm] = React.useState("")
   const [selectedIso, setSelectedIso] = React.useState<string>("")
   const [selectedDeveloper, setSelectedDeveloper] = React.useState("")
   const [temperatureUnit, setTemperatureUnit] = React.useState("celsius")
   const [totalVolume, setTotalVolume] = React.useState(500) // Default to 500ml
+  const [modifiedTemperature, setModifiedTemperature] = React.useState<number>(20)
+  const [correctedTime, setCorrectedTime] = React.useState<number | null>(null)
 
   const selectedFilmData = films.find(film => film.name === selectedFilm)
   const selectedDeveloperData = developers.find(dev => dev.name === selectedDeveloper)
@@ -275,6 +291,44 @@ export default function Home() {
 
   const developmentInfo = getDevelopmentInfo();
 
+  // Update the temperature correction calculation
+  const calculateCorrectedTime = (baseTemp: number, baseTime: number, newTemp: number) => {
+    // Using the Q10 temperature coefficient (development rate doubles every 10°C)
+    const q10 = 2;
+    const tempDiff = newTemp - baseTemp;
+    const factor = Math.pow(q10, tempDiff / 10);
+    const correctedTime = baseTime / factor;
+    // Round to nearest second and ensure minimum time
+    return Math.max(0.1, roundToNearestSecond(correctedTime));
+  };
+
+  // Handle temperature unit changes
+  const handleTemperatureChange = (value: string) => {
+    setTemperatureUnit(value);
+    // Convert the modified temperature when changing units
+    if (value === 'fahrenheit') {
+      setModifiedTemperature(Number(convertToFahrenheit(modifiedTemperature).toFixed(1)));
+    } else {
+      setModifiedTemperature(Number(convertToCelsius(modifiedTemperature).toFixed(1)));
+    }
+  };
+
+  // Add useEffect to update corrected time when relevant values change
+  React.useEffect(() => {
+    if (developmentInfo) {
+      const baseTime = Array.isArray(developmentInfo) 
+        ? developmentInfo[0]?.time ?? 0 
+        : developmentInfo?.time ?? 0;
+      
+      const baseTemp = Array.isArray(developmentInfo)
+        ? developmentInfo[0]?.temperature ?? 20
+        : developmentInfo?.temperature ?? 20;
+
+      const newTime = calculateCorrectedTime(baseTemp, baseTime, modifiedTemperature);
+      setCorrectedTime(newTime); // No need for additional rounding here
+    }
+  }, [developmentInfo, modifiedTemperature]);
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-8">
       <div className="max-w-md w-full space-y-8">
@@ -326,7 +380,7 @@ export default function Home() {
             <RadioGroup
               defaultValue="celsius"
               value={temperatureUnit}
-              onValueChange={setTemperatureUnit}
+              onValueChange={handleTemperatureChange}
               className="flex items-center space-x-8"
             >
               <div className="flex items-center space-x-2">
@@ -398,6 +452,57 @@ export default function Home() {
             {developmentInfo && selectedIso && (
               <>
                 <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                  <h3 className="text-lg font-medium mb-4">Temperature Correction</h3>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Recommended Temp</label>
+                      <input
+                        type="text"
+                        value={formatTemperature(
+                          Array.isArray(developmentInfo) 
+                            ? developmentInfo[0]?.temperature ?? 20 
+                            : developmentInfo?.temperature ?? 20,
+                          temperatureUnit
+                        )}
+                        disabled
+                        className="flex h-10 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Recommended Time</label>
+                      <input
+                        type="text"
+                        value={`${Array.isArray(developmentInfo) 
+                          ? developmentInfo[0]?.time ?? 0 
+                          : developmentInfo?.time ?? 0} min`}
+                        disabled
+                        className="flex h-10 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Modified Temp</label>
+                      <input
+                        type="number"
+                        value={modifiedTemperature}
+                        onChange={(e) => {
+                          const newTemp = Number(e.target.value);
+                          setModifiedTemperature(newTemp);
+                        }}
+                        step="0.1"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      />
+                    </div>
+                  </div>
+                  {correctedTime !== null && (
+                    <div className="mt-4 p-3 bg-muted rounded-md">
+                      <p className="text-sm font-medium">
+                        Adjusted development time: {correctedTime.toFixed(1)} minutes
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
                   <h3 className="text-lg font-medium mb-4">Volume Mixer</h3>
                   <VolumeMixer
                     dilution={Array.isArray(developmentInfo) 
@@ -410,12 +515,12 @@ export default function Home() {
 
                 <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
                   <Timer 
-                    developmentTime={Array.isArray(developmentInfo) 
-                      ? developmentInfo[0]?.time ?? 0
-                      : developmentInfo?.time ?? 0}
-                    temperature={Array.isArray(developmentInfo)
-                      ? developmentInfo[0]?.temperature ?? 20
-                      : developmentInfo?.temperature ?? 20}
+                    developmentTime={correctedTime !== null ? roundToNearestSecond(correctedTime) : (
+                      Array.isArray(developmentInfo) 
+                        ? roundToNearestSecond(developmentInfo[0]?.time ?? 0)
+                        : roundToNearestSecond(developmentInfo?.time ?? 0)
+                    )}
+                    temperature={modifiedTemperature}
                     temperatureUnit={temperatureUnit}
                     isColor={selectedFilmData?.type === "Color"}
                   />
