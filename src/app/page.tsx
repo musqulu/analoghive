@@ -221,6 +221,7 @@ export default function Home() {
   const [totalVolume, setTotalVolume] = React.useState(500) // Default to 500ml
   const [modifiedTemperature, setModifiedTemperature] = React.useState<number>(20)
   const [correctedTime, setCorrectedTime] = React.useState<number | null>(null)
+  const [constantAgitation, setConstantAgitation] = React.useState(false)
 
   const selectedFilmData = films.find(film => film.name === selectedFilm)
   const selectedDeveloperData = developers.find(dev => dev.name === selectedDeveloper)
@@ -300,7 +301,14 @@ export default function Home() {
     const q10 = 2;
     const tempDiff = newTemp - baseTemp;
     const factor = Math.pow(q10, tempDiff / 10);
-    const correctedTime = baseTime / factor;
+    let correctedTime = baseTime / factor;
+
+    // Apply constant agitation adjustment if enabled
+    // Using T_effective = T_static / (1 + k·A) where k·A = 0.3 for constant agitation
+    if (constantAgitation) {
+      correctedTime = correctedTime / (1 + 0.3);
+    }
+
     // Round to nearest second and ensure minimum time
     return Math.max(0.1, roundToNearestSecond(correctedTime));
   };
@@ -518,11 +526,31 @@ export default function Home() {
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     />
                   </div>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="constant-agitation"
+                      checked={constantAgitation}
+                      onChange={(e) => setConstantAgitation(e.target.checked)}
+                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                    <label htmlFor="constant-agitation" className="text-sm font-medium">
+                      Constant Agitation
+                      <span className="block text-xs text-gray-500">
+                        Reduces development time by ~30%
+                      </span>
+                    </label>
+                  </div>
                   {correctedTime !== null && (
                     <div className="mt-4 p-3 bg-muted rounded-md">
                       <p className="text-sm font-medium">
                         Adjusted development time: {correctedTime.toFixed(1)} minutes
                       </p>
+                      {constantAgitation && (
+                        <p className="text-xs text-gray-600 mt-1">
+                          Time adjusted for constant agitation
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
