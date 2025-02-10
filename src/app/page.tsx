@@ -45,34 +45,9 @@ const films = [
     isos: [200, 400, 800, 1600, 3200]
   },
   { 
-    name: "Kodak Portra 400", 
-    type: "Color",
-    isos: [200, 400, 800]
-  },
-  { 
-    name: "Fujifilm Pro 400H", 
-    type: "Color",
-    isos: [200, 400, 800]
-  },
-  { 
-    name: "Kodak Gold 200", 
-    type: "Color",
-    isos: [100, 200, 400]
-  },
-  { 
     name: "Ilford Delta 3200", 
     type: "B&W",
     isos: [1600, 3200, 6400, 12800]
-  },
-  { 
-    name: "CineStill 800T", 
-    type: "Color",
-    isos: [400, 800, 1600]
-  },
-  { 
-    name: "Fujifilm Superia X-TRA 400", 
-    type: "Color",
-    isos: [200, 400, 800]
   }
 ]
 
@@ -81,18 +56,6 @@ const developers: Developer[] = [
     name: "Kodak D-76", 
     type: "B&W",
     development: {
-      stock: {
-        dilution: "Stock",
-        times: {
-          200: 7.5,
-          400: 9,
-          800: 11,
-          1600: 13,
-          3200: 15,
-          6400: 17,
-          12800: 19
-        }
-      },
       "1:1": {
         dilution: "1:1",
         times: {
@@ -103,6 +66,18 @@ const developers: Developer[] = [
           3200: 19,
           6400: 21,
           12800: 23
+        }
+      },
+      "1:3": {
+        dilution: "1:3",
+        times: {
+          200: 16,
+          400: 18,
+          800: 20,
+          1600: 22,
+          3200: 24,
+          6400: 26,
+          12800: 28
         }
       }
     }
@@ -122,6 +97,30 @@ const developers: Developer[] = [
           6400: 13,
           12800: 15
         }
+      },
+      e: {
+        dilution: "Dilution E (1:47)",
+        times: {
+          200: 6.5,
+          400: 7.5,
+          800: 9,
+          1600: 11,
+          3200: 13,
+          6400: 15,
+          12800: 17
+        }
+      },
+      h: {
+        dilution: "Dilution H (1:63)",
+        times: {
+          200: 9,
+          400: 10,
+          800: 12,
+          1600: 14,
+          3200: 16,
+          6400: 18,
+          12800: 20
+        }
       }
     }
   },
@@ -129,16 +128,28 @@ const developers: Developer[] = [
     name: "Ilford ID-11", 
     type: "B&W",
     development: {
-      stock: {
-        dilution: "Stock",
+      "1:1": {
+        dilution: "1:1",
         times: {
-          200: 8,
-          400: 10,
-          800: 12,
-          1600: 14,
-          3200: 16,
-          6400: 18,
-          12800: 20
+          200: 10,
+          400: 12,
+          800: 14,
+          1600: 16,
+          3200: 18,
+          6400: 20,
+          12800: 22
+        }
+      },
+      "1:3": {
+        dilution: "1:3",
+        times: {
+          200: 15,
+          400: 17,
+          800: 19,
+          1600: 21,
+          3200: 23,
+          6400: 25,
+          12800: 27
         }
       }
     }
@@ -170,40 +181,18 @@ const developers: Developer[] = [
           6400: 23,
           12800: 26
         }
-      }
-    }
-  },
-  { 
-    name: "Tetenal Colortec C-41", 
-    type: "Color",
-    development: {
-      kit: {
-        dilution: "According to kit instructions",
+      },
+      "1:100": {
+        dilution: "1:100",
         times: {
-          100: 3.25,
-          200: 3.25,
-          400: 3.25,
-          800: 3.25,
-          1600: 3.25
-        },
-        temperature: 38
-      }
-    }
-  },
-  { 
-    name: "Cinestill CS41", 
-    type: "Color",
-    development: {
-      kit: {
-        dilution: "According to kit instructions",
-        times: {
-          100: 3.5,
-          200: 3.5,
-          400: 3.5,
-          800: 3.5,
-          1600: 3.5
-        },
-        temperature: 39
+          200: 14,
+          400: 18,
+          800: 22,
+          1600: 26,
+          3200: 30,
+          6400: 34,
+          12800: 38
+        }
       }
     }
   }
@@ -227,6 +216,7 @@ export default function Home() {
   const [selectedFilm, setSelectedFilm] = React.useState("")
   const [selectedIso, setSelectedIso] = React.useState<string>("")
   const [selectedDeveloper, setSelectedDeveloper] = React.useState("")
+  const [selectedDilution, setSelectedDilution] = React.useState<string>("")
   const [temperatureUnit, setTemperatureUnit] = React.useState("celsius")
   const [totalVolume, setTotalVolume] = React.useState(500) // Default to 500ml
   const [modifiedTemperature, setModifiedTemperature] = React.useState<number>(20)
@@ -239,7 +229,13 @@ export default function Home() {
   // Reset ISO when film changes
   React.useEffect(() => {
     setSelectedIso("")
+    setSelectedDilution("") // Reset dilution when film changes
   }, [selectedFilm])
+
+  // Reset dilution when developer changes
+  React.useEffect(() => {
+    setSelectedDilution("")
+  }, [selectedDeveloper])
 
   const getDevelopmentInfo = () => {
     if (!selectedDeveloperData || !selectedIso) return null;
@@ -291,6 +287,13 @@ export default function Home() {
 
   const developmentInfo = getDevelopmentInfo();
 
+  // Set default dilution when development info becomes available
+  React.useEffect(() => {
+    if (developmentInfo && Array.isArray(developmentInfo) && developmentInfo.length > 0 && !selectedDilution) {
+      setSelectedDilution(developmentInfo[0].dilution)
+    }
+  }, [developmentInfo, selectedDilution])
+
   // Update the temperature correction calculation
   const calculateCorrectedTime = (baseTemp: number, baseTime: number, newTemp: number) => {
     // Using the Q10 temperature coefficient (development rate doubles every 10°C)
@@ -316,91 +319,94 @@ export default function Home() {
   // Add useEffect to update corrected time when relevant values change
   React.useEffect(() => {
     if (developmentInfo) {
-      const baseTime = Array.isArray(developmentInfo) 
-        ? developmentInfo[0]?.time ?? 0 
-        : developmentInfo?.time ?? 0;
-      
-      const baseTemp = Array.isArray(developmentInfo)
-        ? developmentInfo[0]?.temperature ?? 20
-        : developmentInfo?.temperature ?? 20;
+      const selectedInfo = Array.isArray(developmentInfo) 
+        ? developmentInfo.find(info => info.dilution === selectedDilution)
+        : developmentInfo;
 
-      const newTime = calculateCorrectedTime(baseTemp, baseTime, modifiedTemperature);
-      setCorrectedTime(newTime); // No need for additional rounding here
+      if (selectedInfo) {
+        const baseTime = selectedInfo.time;
+        const baseTemp = selectedInfo.temperature ?? 20;
+        const newTime = calculateCorrectedTime(baseTemp, baseTime, modifiedTemperature);
+        setCorrectedTime(newTime);
+      }
     }
-  }, [developmentInfo, modifiedTemperature]);
+  }, [developmentInfo, modifiedTemperature, selectedDilution]);
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-8">
+    <main className="min-h-screen flex flex-col items-center p-8 pt-12">
       <div className="max-w-md w-full space-y-8">
         <h1 className="text-2xl font-bold text-center mb-8">Film Development Calculator</h1>
         
-        <div className="space-y-6">
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium mb-2 block">Select Film</label>
-              <Combobox
-                options={films}
-                value={selectedFilm}
-                onChange={setSelectedFilm}
-                placeholder="Search for a film..."
-              />
-            </div>
+        <div className="space-y-8">
+          <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+            <h3 className="text-lg font-medium mb-4">Film & Developer Selection</h3>
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Select Film</label>
+                  <Combobox
+                    options={films}
+                    value={selectedFilm}
+                    onChange={setSelectedFilm}
+                    placeholder="Search for a film..."
+                  />
+                </div>
 
-            {selectedFilm && (
+                {selectedFilm && (
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Select ISO</label>
+                    <Select value={selectedIso} onValueChange={setSelectedIso}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choose ISO" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableIsos.map((iso) => (
+                          <SelectItem key={iso} value={iso.toString()}>
+                            ISO {iso}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </div>
+
               <div>
-                <label className="text-sm font-medium mb-2 block">Select ISO</label>
-                <Select value={selectedIso} onValueChange={setSelectedIso}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Choose ISO" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableIsos.map((iso) => (
-                      <SelectItem key={iso} value={iso.toString()}>
-                        ISO {iso}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <label className="text-sm font-medium mb-2 block">Select Developer</label>
+                <Combobox
+                  options={developers}
+                  value={selectedDeveloper}
+                  onChange={setSelectedDeveloper}
+                  placeholder="Search for a developer..."
+                />
               </div>
-            )}
+
+              <div>
+                <label className="text-sm font-medium mb-3 block">Temperature Unit</label>
+                <RadioGroup
+                  defaultValue="celsius"
+                  value={temperatureUnit}
+                  onValueChange={handleTemperatureChange}
+                  className="flex items-center space-x-8"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="celsius" id="celsius" />
+                    <label htmlFor="celsius" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      Celsius (°C)
+                    </label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="fahrenheit" id="fahrenheit" />
+                    <label htmlFor="fahrenheit" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      Fahrenheit (°F)
+                    </label>
+                  </div>
+                </RadioGroup>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label className="text-sm font-medium mb-2 block">Select Developer</label>
-            <Combobox
-              options={developers}
-              value={selectedDeveloper}
-              onChange={setSelectedDeveloper}
-              placeholder="Search for a developer..."
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-medium mb-3 block">Temperature Unit</label>
-            <RadioGroup
-              defaultValue="celsius"
-              value={temperatureUnit}
-              onValueChange={handleTemperatureChange}
-              className="flex items-center space-x-8"
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="celsius" id="celsius" />
-                <label htmlFor="celsius" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  Celsius (°C)
-                </label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="fahrenheit" id="fahrenheit" />
-                <label htmlFor="fahrenheit" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  Fahrenheit (°F)
-                </label>
-              </div>
-            </RadioGroup>
-          </div>
-        </div>
-
-        {(selectedFilm || selectedDeveloper || developmentInfo) && (
-          <div className="mt-8 space-y-8">
+          {(selectedFilm || selectedDeveloper || developmentInfo) && (
             <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-4">
               {selectedFilm && (
                 <div>
@@ -419,17 +425,31 @@ export default function Home() {
                         // B&W development options
                         <div className="space-y-4">
                           <p className="text-sm font-medium">Development Options:</p>
-                          {developmentInfo.map((info, index) => (
-                            <div key={index} className="pl-4 border-l-2 border-gray-200">
-                              <p className="text-sm">Dilution: {info.dilution}</p>
-                              <p className="text-sm">Time: {info.time} minutes</p>
-                              <p className="text-sm">
-                                Temperature: {temperatureUnit === 'celsius' 
-                                  ? `${info.temperature}°C` 
-                                  : `${(info.temperature * 9/5 + 32).toFixed(1)}°F`}
-                              </p>
-                            </div>
-                          ))}
+                          <RadioGroup
+                            value={selectedDilution}
+                            onValueChange={setSelectedDilution}
+                            className="space-y-2"
+                          >
+                            {developmentInfo.map((info, index) => (
+                              <div key={index} className="flex items-start space-x-4 p-3 rounded-md hover:bg-gray-100">
+                                <RadioGroupItem value={info.dilution} id={`dilution-${index}`} className="mt-1" />
+                                <label
+                                  htmlFor={`dilution-${index}`}
+                                  className="flex-1 cursor-pointer"
+                                >
+                                  <div className="space-y-1">
+                                    <p className="text-sm font-medium">Dilution: {info.dilution}</p>
+                                    <p className="text-sm">Time: {info.time} minutes</p>
+                                    <p className="text-sm">
+                                      Temperature: {temperatureUnit === 'celsius' 
+                                        ? `${info.temperature}°C` 
+                                        : `${(info.temperature * 9/5 + 32).toFixed(1)}°F`}
+                                    </p>
+                                  </div>
+                                </label>
+                              </div>
+                            ))}
+                          </RadioGroup>
                         </div>
                       ) : (
                         // Color development
@@ -448,83 +468,81 @@ export default function Home() {
                 </div>
               )}
             </div>
+          )}
 
-            {developmentInfo && selectedIso && (
-              <>
-                <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-                  <h3 className="text-lg font-medium mb-4">Volume Mixer</h3>
-                  <VolumeMixer
-                    dilution={Array.isArray(developmentInfo) 
-                      ? developmentInfo[0]?.dilution ?? "Stock"
-                      : developmentInfo?.dilution ?? "Stock"}
-                    totalVolume={totalVolume}
-                    onVolumeChange={setTotalVolume}
-                  />
-                </div>
+          {developmentInfo && selectedIso && selectedDilution && (
+            <>
+              <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                <h3 className="text-lg font-medium mb-4">Volume Mixer</h3>
+                <VolumeMixer
+                  dilution={selectedDilution}
+                  totalVolume={totalVolume}
+                  onVolumeChange={setTotalVolume}
+                />
+              </div>
 
-                <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-                  <h3 className="text-lg font-medium mb-4">Temperature Correction</h3>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-sm font-medium mb-2">Recommended Temperature</p>
-                        <p className="text-2xl font-mono">
-                          {formatTemperature(
-                            Array.isArray(developmentInfo) 
-                              ? developmentInfo[0]?.temperature ?? 20 
-                              : developmentInfo?.temperature ?? 20,
-                            temperatureUnit
-                          )}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium mb-2">Recommended Time</p>
-                        <p className="text-2xl font-mono">
-                          {Array.isArray(developmentInfo) 
-                            ? developmentInfo[0]?.time ?? 0 
-                            : developmentInfo?.time ?? 0} min
-                        </p>
-                      </div>
+              <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                <h3 className="text-lg font-medium mb-4">Temperature Correction</h3>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm font-medium mb-2">Recommended Temperature</p>
+                      <p className="text-2xl font-mono">
+                        {formatTemperature(
+                          Array.isArray(developmentInfo) 
+                            ? developmentInfo.find(info => info.dilution === selectedDilution)?.temperature ?? 20
+                            : developmentInfo.temperature ?? 20,
+                          temperatureUnit
+                        )}
+                      </p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Modified Temperature</label>
-                      <input
-                        type="number"
-                        value={modifiedTemperature}
-                        onChange={(e) => {
-                          const newTemp = Number(e.target.value);
-                          setModifiedTemperature(newTemp);
-                        }}
-                        step="0.1"
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      />
+                      <p className="text-sm font-medium mb-2">Recommended Time</p>
+                      <p className="text-2xl font-mono">
+                        {Array.isArray(developmentInfo)
+                          ? developmentInfo.find(info => info.dilution === selectedDilution)?.time ?? 0
+                          : developmentInfo.time ?? 0} min
+                      </p>
                     </div>
-                    {correctedTime !== null && (
-                      <div className="mt-4 p-3 bg-muted rounded-md">
-                        <p className="text-sm font-medium">
-                          Adjusted development time: {correctedTime.toFixed(1)} minutes
-                        </p>
-                      </div>
-                    )}
                   </div>
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Modified Temperature</label>
+                    <input
+                      type="number"
+                      value={modifiedTemperature}
+                      onChange={(e) => {
+                        const newTemp = Number(e.target.value);
+                        setModifiedTemperature(newTemp);
+                      }}
+                      step="0.1"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    />
+                  </div>
+                  {correctedTime !== null && (
+                    <div className="mt-4 p-3 bg-muted rounded-md">
+                      <p className="text-sm font-medium">
+                        Adjusted development time: {correctedTime.toFixed(1)} minutes
+                      </p>
+                    </div>
+                  )}
                 </div>
+              </div>
 
-                <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-                  <Timer 
-                    developmentTime={correctedTime !== null ? roundToNearestSecond(correctedTime) : (
-                      Array.isArray(developmentInfo) 
-                        ? roundToNearestSecond(developmentInfo[0]?.time ?? 0)
-                        : roundToNearestSecond(developmentInfo?.time ?? 0)
-                    )}
-                    temperature={modifiedTemperature}
-                    temperatureUnit={temperatureUnit}
-                    isColor={selectedFilmData?.type === "Color"}
-                  />
-                </div>
-              </>
-            )}
-          </div>
-        )}
+              <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                <Timer 
+                  developmentTime={correctedTime !== null ? roundToNearestSecond(correctedTime) : (
+                    Array.isArray(developmentInfo)
+                      ? roundToNearestSecond(developmentInfo.find(info => info.dilution === selectedDilution)?.time ?? 0)
+                      : roundToNearestSecond(developmentInfo.time ?? 0)
+                  )}
+                  temperature={modifiedTemperature}
+                  temperatureUnit={temperatureUnit}
+                  isColor={selectedFilmData?.type === "Color"}
+                />
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </main>
   )
