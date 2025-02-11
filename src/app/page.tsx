@@ -323,7 +323,7 @@ export default function Home() {
                   {correctedTime !== null && (
                     <div className="mt-4 p-3 bg-muted rounded-md">
                       <p className="text-sm font-medium">
-                        Adjusted development time: {correctedTime.toFixed(1)} minutes
+                        Adjusted development time: {Math.floor(correctedTime)}:{String(Math.round((correctedTime % 1) * 60)).padStart(2, '0')} min
                       </p>
                       {constantAgitation && (
                         <p className="text-xs text-gray-600 mt-1">
