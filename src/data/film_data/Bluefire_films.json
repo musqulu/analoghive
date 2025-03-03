@@ -1,0 +1,32 @@
+[
+  {
+    "Film": "Bluefire films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "13",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Bluefire films",
+    "Developer": "Df96 Monobath",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Bluefire films",
+    "Developer": "Bluefire HR",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "15",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  }
+]

@@ -1,0 +1,202 @@
+[
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "Fomadon LQN",
+    "Dilution": "1+10",
+    "ASA/ISO": "200",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "15",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "HC-110",
+    "Dilution": "H",
+    "ASA/ISO": "200",
+    "35mm": "8.25",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "HC-110",
+    "Dilution": "H",
+    "ASA/ISO": "200",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "Microphen",
+    "Dilution": "stock",
+    "ASA/ISO": "200",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "HC-110",
+    "Dilution": "F",
+    "ASA/ISO": "20",
+    "35mm": "30",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "Eco Pro",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "",
+    "Sheet": "6",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "",
+    "Sheet": "6",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "",
+    "Sheet": "6",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "D-23",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "",
+    "Sheet": "6",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "HC-110",
+    "Dilution": "H",
+    "ASA/ISO": "50",
+    "35mm": "",
+    "120": "",
+    "Sheet": "6",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "400",
+    "35mm": "",
+    "120": "",
+    "Sheet": "11",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "Rodinal",
+    "Dilution": "1+100",
+    "ASA/ISO": "400",
+    "35mm": "",
+    "120": "",
+    "Sheet": "37",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "Rodinal",
+    "Dilution": "1+300",
+    "ASA/ISO": "15",
+    "35mm": "120",
+    "120": "",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "Caffenol C",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "16",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "Bluefire HR",
+    "Dilution": "1+16",
+    "ASA/ISO": "25",
+    "35mm": "14",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "20",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "Bluefire HR",
+    "Dilution": "1+20",
+    "ASA/ISO": "25",
+    "35mm": "25",
+    "120": "",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "D-76",
+    "Dilution": "1+2",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "",
+    "Sheet": "9",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "Rodinal",
+    "Dilution": "1+100",
+    "ASA/ISO": "25",
+    "35mm": "",
+    "120": "",
+    "Sheet": "4.5",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Fuji HR/RX/C",
+    "Developer": "Rodinal",
+    "Dilution": "1+100",
+    "ASA/ISO": "25",
+    "35mm": "",
+    "120": "",
+    "Sheet": "7",
+    "Temp": "20C"
+  }
+]

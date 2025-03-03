@@ -5,6 +5,7 @@ export interface Film {
   isos: number[];
   manufacturer: string;
   alias?: string[];
+  formats: ("35mm" | "120" | "sheet")[];
 }
 
 export const films: Film[] = [
@@ -14,7 +15,8 @@ export const films: Film[] = [
     manufacturer: "Kodak",
     type: "B&W",
     isos: [200, 400, 800, 1600],
-    alias: ["TX", "Tri-X"]
+    alias: ["TX", "Tri-X"],
+    formats: ["35mm", "120", "sheet"]
   },
   { 
     id: "hp5plus",
@@ -22,7 +24,8 @@ export const films: Film[] = [
     manufacturer: "Ilford",
     type: "B&W",
     isos: [200, 400, 800, 1600, 3200],
-    alias: ["HP5", "HP5 Plus"]
+    alias: ["HP5", "HP5 Plus"],
+    formats: ["35mm", "120", "sheet"]
   },
   { 
     id: "delta3200",
@@ -30,7 +33,8 @@ export const films: Film[] = [
     manufacturer: "Ilford",
     type: "B&W",
     isos: [1600, 3200, 6400, 12800],
-    alias: ["Delta"]
+    alias: ["Delta"],
+    formats: ["35mm", "120"]
   }
 ];
 
@@ -46,4 +50,10 @@ export function findFilmByName(name: string): Film | undefined {
 export function getFilmIsos(filmId: string): number[] {
   const film = films.find(f => f.id === filmId);
   return film?.isos || [];
+}
+
+// Utility function to get available formats for a film
+export function getFilmFormats(filmId: string): ("35mm" | "120" | "sheet")[] {
+  const film = films.find(f => f.id === filmId);
+  return film?.formats || [];
 } 

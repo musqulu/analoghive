@@ -1,0 +1,182 @@
+[
+  {
+    "Film": "Type-D films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "200",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "200",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "Eco Pro",
+    "Dilution": "1+1",
+    "ASA/ISO": "200",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "200",
+    "35mm": "3.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "200",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "200",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+4",
+    "ASA/ISO": "200",
+    "35mm": "9.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "Microphen",
+    "Dilution": "1+1",
+    "ASA/ISO": "200",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "Silvermax",
+    "Dilution": "1+29",
+    "ASA/ISO": "100",
+    "35mm": "11",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "Silvermax",
+    "Dilution": "1+29",
+    "ASA/ISO": "200",
+    "35mm": "16",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "Silvermax",
+    "Dilution": "1+29",
+    "ASA/ISO": "400",
+    "35mm": "20",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "200",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "200",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "Ilfosol 3",
+    "Dilution": "1+9",
+    "ASA/ISO": "400",
+    "35mm": "6",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "Microphen",
+    "Dilution": "stock",
+    "ASA/ISO": "200",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Type-D films",
+    "Developer": "Microphen",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "14",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  }
+]

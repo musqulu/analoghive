@@ -5,6 +5,7 @@ export interface DevelopmentTime {
   iso: number;
   time: number;
   temperature: number;
+  format?: "35mm" | "120" | "sheet"; // Optional format-specific time
   notes?: string;
 }
 
@@ -66,9 +67,11 @@ export const developmentTimes: DevelopmentTime[] = [
 ];
 
 // Utility function to find development times for a specific film and developer combination
-export function findDevelopmentTimes(filmId: string, developerId: string): DevelopmentTime[] {
+export function findDevelopmentTimes(filmId: string, developerId: string, format?: "35mm" | "120" | "sheet"): DevelopmentTime[] {
   return developmentTimes.filter(
-    time => time.filmId === filmId && time.developerId === developerId
+    time => time.filmId === filmId && 
+            time.developerId === developerId && 
+            (!format || !time.format || time.format === format)
   );
 }
 

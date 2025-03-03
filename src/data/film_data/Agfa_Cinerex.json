@@ -1,0 +1,72 @@
+[
+  {
+    "Film": "Agfa Cinerex",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "4.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Cinerex",
+    "Developer": "HC-110",
+    "Dilution": "H",
+    "ASA/ISO": "25",
+    "35mm": "5.75",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Cinerex",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "4.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Cinerex",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "50",
+    "35mm": "4.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Cinerex",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "100",
+    "35mm": "5.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Cinerex",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "200",
+    "35mm": "6.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Cinerex",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "400",
+    "35mm": "7.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  }
+]

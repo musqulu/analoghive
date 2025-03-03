@@ -1,0 +1,122 @@
+[
+  {
+    "Film": "Rollei Blackbird",
+    "Developer": "510-Pyro",
+    "Dilution": "1+300",
+    "ASA/ISO": "64",
+    "35mm": "22.75",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei Blackbird",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "25",
+    "35mm": "6",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei Blackbird",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei Blackbird",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "25",
+    "35mm": "6",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei Blackbird",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei Blackbird",
+    "Developer": "Ilford Ilfosol 3",
+    "Dilution": "1+19",
+    "ASA/ISO": "64",
+    "35mm": "5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei Blackbird",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "64",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Rollei Blackbird",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "100",
+    "35mm": "11",
+    "120": "",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Rollei Blackbird",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "200",
+    "35mm": "16.25",
+    "120": "",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Rollei Blackbird",
+    "Developer": "Rollei Supergrain",
+    "Dilution": "1+9",
+    "ASA/ISO": "25",
+    "35mm": "5.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei Blackbird",
+    "Developer": "Rollei Supergrain",
+    "Dilution": "1+12",
+    "ASA/ISO": "25",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei Blackbird",
+    "Developer": "Silberra Ascorol",
+    "Dilution": "1+29",
+    "ASA/ISO": "100",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  }
+]

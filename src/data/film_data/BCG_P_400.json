@@ -1,0 +1,32 @@
+[
+  {
+    "Film": "BCG P-400",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "9.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "BCG P-400",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "9.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "BCG P-400",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  }
+]

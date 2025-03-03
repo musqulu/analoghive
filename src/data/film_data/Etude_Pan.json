@@ -1,0 +1,92 @@
+[
+  {
+    "Film": "Etude Pan",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Etude Pan",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Etude Pan",
+    "Developer": "Eco Pro",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Etude Pan",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "400",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Etude Pan",
+    "Developer": "HC-110",
+    "Dilution": "H",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Etude Pan",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Etude Pan",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Etude Pan",
+    "Developer": "XT-3",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Etude Pan",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  }
+]

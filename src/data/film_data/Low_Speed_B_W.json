@@ -1,0 +1,42 @@
+[
+  {
+    "Film": "Low Speed B&W",
+    "Developer": "D-72",
+    "Dilution": "1+2",
+    "ASA/ISO": "3",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "25C"
+  },
+  {
+    "Film": "Low Speed B&W",
+    "Developer": "D-76",
+    "Dilution": "1+2",
+    "ASA/ISO": "3",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "28C"
+  },
+  {
+    "Film": "Low Speed B&W",
+    "Developer": "HC-110",
+    "Dilution": "A",
+    "ASA/ISO": "3",
+    "35mm": "20",
+    "120": "20",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Low Speed B&W",
+    "Developer": "ID-11",
+    "Dilution": "1+2",
+    "ASA/ISO": "3",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "28C"
+  }
+]

@@ -1,0 +1,132 @@
+[
+  {
+    "Film": "Rollei ATP/ATO",
+    "Developer": "Burton 195",
+    "Dilution": "stock",
+    "ASA/ISO": "10",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "6",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei ATP/ATO",
+    "Developer": "Caffenol Delta Micro",
+    "Dilution": "stock",
+    "ASA/ISO": "25",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "10",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei ATP/ATO",
+    "Developer": "Rodinal",
+    "Dilution": "1+300",
+    "ASA/ISO": "1",
+    "35mm": "12",
+    "120": "12",
+    "Sheet": "12",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei ATP/ATO",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "25",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "7",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei ATP/ATO",
+    "Developer": "Rollei RSL Superlith",
+    "Dilution": "1+4",
+    "ASA/ISO": "25",
+    "35mm": "5",
+    "120": "5",
+    "Sheet": "5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei ATP/ATO",
+    "Developer": "510-Pyro",
+    "Dilution": "1+500",
+    "ASA/ISO": "25",
+    "35mm": "25",
+    "120": "25",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Rollei ATP/ATO",
+    "Developer": "Burton 195",
+    "Dilution": "stock",
+    "ASA/ISO": "16",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei ATP/ATO",
+    "Developer": "Rodinal",
+    "Dilution": "1+150",
+    "ASA/ISO": "15",
+    "35mm": "6.5",
+    "120": "6.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei ATP/ATO",
+    "Developer": "Rodinal",
+    "Dilution": "1+300",
+    "ASA/ISO": "20",
+    "35mm": "12",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei ATP/ATO",
+    "Developer": "Rodinal",
+    "Dilution": "1+300",
+    "ASA/ISO": "25",
+    "35mm": "12",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei ATP/ATO",
+    "Developer": "Rollei ATP DC",
+    "Dilution": "2+23",
+    "ASA/ISO": "40",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei ATP/ATO",
+    "Developer": "Rollei RLC Low Contrast",
+    "Dilution": "1+4",
+    "ASA/ISO": "10",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Rollei ATP/ATO",
+    "Developer": "Rollei RLC Low Contrast",
+    "Dilution": "1+4",
+    "ASA/ISO": "32",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  }
+]

@@ -5,8 +5,14 @@ import { Play, Pause, RotateCcw, PlayCircle, Pencil } from "lucide-react"
 
 interface TimerProps {
   developmentTime: number
-  temperatureUnit: string
   temperature: number
+  filmName?: string
+  filmFormat?: "35mm" | "120" | "sheet"
+  filmIso?: string
+  developerName?: string
+  developerDilution?: string
+  totalVolume?: number
+  temperatureUnit?: string
   isColor?: boolean
 }
 
@@ -33,7 +39,18 @@ interface WashingMethod {
   };
 }
 
-export function Timer({ developmentTime, temperatureUnit, temperature, isColor = false }: TimerProps) {
+export function Timer({ 
+  developmentTime, 
+  temperature, 
+  filmName, 
+  filmFormat = "35mm",
+  filmIso,
+  developerName,
+  developerDilution,
+  totalVolume = 500,
+  temperatureUnit = "celsius", 
+  isColor = false 
+}: TimerProps) {
   const [isRunning, setIsRunning] = React.useState(false)
   const [currentStep, setCurrentStep] = React.useState<Step>('dev')
   const [timeLeft, setTimeLeft] = React.useState(developmentTime * 60)
@@ -661,6 +678,62 @@ export function Timer({ developmentTime, temperatureUnit, temperature, isColor =
               </p>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className="mt-6 space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-lg font-semibold">Development Process</h2>
+          <button
+            onClick={() => setIsEditModalOpen(true)}
+            className="text-sm flex items-center gap-1 text-gray-500 hover:text-gray-700"
+          >
+            <Pencil size={14} /> Edit
+          </button>
+        </div>
+
+        {/* Film and Developer Info */}
+        {(filmName || developerName) && (
+          <div className="bg-muted p-3 rounded-md text-sm mb-4">
+            {filmName && (
+              <p>
+                <span className="font-medium">Film:</span> {filmName} {filmFormat && `(${filmFormat})`} {filmIso && `@ ISO ${filmIso}`}
+              </p>
+            )}
+            {developerName && (
+              <p>
+                <span className="font-medium">Developer:</span> {developerName} {developerDilution && `(${developerDilution})`}
+              </p>
+            )}
+            {totalVolume && (
+              <p>
+                <span className="font-medium">Volume:</span> {totalVolume}ml
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Steps */}
+        <div className="space-y-2">
+          {Object.entries(steps).map(([step, details]) => (
+            <button
+              key={step}
+              onClick={() => startTimer(step as Step)}
+              className={`w-full text-left p-3 rounded-md flex justify-between items-center ${
+                currentStep === step
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted hover:bg-muted/80"
+              }`}
+            >
+              <div>
+                <div className="font-medium">{details.name}</div>
+                <div className="text-sm opacity-90">
+                  {formatTime(details.time)} at {getStepTemp(step as Step)}°{temperatureUnit === "celsius" ? "C" : "F"}
+                </div>
+              </div>
+              <PlayCircle size={20} className={currentStep === step ? "" : "opacity-50"} />
+            </button>
+          ))}
         </div>
       </div>
     </div>

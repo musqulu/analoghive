@@ -1,0 +1,332 @@
+[
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "510-Pyro",
+    "Dilution": "1+100",
+    "ASA/ISO": "200",
+    "35mm": "17",
+    "120": "17",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "510-Pyro",
+    "Dilution": "1+100",
+    "ASA/ISO": "400",
+    "35mm": "23",
+    "120": "23",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Acurol-N",
+    "Dilution": "1+32",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "13",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Adox HR-DEV",
+    "Dilution": "1+30",
+    "ASA/ISO": "400",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Arista® Premium",
+    "Dilution": "1+9",
+    "ASA/ISO": "400",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Ars-Imago FD",
+    "Dilution": "1+9",
+    "ASA/ISO": "400",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Bellini Hydrofen",
+    "Dilution": "1+39",
+    "ASA/ISO": "200",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Black/White & Green",
+    "Dilution": "1+49",
+    "ASA/ISO": "400",
+    "35mm": "12",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "D-23",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "D-23",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "7.5",
+    "120": "7.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "10.25",
+    "120": "10.25",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Eco Pro",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "6.5",
+    "120": "6.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Eco Pro",
+    "Dilution": "1+3",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "13",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "400",
+    "35mm": "5.5",
+    "120": "5.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "7.5",
+    "120": "7.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "10.25",
+    "120": "10.25",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Ilfosol 3",
+    "Dilution": "1+9",
+    "ASA/ISO": "400",
+    "35mm": "6.5",
+    "120": "6.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Ilfotec DD",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+4",
+    "ASA/ISO": "320",
+    "35mm": "9",
+    "120": "9",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Ilfotec HC",
+    "Dilution": "1+31",
+    "ASA/ISO": "400",
+    "35mm": "6",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Microphen",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Neofin Blue",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "12",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "400",
+    "35mm": "5",
+    "120": "5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "400",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Spur TRX 2000",
+    "Dilution": "1+30",
+    "ASA/ISO": "400",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "TMax Dev",
+    "Dilution": "1+4",
+    "ASA/ISO": "400",
+    "35mm": "5",
+    "120": "5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "TMax RS",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "XT-3",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "6.5",
+    "120": "6.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "XT-3",
+    "Dilution": "1+3",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "13",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "6.5",
+    "120": "6.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "8.25",
+    "120": "8.25",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Lomo Lady Grey",
+    "Developer": "Xtol",
+    "Dilution": "1+3",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "13",
+    "Sheet": "",
+    "Temp": "20C"
+  }
+]

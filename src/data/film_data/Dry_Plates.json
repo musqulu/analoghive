@@ -1,0 +1,32 @@
+[
+  {
+    "Film": "Dry Plates",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "2",
+    "35mm": "",
+    "120": "",
+    "Sheet": "5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Dry Plates",
+    "Developer": "510-Pyro",
+    "Dilution": "1+150",
+    "ASA/ISO": "2",
+    "35mm": "",
+    "120": "",
+    "Sheet": "5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Dry Plates",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "2",
+    "35mm": "",
+    "120": "",
+    "Sheet": "5",
+    "Temp": "20C"
+  }
+]

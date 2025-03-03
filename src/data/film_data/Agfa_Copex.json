@@ -1,0 +1,302 @@
+[
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Bellini Hydrofen",
+    "Dilution": "1+45",
+    "ASA/ISO": "12",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "25",
+    "35mm": "5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "25",
+    "35mm": "5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Studional",
+    "Dilution": "1+45",
+    "ASA/ISO": "12",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "510-Pyro",
+    "Dilution": "1+300",
+    "ASA/ISO": "50",
+    "35mm": "60",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "510-Pyro",
+    "Dilution": "1+300",
+    "ASA/ISO": "64",
+    "35mm": "20",
+    "120": "20",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Caffenol LC+C",
+    "Dilution": "stock",
+    "ASA/ISO": "64",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "F76+",
+    "Dilution": "1+19",
+    "ASA/ISO": "50",
+    "35mm": "9",
+    "120": "9",
+    "Sheet": "9",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "HC-110",
+    "Dilution": "1+31",
+    "ASA/ISO": "50",
+    "35mm": "",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "HC-110",
+    "Dilution": "1+80",
+    "ASA/ISO": "50",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "POTA",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "17",
+    "120": "17",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Rodinal",
+    "Dilution": "1+100",
+    "ASA/ISO": "50",
+    "35mm": "18",
+    "120": "18",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur Dokuspeed SL",
+    "Dilution": "25+10+215",
+    "ASA/ISO": "25",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur Dokuspeed SL",
+    "Dilution": "25+10+215",
+    "ASA/ISO": "32",
+    "35mm": "",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur Dokuspeed SL",
+    "Dilution": "50+15+185",
+    "ASA/ISO": "32",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur Dokuspeed SL",
+    "Dilution": "25+10+215",
+    "ASA/ISO": "40",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur Dokuspeed SL",
+    "Dilution": "25+5+220",
+    "ASA/ISO": "40",
+    "35mm": "",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur Dokuspeed SL",
+    "Dilution": "25+5+220",
+    "ASA/ISO": "50",
+    "35mm": "",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur Dokuspeed SL",
+    "Dilution": "25+5+220",
+    "ASA/ISO": "50",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur Dokuspeed SL-N",
+    "Dilution": "9+9+282",
+    "ASA/ISO": "12",
+    "35mm": "9",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur Dokuspeed SL-N",
+    "Dilution": "12+6+282",
+    "ASA/ISO": "25",
+    "35mm": "",
+    "120": "10.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur Dokuspeed SL-N",
+    "Dilution": "12+6+282",
+    "ASA/ISO": "25",
+    "35mm": "11.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur Dokuspeed SL-N",
+    "Dilution": "12+6+282",
+    "ASA/ISO": "50",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "26C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur Dokuspeed SL-N",
+    "Dilution": "12+9+279",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "28C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur Dokuspeed SL-N",
+    "Dilution": "12+6+282",
+    "ASA/ISO": "100",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "28C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur HRX",
+    "Dilution": "1+35",
+    "ASA/ISO": "20",
+    "35mm": "11.5",
+    "120": "11.5",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur HRX",
+    "Dilution": "1+35",
+    "ASA/ISO": "25",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "28C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Spur Modular UR",
+    "Dilution": "1+5",
+    "ASA/ISO": "50",
+    "35mm": "5",
+    "120": "5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Ultrafin",
+    "Dilution": "1+10",
+    "ASA/ISO": "100",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Agfa Copex",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "5.5",
+    "120": "5.5",
+    "Sheet": "",
+    "Temp": "24C"
+  }
+]

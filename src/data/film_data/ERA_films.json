@@ -1,0 +1,252 @@
+[
+  {
+    "Film": "ERA films",
+    "Developer": "Bellini DF2 Duo Step",
+    "Dilution": "stock",
+    "ASA/ISO": "200",
+    "35mm": "3+3",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "Caffenol C",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "D-23",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "6-10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "D-23",
+    "Dilution": "1+2",
+    "ASA/ISO": "100",
+    "35mm": "21",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "200",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "18",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "Diafine",
+    "Dilution": "stock",
+    "ASA/ISO": "200",
+    "35mm": "3+3",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "DiXactol Ultra",
+    "Dilution": "1+7+300",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "",
+    "Sheet": "10",
+    "Temp": "21C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "Eco Pro",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "Emofin",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "5+5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "",
+    "Sheet": "5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "100",
+    "35mm": "6.5-7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "400",
+    "35mm": "",
+    "120": "",
+    "Sheet": "14",
+    "Temp": "21C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "200",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "18",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+4",
+    "ASA/ISO": "100",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "Ilfotec LC29",
+    "Dilution": "1+58",
+    "ASA/ISO": "100",
+    "35mm": "15.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "PMK",
+    "Dilution": "1+2+100",
+    "ASA/ISO": "100",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "Pyrocat-HD",
+    "Dilution": "1+1+100",
+    "ASA/ISO": "50",
+    "35mm": "",
+    "120": "",
+    "Sheet": "9.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "100",
+    "35mm": "14",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "ERA films",
+    "Developer": "Rodinal",
+    "Dilution": "1+100",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "",
+    "Sheet": "60",
+    "Temp": "20C"
+  }
+]

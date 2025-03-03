@@ -1,0 +1,602 @@
+[
+  {
+    "Film": "Ferrania P30",
+    "Developer": "510-Pyro",
+    "Dilution": "1+100",
+    "ASA/ISO": "32",
+    "35mm": "",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "510-Pyro",
+    "Dilution": "1+100",
+    "ASA/ISO": "80",
+    "35mm": "13.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Ars-Imago FE",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Atomal 49",
+    "Dilution": "1+2",
+    "ASA/ISO": "64",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Black/White & Green",
+    "Dilution": "1+49",
+    "ASA/ISO": "80",
+    "35mm": "14",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "D-23",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "11",
+    "120": "",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "13.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "D-76",
+    "Dilution": "1+3",
+    "ASA/ISO": "80",
+    "35mm": "30",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "D-96",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "D-96",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Eco Pro",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Eco Pro",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Eco Pro",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Eco Pro",
+    "Dilution": "1+3",
+    "ASA/ISO": "80",
+    "35mm": "16",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "FF No 1 Monobath",
+    "Dilution": "1+50",
+    "ASA/ISO": "80",
+    "35mm": "6",
+    "120": "",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "80",
+    "35mm": "5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "HC-110",
+    "Dilution": "H",
+    "ASA/ISO": "80",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "11",
+    "120": "",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "13.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "ID-11",
+    "Dilution": "1+3",
+    "ASA/ISO": "80",
+    "35mm": "30",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Ilfosol 3",
+    "Dilution": "1+9",
+    "ASA/ISO": "80",
+    "35mm": "6",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Ilfotec DD",
+    "Dilution": "1+4",
+    "ASA/ISO": "80",
+    "35mm": "11",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+5",
+    "ASA/ISO": "50",
+    "35mm": "7.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+4",
+    "ASA/ISO": "80",
+    "35mm": "10.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+6",
+    "ASA/ISO": "80",
+    "35mm": "15",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20.5C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Microdol-X",
+    "Dilution": "1+3",
+    "ASA/ISO": "80",
+    "35mm": "15",
+    "120": "",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Microphen",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "8.75",
+    "120": "8.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Microphen",
+    "Dilution": "1+3",
+    "ASA/ISO": "80",
+    "35mm": "17",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Nucleol BF200",
+    "Dilution": "10+7.5+982.5*",
+    "ASA/ISO": "64",
+    "35mm": "60",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Paranol S",
+    "Dilution": "1+50",
+    "ASA/ISO": "80",
+    "35mm": "14",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "POTA",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "11",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Promicrol",
+    "Dilution": "1+14",
+    "ASA/ISO": "50",
+    "35mm": "8.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20.5C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Promicrol",
+    "Dilution": "1+9",
+    "ASA/ISO": "80",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "25",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "7",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "80",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "80",
+    "35mm": "14",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Rodinal",
+    "Dilution": "1+80",
+    "ASA/ISO": "80",
+    "35mm": "16.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "19C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Rodinal",
+    "Dilution": "1+100",
+    "ASA/ISO": "80",
+    "35mm": "60",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Rollei Supergrain",
+    "Dilution": "1+12",
+    "ASA/ISO": "80",
+    "35mm": "7.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Silvermax",
+    "Dilution": "1+29",
+    "ASA/ISO": "50",
+    "35mm": "8.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Silvermax",
+    "Dilution": "1+29",
+    "ASA/ISO": "80",
+    "35mm": "11",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "TMax Dev",
+    "Dilution": "1+4",
+    "ASA/ISO": "80",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "TMax Dev",
+    "Dilution": "1+6",
+    "ASA/ISO": "80",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "XT-3",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "XT-3",
+    "Dilution": "1+3",
+    "ASA/ISO": "80",
+    "35mm": "16",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ferrania P30",
+    "Developer": "Xtol",
+    "Dilution": "1+3",
+    "ASA/ISO": "80",
+    "35mm": "16",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  }
+]

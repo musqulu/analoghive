@@ -1,0 +1,572 @@
+[
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "510-Pyro",
+    "Dilution": "1+100",
+    "ASA/ISO": "200",
+    "35mm": "9.75",
+    "120": "9.75",
+    "Sheet": "9.75",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Amaloco AM74",
+    "Dilution": "1+7",
+    "ASA/ISO": "200",
+    "35mm": "5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Amaloco AM74",
+    "Dilution": "1+7",
+    "ASA/ISO": "400",
+    "35mm": "7.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Bellini DF2 Duo Step",
+    "Dilution": "stock",
+    "ASA/ISO": "320",
+    "35mm": "5+5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "D-19",
+    "Dilution": "stock",
+    "ASA/ISO": "n/a",
+    "35mm": "6",
+    "120": "",
+    "Sheet": "5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "n/a",
+    "35mm": "8.5-11",
+    "120": "",
+    "Sheet": "9.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Diafine",
+    "Dilution": "stock",
+    "ASA/ISO": "320",
+    "35mm": "5+5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Eco Pro",
+    "Dilution": "stock",
+    "ASA/ISO": "n/a",
+    "35mm": "5.5-9",
+    "120": "",
+    "Sheet": "5.5-9",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Eco Pro",
+    "Dilution": "1+1",
+    "ASA/ISO": "n/a",
+    "35mm": "8-12.5",
+    "120": "",
+    "Sheet": "8-12.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Eco Pro",
+    "Dilution": "1+2",
+    "ASA/ISO": "n/a",
+    "35mm": "12.5",
+    "120": "",
+    "Sheet": "12.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Eco Pro",
+    "Dilution": "1+3",
+    "ASA/ISO": "n/a",
+    "35mm": "17",
+    "120": "",
+    "Sheet": "17",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Emofin",
+    "Dilution": "stock",
+    "ASA/ISO": "n/a",
+    "35mm": "5.5+5.5",
+    "120": "",
+    "Sheet": "5.5+5.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "FD10",
+    "Dilution": "1+9",
+    "ASA/ISO": "n/a",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "12",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "FX-39",
+    "Dilution": "1+9",
+    "ASA/ISO": "n/a",
+    "35mm": "11",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "FX-39",
+    "Dilution": "1+19",
+    "ASA/ISO": "n/a",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "FX-55",
+    "Dilution": "1+9",
+    "ASA/ISO": "n/a",
+    "35mm": "16",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "n/a",
+    "35mm": "5",
+    "120": "",
+    "Sheet": "4.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "n/a",
+    "35mm": "8.5-11",
+    "120": "",
+    "Sheet": "9.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+4",
+    "ASA/ISO": "n/a",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Ilfotec HC",
+    "Dilution": "1+31",
+    "ASA/ISO": "n/a",
+    "35mm": "5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Microdol-X",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "10.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Microdol-X",
+    "Dilution": "1+3",
+    "ASA/ISO": "800",
+    "35mm": "21",
+    "120": "",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Microphen",
+    "Dilution": "1+1",
+    "ASA/ISO": "64",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Neofin Blue",
+    "Dilution": "stock",
+    "ASA/ISO": "n/a",
+    "35mm": "5",
+    "120": "",
+    "Sheet": "5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Nucleol BF200",
+    "Dilution": "20+15+965",
+    "ASA/ISO": "50",
+    "35mm": "9.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Ornano Gradual ST20",
+    "Dilution": "1+9",
+    "ASA/ISO": "100",
+    "35mm": "11",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Perceptol",
+    "Dilution": "stock",
+    "ASA/ISO": "n/a",
+    "35mm": "15",
+    "120": "",
+    "Sheet": "15",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Perceptol",
+    "Dilution": "1+2",
+    "ASA/ISO": "50",
+    "35mm": "13.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "PMK",
+    "Dilution": "1+2+100",
+    "ASA/ISO": "n/a",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "12",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "PMK",
+    "Dilution": "1+2+100",
+    "ASA/ISO": "320",
+    "35mm": "17.75",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Promicrol",
+    "Dilution": "1+9",
+    "ASA/ISO": "n/a",
+    "35mm": "11-13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Promicrol",
+    "Dilution": "1+9",
+    "ASA/ISO": "n/a",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Promicrol",
+    "Dilution": "1+14",
+    "ASA/ISO": "n/a",
+    "35mm": "16-19",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Promicrol",
+    "Dilution": "1+14",
+    "ASA/ISO": "n/a",
+    "35mm": "11",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "n/a",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "9",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "n/a",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "12",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "400",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "1600",
+    "35mm": "20",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Sprint Standard",
+    "Dilution": "1+4",
+    "ASA/ISO": "n/a",
+    "35mm": "11.5",
+    "120": "",
+    "Sheet": "11.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Sprint Standard",
+    "Dilution": "2+8",
+    "ASA/ISO": "n/a",
+    "35mm": "7.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Suprol",
+    "Dilution": "1+9",
+    "ASA/ISO": "n/a",
+    "35mm": "4.75",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Suprol",
+    "Dilution": "1+19",
+    "ASA/ISO": "n/a",
+    "35mm": "5.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "TMax Dev",
+    "Dilution": "1+4",
+    "ASA/ISO": "n/a",
+    "35mm": "4-8",
+    "120": "",
+    "Sheet": "4-8",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "TMax Dev",
+    "Dilution": "1+4",
+    "ASA/ISO": "50",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "TMax Dev",
+    "Dilution": "1+4",
+    "ASA/ISO": "2000",
+    "35mm": "5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Ultrafin",
+    "Dilution": "1+10",
+    "ASA/ISO": "n/a",
+    "35mm": "5",
+    "120": "",
+    "Sheet": "5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Ultrafin",
+    "Dilution": "1+20",
+    "ASA/ISO": "n/a",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "13",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "XT-3",
+    "Dilution": "stock",
+    "ASA/ISO": "n/a",
+    "35mm": "5.5-9",
+    "120": "",
+    "Sheet": "5.5-9",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "n/a",
+    "35mm": "8-12.5",
+    "120": "",
+    "Sheet": "8-12.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "XT-3",
+    "Dilution": "1+2",
+    "ASA/ISO": "n/a",
+    "35mm": "12.5",
+    "120": "",
+    "Sheet": "12.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "XT-3",
+    "Dilution": "1+3",
+    "ASA/ISO": "n/a",
+    "35mm": "17",
+    "120": "",
+    "Sheet": "17",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "n/a",
+    "35mm": "5.5-9",
+    "120": "",
+    "Sheet": "5.5-9",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "n/a",
+    "35mm": "8-12.5",
+    "120": "",
+    "Sheet": "8-12.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Xtol",
+    "Dilution": "1+2",
+    "ASA/ISO": "n/a",
+    "35mm": "12.5",
+    "120": "",
+    "Sheet": "12.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Kodak HIE Infrared",
+    "Developer": "Xtol",
+    "Dilution": "1+3",
+    "ASA/ISO": "n/a",
+    "35mm": "17",
+    "120": "",
+    "Sheet": "17",
+    "Temp": "20C"
+  }
+]

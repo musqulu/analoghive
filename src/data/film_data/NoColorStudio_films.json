@@ -1,0 +1,172 @@
+[
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "FD10",
+    "Dilution": "1+9",
+    "ASA/ISO": "100",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "Microphen",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "8.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "100",
+    "35mm": "13.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "5",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "5",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "Ilford HC",
+    "Dilution": "1+15",
+    "ASA/ISO": "6",
+    "35mm": "5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "Ilfotec HC",
+    "Dilution": "1+31",
+    "ASA/ISO": "6",
+    "35mm": "8.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "Microphen",
+    "Dilution": "stock",
+    "ASA/ISO": "5",
+    "35mm": "9.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "Perceptol",
+    "Dilution": "stock",
+    "ASA/ISO": "5",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "6",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "5",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "990",
+    "35mm": "9.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "990",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "990",
+    "35mm": "11",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "NoColorStudio films",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "990",
+    "35mm": "11",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  }
+]

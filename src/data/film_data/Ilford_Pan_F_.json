@@ -1,0 +1,2522 @@
+[
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "510-Pyro",
+    "Dilution": "1+100",
+    "ASA/ISO": "32",
+    "35mm": "11.5",
+    "120": "11.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "510-Pyro",
+    "Dilution": "1+100",
+    "ASA/ISO": "50",
+    "35mm": "8.5",
+    "120": "8.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "510-Pyro",
+    "Dilution": "1+100",
+    "ASA/ISO": "50",
+    "35mm": "6.5",
+    "120": "6.5",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "ACU-1",
+    "Dilution": "1+10",
+    "ASA/ISO": "50",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "ACU-1",
+    "Dilution": "1+10",
+    "ASA/ISO": "64",
+    "35mm": "6.5",
+    "120": "6.5",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Acufine",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "3.5",
+    "120": "3.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Acufine",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "5",
+    "120": "4.5",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Acurol-N",
+    "Dilution": "1+70",
+    "ASA/ISO": "12",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Acurol-N",
+    "Dilution": "1+100",
+    "ASA/ISO": "16",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Acurol-N",
+    "Dilution": "1+100",
+    "ASA/ISO": "20",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Acurol-N",
+    "Dilution": "1+100",
+    "ASA/ISO": "25",
+    "35mm": "20",
+    "120": "20",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Acurol-N",
+    "Dilution": "1+100",
+    "ASA/ISO": "25",
+    "35mm": "30",
+    "120": "30",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Acurol-N",
+    "Dilution": "1+100",
+    "ASA/ISO": "32",
+    "35mm": "27",
+    "120": "27",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Acurol-N",
+    "Dilution": "1+100",
+    "ASA/ISO": "40",
+    "35mm": "25",
+    "120": "25",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Acurol-N",
+    "Dilution": "1+100",
+    "ASA/ISO": "40",
+    "35mm": "27",
+    "120": "27",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Acurol-N",
+    "Dilution": "1+100",
+    "ASA/ISO": "50",
+    "35mm": "27",
+    "120": "27",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Adox HR-DEV",
+    "Dilution": "1+49",
+    "ASA/ISO": "25",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "ADX II",
+    "Dilution": "1+24",
+    "ASA/ISO": "25",
+    "35mm": "5",
+    "120": "5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Amaloco AM74",
+    "Dilution": "1+7",
+    "ASA/ISO": "50",
+    "35mm": "3",
+    "120": "3",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Amaloco AM74",
+    "Dilution": "1+7",
+    "ASA/ISO": "100",
+    "35mm": "3.5",
+    "120": "3.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Arista® Liquid",
+    "Dilution": "1+14",
+    "ASA/ISO": "50",
+    "35mm": "5.5",
+    "120": "5.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ars-Imago FD",
+    "Dilution": "1+39",
+    "ASA/ISO": "50",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ars-Imago FE",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "6.5",
+    "120": "6.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Atomal 49",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "7.5",
+    "120": "7.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Bellini DF2 Duo Step",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "3+3",
+    "120": "3+3",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Bellini DF2 Duo Step",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "3+3",
+    "120": "3+3",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Bellini Hydrofen",
+    "Dilution": "1+15",
+    "ASA/ISO": "25",
+    "35mm": "3",
+    "120": "3",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Bergger Superfine",
+    "Dilution": "1+4",
+    "ASA/ISO": "25",
+    "35mm": "12",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Black/White & Green",
+    "Dilution": "1+49",
+    "ASA/ISO": "50",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "D-19",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "5.5",
+    "120": "5.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "D-23",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "6.5",
+    "120": "6.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "D-23",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "8.5",
+    "120": "8.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "D-23",
+    "Dilution": "1+3",
+    "ASA/ISO": "50",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "12",
+    "35mm": "4",
+    "120": "4",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "D-76",
+    "Dilution": "1+3",
+    "ASA/ISO": "12",
+    "35mm": "9",
+    "120": "9",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "25",
+    "35mm": "4.5",
+    "120": "4.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "25",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "D-76",
+    "Dilution": "1+3",
+    "ASA/ISO": "25",
+    "35mm": "12.5",
+    "120": "12.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "6.5",
+    "120": "6.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "8.5",
+    "120": "8.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "D-76",
+    "Dilution": "1+3",
+    "ASA/ISO": "50",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Diafine",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "3+3",
+    "120": "3+3",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Diafine",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "3+3",
+    "120": "3+3",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "DiXactol Ultra",
+    "Dilution": "1+7+300",
+    "ASA/ISO": "50",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "DK-50",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "5",
+    "120": "5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "DK-50",
+    "Dilution": "1+3",
+    "ASA/ISO": "50",
+    "35mm": "9",
+    "120": "9",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "stock",
+    "ASA/ISO": "25",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "1+1",
+    "ASA/ISO": "25",
+    "35mm": "6.75",
+    "120": "6.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "1+2",
+    "ASA/ISO": "25",
+    "35mm": "8.75",
+    "120": "8.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "1+3",
+    "ASA/ISO": "25",
+    "35mm": "10.5",
+    "120": "10.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "7.75",
+    "120": "7.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "1+2",
+    "ASA/ISO": "50",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "1+3",
+    "ASA/ISO": "50",
+    "35mm": "12",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "9.5",
+    "120": "9.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "1+2",
+    "ASA/ISO": "100",
+    "35mm": "11.5",
+    "120": "11.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "1+3",
+    "ASA/ISO": "100",
+    "35mm": "13.5",
+    "120": "13.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "stock",
+    "ASA/ISO": "200",
+    "35mm": "9",
+    "120": "9",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "1+1",
+    "ASA/ISO": "200",
+    "35mm": "11.25",
+    "120": "11.25",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "1+2",
+    "ASA/ISO": "200",
+    "35mm": "13.25",
+    "120": "13.25",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "1+3",
+    "ASA/ISO": "200",
+    "35mm": "15.75",
+    "120": "15.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "13",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "1+2",
+    "ASA/ISO": "400",
+    "35mm": "15.5",
+    "120": "15.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Eco Pro",
+    "Dilution": "1+3",
+    "ASA/ISO": "400",
+    "35mm": "18.5",
+    "120": "18.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Emofin",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "4+4",
+    "120": "4+4",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "F76+",
+    "Dilution": "1+14",
+    "ASA/ISO": "50",
+    "35mm": "5.5",
+    "120": "5.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "FA-1027",
+    "Dilution": "1+14",
+    "ASA/ISO": "50",
+    "35mm": "5",
+    "120": "5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "FD10",
+    "Dilution": "1+9",
+    "ASA/ISO": "50",
+    "35mm": "4",
+    "120": "4",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "FD10",
+    "Dilution": "1+14",
+    "ASA/ISO": "50",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Finol",
+    "Dilution": "1+1+100",
+    "ASA/ISO": "40",
+    "35mm": "8.5",
+    "120": "8.5",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Foma W-17 Hydrofen",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "7.5",
+    "120": "7.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Foma W-17 Hydrofen",
+    "Dilution": "1+3",
+    "ASA/ISO": "50",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Fomadon Excel",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "7.5",
+    "120": "7.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Fomadon Excel",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "10.5",
+    "120": "10.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Fomadon R09",
+    "Dilution": "1+25",
+    "ASA/ISO": "12",
+    "35mm": "1.75",
+    "120": "1.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Fomadon R09",
+    "Dilution": "1+25",
+    "ASA/ISO": "50",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Fomadon R09",
+    "Dilution": "1+50",
+    "ASA/ISO": "50",
+    "35mm": "12",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "FX-19",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "FX-37",
+    "Dilution": "1+3",
+    "ASA/ISO": "80",
+    "35mm": "4",
+    "120": "4",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "FX-39",
+    "Dilution": "1+9",
+    "ASA/ISO": "50",
+    "35mm": "5",
+    "120": "5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "FX-39",
+    "Dilution": "1+19",
+    "ASA/ISO": "50",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "FX-4",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "",
+    "120": "#",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "FX-55",
+    "Dilution": "1+9",
+    "ASA/ISO": "50",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "GSD-10",
+    "Dilution": "1+5",
+    "ASA/ISO": "50",
+    "35mm": "6.5",
+    "120": "6.5",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "GSD-10",
+    "Dilution": "1+10",
+    "ASA/ISO": "200",
+    "35mm": "60",
+    "120": "60",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "50",
+    "35mm": "4",
+    "120": "4",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "HC-110",
+    "Dilution": "E",
+    "ASA/ISO": "50",
+    "35mm": "5.5",
+    "120": "5.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "HC-110",
+    "Dilution": "F",
+    "ASA/ISO": "50",
+    "35mm": "9.5",
+    "120": "9.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "HC-110",
+    "Dilution": "F",
+    "ASA/ISO": "100",
+    "35mm": "11.5",
+    "120": "11.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "HC-110",
+    "Dilution": "D",
+    "ASA/ISO": "125",
+    "35mm": "9",
+    "120": "9",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Hypercat",
+    "Dilution": "1+3+200",
+    "ASA/ISO": "50",
+    "35mm": "9.75",
+    "120": "9.75",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Hypercat",
+    "Dilution": "2+3+400",
+    "ASA/ISO": "50",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Hypercat",
+    "Dilution": "2+3+500",
+    "ASA/ISO": "50",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "12",
+    "35mm": "4",
+    "120": "4",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "ID-11",
+    "Dilution": "1+3",
+    "ASA/ISO": "12",
+    "35mm": "9",
+    "120": "9",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "25",
+    "35mm": "4.5",
+    "120": "4.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "25",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "ID-11",
+    "Dilution": "1+3",
+    "ASA/ISO": "25",
+    "35mm": "12.5",
+    "120": "12.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "6.5",
+    "120": "6.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "8.5",
+    "120": "8.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "ID-11",
+    "Dilution": "1+3",
+    "ASA/ISO": "50",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ilfosol 3",
+    "Dilution": "1+14",
+    "ASA/ISO": "50",
+    "35mm": "4.5",
+    "120": "4.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ilfotec DD",
+    "Dilution": "stock",
+    "ASA/ISO": "25",
+    "35mm": "4.5",
+    "120": "4.5",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ilfotec DD",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ilfotec DD",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "5.5",
+    "120": "5.5",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+4",
+    "ASA/ISO": "25",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+4",
+    "ASA/ISO": "50",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+4",
+    "ASA/ISO": "50",
+    "35mm": "5",
+    "120": "5",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+4",
+    "ASA/ISO": "100",
+    "35mm": "9",
+    "120": "9",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+4",
+    "ASA/ISO": "100",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ilfotec HC",
+    "Dilution": "1+31",
+    "ASA/ISO": "50",
+    "35mm": "4",
+    "120": "4",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ilfotec HC",
+    "Dilution": "1+47",
+    "ASA/ISO": "50",
+    "35mm": "5.5",
+    "120": "5.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ilfotec LC29",
+    "Dilution": "1+19",
+    "ASA/ISO": "50",
+    "35mm": "4",
+    "120": "4",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ilfotec LC29",
+    "Dilution": "1+29",
+    "ASA/ISO": "50",
+    "35mm": "5.5",
+    "120": "5.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Marathon",
+    "Dilution": "1+9",
+    "ASA/ISO": "50",
+    "35mm": "4.25",
+    "120": "4.25",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Microdol-X",
+    "Dilution": "stock",
+    "ASA/ISO": "25",
+    "35mm": "12",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Microdol-X",
+    "Dilution": "1+3",
+    "ASA/ISO": "25",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Microdol-X",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Microdol-X",
+    "Dilution": "1+3",
+    "ASA/ISO": "50",
+    "35mm": "18",
+    "120": "18",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Microphen",
+    "Dilution": "stock",
+    "ASA/ISO": "25",
+    "35mm": "4.5",
+    "120": "4.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Microphen",
+    "Dilution": "1+1",
+    "ASA/ISO": "25",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Microphen",
+    "Dilution": "1+3",
+    "ASA/ISO": "25",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Microphen",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "4.5",
+    "120": "4.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Microphen",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Microphen",
+    "Dilution": "1+3",
+    "ASA/ISO": "50",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Microphen",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Microphen",
+    "Dilution": "stock",
+    "ASA/ISO": "200",
+    "35mm": "12",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Mocon",
+    "Dilution": "1+64",
+    "ASA/ISO": "50",
+    "35mm": "12.25",
+    "120": "12.25",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Moersch eco",
+    "Dilution": "2+1+70",
+    "ASA/ISO": "32",
+    "35mm": "9.5",
+    "120": "9.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Neofin Blue",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "4.5",
+    "120": "4.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Neofin Blue",
+    "Dilution": "1+5",
+    "ASA/ISO": "100",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Neofin Blue",
+    "Dilution": "1+9",
+    "ASA/ISO": "100",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Neopress HC",
+    "Dilution": "1+15",
+    "ASA/ISO": "50",
+    "35mm": "2.5",
+    "120": "2.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Neopress HC",
+    "Dilution": "1+31",
+    "ASA/ISO": "50",
+    "35mm": "3.5",
+    "120": "3.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Neopress HC",
+    "Dilution": "1+31",
+    "ASA/ISO": "50",
+    "35mm": "4.5",
+    "120": "4.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Nucleol BF200",
+    "Dilution": "20+15+965",
+    "ASA/ISO": "50",
+    "35mm": "5",
+    "120": "5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ornano Gradual ST20",
+    "Dilution": "1+9",
+    "ASA/ISO": "50",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ornano Gradual ST20",
+    "Dilution": "1+9",
+    "ASA/ISO": "100",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Paranol S",
+    "Dilution": "1+25",
+    "ASA/ISO": "50",
+    "35mm": "17",
+    "120": "17",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Paranol S",
+    "Dilution": "1+50",
+    "ASA/ISO": "50",
+    "35mm": "36",
+    "120": "36",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Parvofin",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "4",
+    "120": "4",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Perceptol",
+    "Dilution": "stock",
+    "ASA/ISO": "25",
+    "35mm": "9",
+    "120": "9",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Perceptol",
+    "Dilution": "1+1",
+    "ASA/ISO": "25",
+    "35mm": "10.5",
+    "120": "10.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Perceptol",
+    "Dilution": "1+2",
+    "ASA/ISO": "25",
+    "35mm": "16",
+    "120": "16",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Perceptol",
+    "Dilution": "1+3",
+    "ASA/ISO": "25",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Perceptol",
+    "Dilution": "1+2",
+    "ASA/ISO": "32",
+    "35mm": "13.5",
+    "120": "13.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Perceptol",
+    "Dilution": "1+3",
+    "ASA/ISO": "32",
+    "35mm": "17",
+    "120": "17",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Perceptol",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "14",
+    "120": "14",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Perceptol",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Perceptol",
+    "Dilution": "1+3",
+    "ASA/ISO": "50",
+    "35mm": "17",
+    "120": "17",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "PMK",
+    "Dilution": "1+2+100",
+    "ASA/ISO": "32",
+    "35mm": "9",
+    "120": "9",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "PMK",
+    "Dilution": "1+2+100",
+    "ASA/ISO": "32",
+    "35mm": "7.5",
+    "120": "7.5",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "PMK",
+    "Dilution": "1+2+100",
+    "ASA/ISO": "50",
+    "35mm": "7.5",
+    "120": "7.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Promicrol",
+    "Dilution": "1+9",
+    "ASA/ISO": "75",
+    "35mm": "5",
+    "120": "5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Promicrol",
+    "Dilution": "1+14",
+    "ASA/ISO": "75",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Promicrol",
+    "Dilution": "1+9",
+    "ASA/ISO": "100",
+    "35mm": "5",
+    "120": "5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Promicrol",
+    "Dilution": "1+14",
+    "ASA/ISO": "100",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Pyrocat-M",
+    "Dilution": "1+1+100",
+    "ASA/ISO": "50",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "25",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rodinal",
+    "Dilution": "1+100",
+    "ASA/ISO": "25",
+    "35mm": "15",
+    "120": "15",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rodinal",
+    "Dilution": "1+24",
+    "ASA/ISO": "40",
+    "35mm": "5",
+    "120": "5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rodinal",
+    "Dilution": "1+19",
+    "ASA/ISO": "50",
+    "35mm": "5",
+    "120": "5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "50",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "50",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rodinal",
+    "Dilution": "1+80",
+    "ASA/ISO": "50",
+    "35mm": "17",
+    "120": "17",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rodinal",
+    "Dilution": "1+100",
+    "ASA/ISO": "50",
+    "35mm": "60",
+    "120": "60",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "64",
+    "35mm": "12",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "80",
+    "35mm": "13.5",
+    "120": "13.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "100",
+    "35mm": "12",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rodinal",
+    "Dilution": "1+150",
+    "ASA/ISO": "100",
+    "35mm": "60",
+    "120": "60",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "200",
+    "35mm": "12.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "800",
+    "35mm": "25",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "800",
+    "35mm": "25",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rollei D74",
+    "Dilution": "1+15",
+    "ASA/ISO": "50",
+    "35mm": "5.5",
+    "120": "5.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Rollei RLS Low Speed",
+    "Dilution": "1+4",
+    "ASA/ISO": "25",
+    "35mm": "12",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Silberra Ascorol",
+    "Dilution": "1+29",
+    "ASA/ISO": "50",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Sprint Standard",
+    "Dilution": "1+9",
+    "ASA/ISO": "50",
+    "35mm": "8.5",
+    "120": "8.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Spur HRX",
+    "Dilution": "1+20",
+    "ASA/ISO": "32",
+    "35mm": "8.5",
+    "120": "8.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Spur NHC",
+    "Dilution": "1+19",
+    "ASA/ISO": "50",
+    "35mm": "7.5",
+    "120": "7.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Spur NHC",
+    "Dilution": "1+15",
+    "ASA/ISO": "64",
+    "35mm": "13",
+    "120": "13",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Spur NHC",
+    "Dilution": "1+19",
+    "ASA/ISO": "64",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Spur SD 2525",
+    "Dilution": "1+15",
+    "ASA/ISO": "32",
+    "35mm": "4.5",
+    "120": "4.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Spur SHADOWmax",
+    "Dilution": "1+1+48",
+    "ASA/ISO": "25",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Spur SHADOWmax",
+    "Dilution": "1+2+38",
+    "ASA/ISO": "40",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Spur SHADOWmax",
+    "Dilution": "5+18+157",
+    "ASA/ISO": "50",
+    "35mm": "9",
+    "120": "9",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Spur SLD",
+    "Dilution": "1+30",
+    "ASA/ISO": "40",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Spur SLD",
+    "Dilution": "1+24",
+    "ASA/ISO": "50",
+    "35mm": "3.5-4",
+    "120": "3.5-4",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Spur SLD",
+    "Dilution": "1+14",
+    "ASA/ISO": "80",
+    "35mm": "14",
+    "120": "14",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Spur TRX 2000",
+    "Dilution": "1+49",
+    "ASA/ISO": "25",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Spur UFP",
+    "Dilution": "1+40",
+    "ASA/ISO": "20",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Studional",
+    "Dilution": "1+15",
+    "ASA/ISO": "50",
+    "35mm": "3",
+    "120": "3",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Suprol",
+    "Dilution": "1+19",
+    "ASA/ISO": "50",
+    "35mm": "2.25",
+    "120": "2.25",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Tanol",
+    "Dilution": "1+1+100",
+    "ASA/ISO": "100",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "TMax Dev",
+    "Dilution": "1+4",
+    "ASA/ISO": "50",
+    "35mm": "4",
+    "120": "4",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "TMax Dev",
+    "Dilution": "1+9",
+    "ASA/ISO": "80",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "TMax Dev",
+    "Dilution": "1+4",
+    "ASA/ISO": "125",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "TMax RS",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "4",
+    "120": "4",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ultrafin",
+    "Dilution": "1+10",
+    "ASA/ISO": "50",
+    "35mm": "3",
+    "120": "3",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ultrafin",
+    "Dilution": "1+20",
+    "ASA/ISO": "50",
+    "35mm": "5.5",
+    "120": "5.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ultrafin",
+    "Dilution": "1+30",
+    "ASA/ISO": "50",
+    "35mm": "9",
+    "120": "9",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ultrafin T-Plus",
+    "Dilution": "1+4",
+    "ASA/ISO": "50",
+    "35mm": "11.25",
+    "120": "11.25",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ultrafine Endurance",
+    "Dilution": "1+9",
+    "ASA/ISO": "50",
+    "35mm": "4.25",
+    "120": "4.25",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ultrafine Liquid",
+    "Dilution": "1+2",
+    "ASA/ISO": "50",
+    "35mm": "6.5",
+    "120": "6.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ultrafine Liquid",
+    "Dilution": "1+4",
+    "ASA/ISO": "50",
+    "35mm": "10.5",
+    "120": "10.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Ultrafine Powder",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "10.5",
+    "120": "10.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Uncle Mort's",
+    "Dilution": "1+9",
+    "ASA/ISO": "50",
+    "35mm": "5",
+    "120": "5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "WD2D+",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Windisch",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "6.75",
+    "120": "6.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "stock",
+    "ASA/ISO": "25",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "25",
+    "35mm": "6.75",
+    "120": "6.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "1+2",
+    "ASA/ISO": "25",
+    "35mm": "8.75",
+    "120": "8.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "1+3",
+    "ASA/ISO": "25",
+    "35mm": "10.5",
+    "120": "10.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "7.75",
+    "120": "7.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "1+2",
+    "ASA/ISO": "50",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "1+3",
+    "ASA/ISO": "50",
+    "35mm": "12",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "9.5",
+    "120": "9.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "1+2",
+    "ASA/ISO": "100",
+    "35mm": "11.5",
+    "120": "11.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "1+3",
+    "ASA/ISO": "100",
+    "35mm": "13.5",
+    "120": "13.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "stock",
+    "ASA/ISO": "200",
+    "35mm": "9",
+    "120": "9",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "200",
+    "35mm": "11.25",
+    "120": "11.25",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "1+2",
+    "ASA/ISO": "200",
+    "35mm": "13.25",
+    "120": "13.25",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "1+3",
+    "ASA/ISO": "200",
+    "35mm": "15.75",
+    "120": "15.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "13",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "1+2",
+    "ASA/ISO": "400",
+    "35mm": "15.5",
+    "120": "15.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "XT-3",
+    "Dilution": "1+3",
+    "ASA/ISO": "400",
+    "35mm": "18.5",
+    "120": "18.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "25",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "25",
+    "35mm": "6.75",
+    "120": "6.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "1+2",
+    "ASA/ISO": "25",
+    "35mm": "8.75",
+    "120": "8.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "1+3",
+    "ASA/ISO": "25",
+    "35mm": "10.5",
+    "120": "10.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "7",
+    "120": "7",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "50",
+    "35mm": "7.75",
+    "120": "7.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "1+2",
+    "ASA/ISO": "50",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "1+3",
+    "ASA/ISO": "50",
+    "35mm": "12",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "9.5",
+    "120": "9.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "1+2",
+    "ASA/ISO": "100",
+    "35mm": "11.5",
+    "120": "11.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "1+3",
+    "ASA/ISO": "100",
+    "35mm": "13.5",
+    "120": "13.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "200",
+    "35mm": "9",
+    "120": "9",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "200",
+    "35mm": "11.25",
+    "120": "11.25",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "1+2",
+    "ASA/ISO": "200",
+    "35mm": "13.25",
+    "120": "13.25",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "1+3",
+    "ASA/ISO": "200",
+    "35mm": "15.75",
+    "120": "15.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "13",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "1+2",
+    "ASA/ISO": "400",
+    "35mm": "15.5",
+    "120": "15.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Ilford Pan F+",
+    "Developer": "Xtol",
+    "Dilution": "1+3",
+    "ASA/ISO": "400",
+    "35mm": "18.5",
+    "120": "18.5",
+    "Sheet": "",
+    "Temp": "20C"
+  }
+]

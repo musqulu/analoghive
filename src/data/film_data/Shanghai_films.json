@@ -1,0 +1,1452 @@
+[
+  {
+    "Film": "Shanghai films",
+    "Developer": "510-Pyro",
+    "Dilution": "1+100",
+    "ASA/ISO": "100",
+    "35mm": "12.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "510-Pyro",
+    "Dilution": "1+100",
+    "ASA/ISO": "100",
+    "35mm": "6",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "510-Pyro",
+    "Dilution": "1+100",
+    "ASA/ISO": "125",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Acufine",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "4",
+    "Sheet": "4",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Acurol-N",
+    "Dilution": "1+60*",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "11.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Adox HR-DEV",
+    "Dilution": "1+35",
+    "ASA/ISO": "160",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Adox M-Q Borax",
+    "Dilution": "stock",
+    "ASA/ISO": "160",
+    "35mm": "7.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Amaloco AM74",
+    "Dilution": "1+19",
+    "ASA/ISO": "50",
+    "35mm": "",
+    "120": "11",
+    "Sheet": "11",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Atomal 49",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "11.5",
+    "Sheet": "11.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Atomal 49",
+    "Dilution": "1+2",
+    "ASA/ISO": "100",
+    "35mm": "18",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Bellini DF2 Duo Step",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "3+3",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Bellini DF2 Duo Step",
+    "Dilution": "stock",
+    "ASA/ISO": "160",
+    "35mm": "",
+    "120": "3+3",
+    "Sheet": "3+3",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Bellini Hydrofen",
+    "Dilution": "1+39",
+    "ASA/ISO": "100",
+    "35mm": "5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Beutler",
+    "Dilution": "1+1+8",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "18",
+    "Sheet": "18",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Beutler",
+    "Dilution": "1+1+10",
+    "ASA/ISO": "100",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Caffenol C",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "10",
+    "Sheet": "10",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Caffenol C-H",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "15",
+    "Sheet": "15",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Caffenol C-L",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "",
+    "120": "75",
+    "Sheet": "75",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Caffenol C-M (rs)",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "20",
+    "Sheet": "20",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-23",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "12",
+    "Sheet": "12",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-23",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-72",
+    "Dilution": "1+4",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "4",
+    "Sheet": "4",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "6-10",
+    "Sheet": "6-10",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "9",
+    "Sheet": "9",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "14",
+    "Sheet": "14",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "14.5",
+    "Sheet": "14.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-76",
+    "Dilution": "1+3",
+    "ASA/ISO": "100",
+    "35mm": "13-14",
+    "120": "24",
+    "Sheet": "24",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "200",
+    "35mm": "",
+    "120": "12.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "",
+    "120": "14",
+    "Sheet": "14",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "",
+    "120": "28",
+    "Sheet": "28",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-96",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "4.5-6",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-96",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Dektol",
+    "Dilution": "1+4",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "14",
+    "Sheet": "14",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Diafine",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "3+3",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Diafine",
+    "Dilution": "stock",
+    "ASA/ISO": "160",
+    "35mm": "",
+    "120": "3+3",
+    "Sheet": "3+3",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "DK-50",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "10",
+    "Sheet": "10",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "DK-50",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "9.5",
+    "Sheet": "9.5",
+    "Temp": "18C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Eco Pro",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "6.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Eco Pro",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "7.5",
+    "Sheet": "7.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Eco Pro",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "7-8",
+    "120": "10",
+    "Sheet": "10",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Eco Pro",
+    "Dilution": "1+2",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "14",
+    "Sheet": "14",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Eco Pro",
+    "Dilution": "1+2",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "20",
+    "Sheet": "20",
+    "Temp": "18C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Eco Pro",
+    "Dilution": "1+3",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "16",
+    "Sheet": "16",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Foma Universal",
+    "Dilution": "1+3",
+    "ASA/ISO": "100",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Fomadon P",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Fomadon R09",
+    "Dilution": "1+50",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "18",
+    "Sheet": "18",
+    "Temp": "19C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "FX-1",
+    "Dilution": "1+1+8",
+    "ASA/ISO": "100",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "FX-39",
+    "Dilution": "1+9",
+    "ASA/ISO": "100",
+    "35mm": "14",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "FX-39",
+    "Dilution": "1+14",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "12",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "HC-110",
+    "Dilution": "J",
+    "ASA/ISO": "80",
+    "35mm": "18",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "HC-110",
+    "Dilution": "1+90",
+    "ASA/ISO": "100",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "HC-110",
+    "Dilution": "A",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "5",
+    "Sheet": "5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "7.5",
+    "Sheet": "7.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "8",
+    "Sheet": "8",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "HC-110",
+    "Dilution": "H",
+    "ASA/ISO": "100",
+    "35mm": "7.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "HC-110",
+    "Dilution": "J",
+    "ASA/ISO": "100",
+    "35mm": "18",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "160",
+    "35mm": "",
+    "120": "9",
+    "Sheet": "9",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "6-10",
+    "Sheet": "6-10",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "9",
+    "Sheet": "9",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "14",
+    "Sheet": "14",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "14.5",
+    "Sheet": "14.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "ID-11",
+    "Dilution": "1+3",
+    "ASA/ISO": "100",
+    "35mm": "13-14",
+    "120": "24",
+    "Sheet": "24",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "",
+    "120": "14",
+    "Sheet": "14",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "",
+    "120": "28",
+    "Sheet": "28",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Ilfosol 3",
+    "Dilution": "1+5",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "6.5",
+    "Sheet": "6.5",
+    "Temp": "23C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Ilfosol 3",
+    "Dilution": "1+9",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "8",
+    "Sheet": "8",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Ilfosol 3",
+    "Dilution": "1+14",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "12",
+    "Sheet": "12",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Ilfosol 3",
+    "Dilution": "1+14",
+    "ASA/ISO": "200",
+    "35mm": "",
+    "120": "18",
+    "Sheet": "18",
+    "Temp": "20.5C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+9",
+    "ASA/ISO": "100",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "23C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+9",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "10",
+    "Sheet": "10",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Ilfotec HC",
+    "Dilution": "1+31",
+    "ASA/ISO": "100",
+    "35mm": "7.75",
+    "120": "7.75",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Ilfotec LC29",
+    "Dilution": "1+19",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "6.5",
+    "Sheet": "6.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Ilfotec LC29",
+    "Dilution": "1+29",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "11",
+    "Sheet": "11",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Microdol-X",
+    "Dilution": "1+2",
+    "ASA/ISO": "100",
+    "35mm": "33",
+    "120": "",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Microphen",
+    "Dilution": "1+3",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "20",
+    "Sheet": "20",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Mocon",
+    "Dilution": "1+64",
+    "ASA/ISO": "100",
+    "35mm": "11",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Obsidian Aqua",
+    "Dilution": "1+500",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "9",
+    "Sheet": "9",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "PCK",
+    "Dilution": "5+10+100",
+    "ASA/ISO": "100",
+    "35mm": "6.5-7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Perceptol",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "14",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "PMK",
+    "Dilution": "1+2+100",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "10",
+    "Sheet": "10",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "PMK",
+    "Dilution": "1+2+100",
+    "ASA/ISO": "100",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Promicrol",
+    "Dilution": "1+14",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "6",
+    "Sheet": "6",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Pyrocat-HD",
+    "Dilution": "1+1+50",
+    "ASA/ISO": "64",
+    "35mm": "",
+    "120": "6.5",
+    "Sheet": "6.5",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Pyrocat-HD",
+    "Dilution": "1+1+100",
+    "ASA/ISO": "100",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Pyrocat-HD",
+    "Dilution": "1+1+200",
+    "ASA/ISO": "100",
+    "35mm": "40",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "25",
+    "35mm": "",
+    "120": "3",
+    "Sheet": "3",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "50",
+    "35mm": "",
+    "120": "6",
+    "Sheet": "6",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "100",
+    "35mm": "6.5",
+    "120": "10",
+    "Sheet": "10",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "100",
+    "35mm": "8-10",
+    "120": "15",
+    "Sheet": "15",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Rodinal",
+    "Dilution": "1+100",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "60",
+    "Sheet": "60",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Rodinal",
+    "Dilution": "1+100",
+    "ASA/ISO": "100",
+    "35mm": "25",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Rodinal",
+    "Dilution": "1+200",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "120",
+    "Sheet": "120",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Rodinal",
+    "Dilution": "1+400",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "480",
+    "Sheet": "480",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "400",
+    "35mm": "",
+    "120": "35",
+    "Sheet": "35",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Rodinal",
+    "Dilution": "1+100",
+    "ASA/ISO": "400",
+    "35mm": "",
+    "120": "120",
+    "Sheet": "120",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Sprint Standard",
+    "Dilution": "1+9",
+    "ASA/ISO": "100",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Sprint Standard",
+    "Dilution": "1+9",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "8",
+    "Sheet": "8",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Spur HRX",
+    "Dilution": "1+17",
+    "ASA/ISO": "80",
+    "35mm": "9.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Spur TRX 2000",
+    "Dilution": "1+35",
+    "ASA/ISO": "160",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Spur UFP",
+    "Dilution": "1+24",
+    "ASA/ISO": "125",
+    "35mm": "7.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "TMax Dev",
+    "Dilution": "1+4",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "7",
+    "Sheet": "8",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "TMax Dev",
+    "Dilution": "1+9",
+    "ASA/ISO": "100",
+    "35mm": "8",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "TMax Dev",
+    "Dilution": "1+40",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "120",
+    "Sheet": "120",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Ultrafin",
+    "Dilution": "1+20",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "8",
+    "Sheet": "8",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Uncle Mort's",
+    "Dilution": "1+14",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "6",
+    "Sheet": "6",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "6.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "XT-3",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "7.5",
+    "Sheet": "7.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "7-8",
+    "120": "10",
+    "Sheet": "10",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "XT-3",
+    "Dilution": "1+2",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "14",
+    "Sheet": "14",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "XT-3",
+    "Dilution": "1+2",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "20",
+    "Sheet": "20",
+    "Temp": "18C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "XT-3",
+    "Dilution": "1+3",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "16",
+    "Sheet": "16",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "6.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "7.5",
+    "Sheet": "7.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "7-8",
+    "120": "10",
+    "Sheet": "10",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "100",
+    "35mm": "5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Xtol",
+    "Dilution": "1+2",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "14",
+    "Sheet": "14",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Xtol",
+    "Dilution": "1+2",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "20",
+    "Sheet": "20",
+    "Temp": "18C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Xtol",
+    "Dilution": "1+3",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "16",
+    "Sheet": "16",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Bellini DF2 Duo Step",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "3+3",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Bellini FX6a Monobath",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "11",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-23",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "9.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "",
+    "120": "22-24",
+    "Sheet": "22-24",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "800",
+    "35mm": "12.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "1600",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Df96 Monobath",
+    "Dilution": "stock",
+    "ASA/ISO": "250",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Diafine",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "3+3",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Eco Pro",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "11-13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "400",
+    "35mm": "6.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "9.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "10",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "9",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "",
+    "120": "22-24",
+    "Sheet": "22-24",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "800",
+    "35mm": "12.5",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "1600",
+    "35mm": "12",
+    "120": "",
+    "Sheet": "",
+    "Temp": "22C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Microphen",
+    "Dilution": "stock",
+    "ASA/ISO": "400",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "400",
+    "35mm": "13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "TMax Dev",
+    "Dilution": "1+4",
+    "ASA/ISO": "400",
+    "35mm": "6",
+    "120": "",
+    "Sheet": "",
+    "Temp": "21C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "11-13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "Shanghai films",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "400",
+    "35mm": "11-13",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  }
+]

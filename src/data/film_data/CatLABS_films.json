@@ -1,0 +1,662 @@
+[
+  {
+    "Film": "CatLABS films",
+    "Developer": "510-Pyro",
+    "Dilution": "1+100",
+    "ASA/ISO": "320",
+    "35mm": "13.5",
+    "120": "13.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Bergger Superfine",
+    "Dilution": "1+4",
+    "ASA/ISO": "100",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "24C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Berspeed",
+    "Dilution": "1+1",
+    "ASA/ISO": "320",
+    "35mm": "8.5",
+    "120": "8.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Black/White & Green",
+    "Dilution": "1+49",
+    "ASA/ISO": "200",
+    "35mm": "12.5",
+    "120": "12.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Black/White & Green",
+    "Dilution": "1+49",
+    "ASA/ISO": "320",
+    "35mm": "13",
+    "120": "13",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "320",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "320",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "1600",
+    "35mm": "10.5",
+    "120": "10.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "1600",
+    "35mm": "14",
+    "120": "14",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "3200",
+    "35mm": "17",
+    "120": "17",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Eco Pro",
+    "Dilution": "stock",
+    "ASA/ISO": "250",
+    "35mm": "7",
+    "120": "",
+    "Sheet": "",
+    "Temp": "25C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Eco Pro",
+    "Dilution": "1+1",
+    "ASA/ISO": "320",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "HC-110",
+    "Dilution": "1+49",
+    "ASA/ISO": "200",
+    "35mm": "10.5",
+    "120": "10.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "HC-110",
+    "Dilution": "H",
+    "ASA/ISO": "320",
+    "35mm": "14",
+    "120": "14",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "320",
+    "35mm": "6",
+    "120": "6",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "320",
+    "35mm": "10",
+    "120": "10",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "1600",
+    "35mm": "10.5",
+    "120": "10.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "1600",
+    "35mm": "14",
+    "120": "14",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "3200",
+    "35mm": "17",
+    "120": "17",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Ilfosol 3",
+    "Dilution": "1+9",
+    "ASA/ISO": "200",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Ilfosol 3",
+    "Dilution": "1+9",
+    "ASA/ISO": "320",
+    "35mm": "6.5",
+    "120": "6.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+4",
+    "ASA/ISO": "200",
+    "35mm": "8",
+    "120": "8",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Ilfotec DD-X",
+    "Dilution": "1+4",
+    "ASA/ISO": "320",
+    "35mm": "13",
+    "120": "13",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "320",
+    "35mm": "9",
+    "120": "9",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "320",
+    "35mm": "19",
+    "120": "19",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Rodinal",
+    "Dilution": "1+20",
+    "ASA/ISO": "1600",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "1600",
+    "35mm": "17",
+    "120": "17",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Sprint Standard",
+    "Dilution": "1+9",
+    "ASA/ISO": "400",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "TMax Dev",
+    "Dilution": "1+4",
+    "ASA/ISO": "320",
+    "35mm": "9.5",
+    "120": "9.5",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "320",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "320",
+    "35mm": "11",
+    "120": "",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "320",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "320",
+    "35mm": "11",
+    "120": "11",
+    "Sheet": "",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "510-Pyro",
+    "Dilution": "1+100",
+    "ASA/ISO": "32",
+    "35mm": "",
+    "120": "13",
+    "Sheet": "13",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "510-Pyro",
+    "Dilution": "1+100",
+    "ASA/ISO": "32",
+    "35mm": "",
+    "120": "11",
+    "Sheet": "11",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "777",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "17",
+    "Sheet": "17",
+    "Temp": "24C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Acurol-N",
+    "Dilution": "1+100",
+    "ASA/ISO": "64",
+    "35mm": "",
+    "120": "24.5",
+    "Sheet": "24.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Bellini DF2 Duo Step",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "4+4",
+    "Sheet": "4+4",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Bellini FX6a Monobath",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "8.5",
+    "Sheet": "8.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "50",
+    "35mm": "",
+    "120": "",
+    "Sheet": "8",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "9.5",
+    "Sheet": "9.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "15",
+    "Sheet": "15",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "D-76",
+    "Dilution": "stock",
+    "ASA/ISO": "320",
+    "35mm": "",
+    "120": "15",
+    "Sheet": "15",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "D-76",
+    "Dilution": "1+1",
+    "ASA/ISO": "800",
+    "35mm": "",
+    "120": "21",
+    "Sheet": "21",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Df96 Monobath",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "3",
+    "Sheet": "3",
+    "Temp": "27C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Diafine",
+    "Dilution": "stock",
+    "ASA/ISO": "100",
+    "35mm": "",
+    "120": "4+4",
+    "Sheet": "4+4",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "FX-55",
+    "Dilution": "1+50",
+    "ASA/ISO": "64",
+    "35mm": "",
+    "120": "",
+    "Sheet": "9.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "HC-110",
+    "Dilution": "B",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "8.75",
+    "Sheet": "8.75",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "9.5",
+    "Sheet": "9.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "14",
+    "Sheet": "14",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "ID-11",
+    "Dilution": "stock",
+    "ASA/ISO": "320",
+    "35mm": "",
+    "120": "15",
+    "Sheet": "15",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "ID-11",
+    "Dilution": "1+1",
+    "ASA/ISO": "800",
+    "35mm": "",
+    "120": "21",
+    "Sheet": "21",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Ilfosol 3",
+    "Dilution": "1+14",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "9",
+    "Sheet": "9",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Ilfotec HC",
+    "Dilution": "1+31",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "9",
+    "Sheet": "9",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "PMK",
+    "Dilution": "1+2+100",
+    "ASA/ISO": "50",
+    "35mm": "",
+    "120": "10",
+    "Sheet": "10",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Pyrocat-HD",
+    "Dilution": "1+1+50",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "7",
+    "Sheet": "7",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "50",
+    "35mm": "",
+    "120": "6.5",
+    "Sheet": "6.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Rodinal",
+    "Dilution": "1+25",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "10",
+    "Sheet": "10",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Rodinal",
+    "Dilution": "1+50",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "15",
+    "Sheet": "15",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Rodinal",
+    "Dilution": "1+100",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "40",
+    "Sheet": "40",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "TMax Dev",
+    "Dilution": "1+4",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "6.75",
+    "Sheet": "6.75",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "XT-3",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "10.5",
+    "Sheet": "10.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "32",
+    "35mm": "",
+    "120": "8.25",
+    "Sheet": "8.25",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "64",
+    "35mm": "",
+    "120": "",
+    "Sheet": "8.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Xtol",
+    "Dilution": "stock",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "7.5",
+    "Sheet": "7.5",
+    "Temp": "20C"
+  },
+  {
+    "Film": "CatLABS films",
+    "Developer": "Xtol",
+    "Dilution": "1+1",
+    "ASA/ISO": "80",
+    "35mm": "",
+    "120": "10.5",
+    "Sheet": "10.5",
+    "Temp": "20C"
+  }
+]
