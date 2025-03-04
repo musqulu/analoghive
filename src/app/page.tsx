@@ -75,11 +75,15 @@ export default function Home() {
     const iso = parseInt(selectedIso);
 
     const times = findDevelopmentTimes(filmId, developerId, selectedFormat);
-    if (times.length === 0) return null;
+    
+    // Filter out times with null ISO values
+    const validTimes = times.filter(time => time.iso !== null);
+    
+    if (validTimes.length === 0) return null;
 
     // For color film, return a single development option
     if (selectedFilmData.type === "Color") {
-      const closestTime = findClosestIsoTime(times, iso);
+      const closestTime = findClosestIsoTime(validTimes, iso);
       if (!closestTime) return null;
       return {
         dilution: closestTime.dilution,
@@ -89,11 +93,11 @@ export default function Home() {
     }
 
     // Filter times to only include exact ISO matches
-    const exactIsoTimes = times.filter(time => time.iso === iso);
+    const exactIsoTimes = validTimes.filter(time => time.iso === iso);
     
     // If no exact matches, fall back to closest ISO
     if (exactIsoTimes.length === 0) {
-      const closestTime = findClosestIsoTime(times, iso);
+      const closestTime = findClosestIsoTime(validTimes, iso);
       if (!closestTime) return null;
       
       return [{
@@ -285,17 +289,21 @@ export default function Home() {
                         if (selectedFilmData && selectedDeveloperData) {
                           const times = findDevelopmentTimes(selectedFilmData.id, selectedDeveloperData.id, selectedFormat);
                           
-                          // Extract unique ISO values that have development times
-                          const availableIsoValues = [...new Set(times.map(time => time.iso))].sort((a, b) => a - b);
+                          // Extract unique ISO values that have development times, filtering out null values
+                          const availableIsoValues = [...new Set(times.filter(time => time.iso !== null).map(time => time.iso))]
+                            .sort((a, b) => (a as number) - (b as number));
                           
                           // If we found ISO values with development times, show only those
                           if (availableIsoValues.length > 0) {
                             return availableIsoValues.map((iso) => (
-                              <SelectItem key={iso} value={iso.toString()}>
+                              <SelectItem key={iso as number} value={(iso as number).toString()}>
                                 {iso}
                               </SelectItem>
                             ));
                           }
+                          
+                          // If no ISO values with development times were found, show a message
+                          return <SelectItem value="" disabled>No ISO values available</SelectItem>;
                         }
                         
                         // Fallback to all ISOs from the film data if no specific times found

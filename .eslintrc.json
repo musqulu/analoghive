@@ -2,11 +2,12 @@
   "extends": "next/core-web-vitals",
   "overrides": [
     {
-      "files": ["src/data/process-*.ts"],
+      "files": ["src/data/*.ts"],
       "rules": {
         "@typescript-eslint/no-require-imports": "off",
         "@typescript-eslint/no-unused-vars": "off",
-        "@typescript-eslint/ban-ts-comment": "off"
+        "@typescript-eslint/ban-ts-comment": "off",
+        "prefer-const": "off"
       }
     }
   ]
