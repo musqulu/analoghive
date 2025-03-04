@@ -37,26 +37,28 @@ export default function Home() {
   const selectedFilmData = findFilmByName(selectedFilm)
   const selectedDeveloperData = findDeveloperByName(selectedDeveloper)
   const availableIsos = selectedFilmData?.isos || []
-  const availableFormats = selectedFilmData ? getFilmFormats(selectedFilmData.id) : []
+  
+  // Wrap availableFormats in useMemo to prevent it from changing on every render
+  const availableFormats = React.useMemo(() => 
+    selectedFilmData ? getFilmFormats(selectedFilmData.id) : []
+  , [selectedFilmData]);
 
   // Reset ISO and format when film changes
   React.useEffect(() => {
     setSelectedIso("")
     setSelectedDilution("") // Reset dilution when film changes
     
-    // Set default format based on available formats
-    if (availableFormats.includes("35mm")) {
-      setSelectedFormat("35mm")
-    } else if (availableFormats.includes("120")) {
-      setSelectedFormat("120")
-    } else if (availableFormats.includes("sheet")) {
-      setSelectedFormat("sheet")
+    // If there's only one format available, select it automatically
+    if (availableFormats.length === 1) {
+      setSelectedFormat(availableFormats[0])
     }
   }, [selectedFilm, availableFormats])
 
   // Reset dilution when developer or format changes
   React.useEffect(() => {
     setSelectedDilution("")
+    // Also reset ISO when developer changes, as available ISOs depend on the developer
+    setSelectedIso("")
   }, [selectedDeveloper, selectedFormat])
 
   // Helper function to normalize dilution display
@@ -86,8 +88,23 @@ export default function Home() {
       };
     }
 
-    // Group times by dilution for B&W film
-    const dilutionTimes = times.reduce((acc, time) => {
+    // Filter times to only include exact ISO matches
+    const exactIsoTimes = times.filter(time => time.iso === iso);
+    
+    // If no exact matches, fall back to closest ISO
+    if (exactIsoTimes.length === 0) {
+      const closestTime = findClosestIsoTime(times, iso);
+      if (!closestTime) return null;
+      
+      return [{
+        dilution: closestTime.dilution,
+        time: closestTime.time,
+        temperature: closestTime.temperature
+      }];
+    }
+    
+    // Group exact ISO times by dilution
+    const dilutionTimes = exactIsoTimes.reduce((acc, time) => {
       if (!acc[time.dilution]) {
         acc[time.dilution] = [];
       }
@@ -95,17 +112,17 @@ export default function Home() {
       return acc;
     }, {} as Record<string, typeof times>);
 
-    // For each dilution, find the closest ISO time
+    // Create development options from exact ISO matches
     const developmentOptions = Object.entries(dilutionTimes).map(([dilution, dilutionTimes]) => {
-      const closestTime = findClosestIsoTime(dilutionTimes, iso);
-      if (!closestTime) return null;
-
+      // Since we're already filtering by exact ISO, just take the first time for each dilution
+      const time = dilutionTimes[0];
+      
       return {
         dilution,
-        time: closestTime.time,
-        temperature: closestTime.temperature
+        time: time.time,
+        temperature: time.temperature
       };
-    }).filter((item): item is DevelopmentOption => item !== null);
+    });
     
     // Sort options from fastest to longest development time
     // If times are equal, sort by dilution strength (higher concentration first)
@@ -236,27 +253,6 @@ export default function Home() {
                         )}
                       </div>
                     </div>
-                    
-                    {/* ISO Selection */}
-                    <div>
-                      <label className="block text-sm font-medium mb-2">ISO/ASA</label>
-                      <Select
-                        value={selectedIso}
-                        onValueChange={setSelectedIso}
-                        disabled={availableIsos.length === 0}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select ISO" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {availableIsos.map((iso) => (
-                            <SelectItem key={iso} value={iso.toString()}>
-                              {iso}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
                   </div>
                 )}
               </div>
@@ -270,6 +266,49 @@ export default function Home() {
                   placeholder="Search for a developer..."
                 />
               </div>
+
+              {/* ISO Selection - Moved below developer selection */}
+              {selectedFilm && selectedDeveloper && (
+                <div>
+                  <label className="block text-sm font-medium mb-2">ISO/ASA</label>
+                  <Select
+                    value={selectedIso}
+                    onValueChange={setSelectedIso}
+                    disabled={!selectedFilmData || !selectedDeveloperData}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select ISO" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {(() => {
+                        // Only show ISOs that have development times for this film and developer
+                        if (selectedFilmData && selectedDeveloperData) {
+                          const times = findDevelopmentTimes(selectedFilmData.id, selectedDeveloperData.id, selectedFormat);
+                          
+                          // Extract unique ISO values that have development times
+                          const availableIsoValues = [...new Set(times.map(time => time.iso))].sort((a, b) => a - b);
+                          
+                          // If we found ISO values with development times, show only those
+                          if (availableIsoValues.length > 0) {
+                            return availableIsoValues.map((iso) => (
+                              <SelectItem key={iso} value={iso.toString()}>
+                                {iso}
+                              </SelectItem>
+                            ));
+                          }
+                        }
+                        
+                        // Fallback to all ISOs from the film data if no specific times found
+                        return availableIsos.map((iso) => (
+                          <SelectItem key={iso} value={iso.toString()}>
+                            {iso}
+                          </SelectItem>
+                        ));
+                      })()}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
 
               <div>
                 <label className="text-sm font-medium mb-3 block">Temperature Unit</label>
@@ -318,9 +357,9 @@ export default function Home() {
                       {selectedDeveloper && Array.isArray(developmentInfo) && developmentInfo.length > 0 && (
                         <div className="mt-4">
                           <label className="block text-sm font-medium mb-2">
-                            Developer Dilution (sorted by time, then by concentration)
+                            Developer Dilution for ISO {selectedIso}
                             <span className="block text-xs font-normal text-gray-500 mt-1">
-                              When development times are equal, stronger concentrations are shown first
+                              Showing exact matches for this ISO, sorted by development time
                             </span>
                           </label>
                           <div className="grid grid-cols-1 gap-2">

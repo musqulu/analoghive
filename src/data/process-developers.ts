@@ -1,7 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-interface RawFilmData {
+// This interface is used for type checking during data processing
+// @ts-ignore -- used for data processing scripts
+interface ProcessingData {
   Film: string;
   Developer: string;
   Dilution: string;
@@ -126,6 +128,9 @@ async function processDeveloperData() {
       // Skip if we already have this developer with the same ID
       if (developers.has(developerId)) {
         const developer = developers.get(developerId);
+        
+        // Skip if developer not found
+        if (!developer) continue;
         
         // Add dilution if it doesn't exist
         const dilutionKey = normalizeDilution(entry.Dilution);

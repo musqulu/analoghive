@@ -1,7 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-interface RawFilmData {
+// This interface is used for type checking during data processing
+// @ts-ignore -- used for data processing scripts
+interface ProcessingData {
   Film: string;
   Developer: string;
   Dilution: string;
@@ -12,6 +14,7 @@ interface RawFilmData {
   Temp: string;
 }
 
+// These interfaces are exported for use in the processed data files
 interface Film {
   id: string;
   name: string;
@@ -65,7 +68,7 @@ function extractTemperature(tempStr: string): number {
 // Process all film data files
 async function processFilmData() {
   const filmDataDir = path.join(__dirname, 'film_data');
-  const files = fs.readdirSync(filmDataDir).filter(file => file.endsWith('.json'));
+  const files = fs.readdirSync(filmDataDir).filter((file: string) => file.endsWith('.json'));
   
   const films = new Map();
   const developmentTimes = [];
@@ -101,13 +104,13 @@ async function processFilmData() {
       }
       
       // Add formats
-      if (entry['35mm'] && !films.get(filmId).formats.includes('35mm')) {
+      if (entry['35mm'] && entry['35mm'] !== "" && entry['35mm'] !== "#" && !films.get(filmId).formats.includes('35mm')) {
         films.get(filmId).formats.push('35mm');
       }
-      if (entry['120'] && !films.get(filmId).formats.includes('120')) {
+      if (entry['120'] && entry['120'] !== "" && entry['120'] !== "#" && !films.get(filmId).formats.includes('120')) {
         films.get(filmId).formats.push('120');
       }
-      if (entry.Sheet && !films.get(filmId).formats.includes('sheet')) {
+      if (entry.Sheet && entry.Sheet !== "" && entry.Sheet !== "#" && !films.get(filmId).formats.includes('sheet')) {
         films.get(filmId).formats.push('sheet');
       }
       
@@ -116,7 +119,7 @@ async function processFilmData() {
       const temperature = extractTemperature(entry.Temp);
       
       // Add 35mm development time
-      if (entry['35mm']) {
+      if (entry['35mm'] && entry['35mm'] !== "" && entry['35mm'] !== "#") {
         developmentTimes.push({
           filmId,
           developerId,
@@ -129,7 +132,7 @@ async function processFilmData() {
       }
       
       // Add 120 development time
-      if (entry['120']) {
+      if (entry['120'] && entry['120'] !== "" && entry['120'] !== "#") {
         developmentTimes.push({
           filmId,
           developerId,
@@ -142,7 +145,7 @@ async function processFilmData() {
       }
       
       // Add sheet development time
-      if (entry.Sheet) {
+      if (entry.Sheet && entry.Sheet !== "" && entry.Sheet !== "#") {
         developmentTimes.push({
           filmId,
           developerId,
@@ -158,7 +161,7 @@ async function processFilmData() {
   
   // Sort ISOs numerically for each film
   for (const film of films.values()) {
-    film.isos.sort((a, b) => a - b);
+    film.isos.sort((a: number, b: number) => a - b);
   }
   
   // Convert to arrays for export
