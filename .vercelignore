@@ -1,0 +1,3 @@
+# Ignore data processing scripts
+src/data/process-*.ts
+src/data/film_data/ 

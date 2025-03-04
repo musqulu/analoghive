@@ -1,0 +1,2 @@
+# Ignore data processing scripts
+src/data/process-*.ts 

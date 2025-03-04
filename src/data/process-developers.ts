@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 
 // This interface is used for type checking during data processing
-// @ts-ignore -- used for data processing scripts
 interface ProcessingData {
   Film: string;
   Developer: string;

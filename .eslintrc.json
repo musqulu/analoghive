@@ -5,7 +5,8 @@
       "files": ["src/data/process-*.ts"],
       "rules": {
         "@typescript-eslint/no-require-imports": "off",
-        "@typescript-eslint/no-unused-vars": "off"
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/ban-ts-comment": "off"
       }
     }
   ]
