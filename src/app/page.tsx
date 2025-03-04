@@ -13,8 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { films, findFilmByName, getFilmFormats } from "@/data/processed-films"
-import { developers, findDeveloperByName } from "@/data/processed-developers"
-import { findDevelopmentTimes, findClosestIsoTime, calculateCorrectedTime } from "@/data/processed-development-times"
+import { developers, findDeveloperByName, Developer } from "@/data/processed-developers"
+import { findDevelopmentTimes, findClosestIsoTime, calculateCorrectedTime, developmentTimes } from "@/data/processed-development-times"
 
 interface DevelopmentOption {
   dilution: string
@@ -33,6 +33,7 @@ export default function Home() {
   const [modifiedTemperature, setModifiedTemperature] = React.useState<number>(20)
   const [correctedTime, setCorrectedTime] = React.useState<number | null>(null)
   const [constantAgitation, setConstantAgitation] = React.useState(false)
+  const [availableDevelopers, setAvailableDevelopers] = React.useState<Developer[]>([])
 
   const selectedFilmData = findFilmByName(selectedFilm)
   const selectedDeveloperData = findDeveloperByName(selectedDeveloper)
@@ -190,6 +191,40 @@ export default function Home() {
     }
   };
 
+  // Function to get available developers for a film
+  const getAvailableDevelopersForFilm = (filmId: string, format: "35mm" | "120" | "sheet"): Developer[] => {
+    if (!filmId) return [];
+    
+    // Get all unique developer IDs that have development times for this film
+    const developerIds = [...new Set(
+      developmentTimes
+        .filter(time => time.filmId === filmId && (!format || !time.format || time.format === format))
+        .map(time => time.developerId)
+    )];
+    
+    // Convert developer IDs to developer objects
+    return developerIds
+      .map(id => developers.find(dev => dev.id === id))
+      .filter((dev): dev is Developer => dev !== undefined);
+  };
+
+  // Update available developers when film or format changes
+  React.useEffect(() => {
+    if (selectedFilmData) {
+      const availableDevelopers = getAvailableDevelopersForFilm(selectedFilmData.id, selectedFormat);
+      setAvailableDevelopers(availableDevelopers);
+      
+      // Reset selected developer if it's not available for this film
+      if (selectedDeveloper && !availableDevelopers.some(dev => dev.name === selectedDeveloper)) {
+        setSelectedDeveloper("");
+        setSelectedIso("");
+        setSelectedDilution("");
+      }
+    } else {
+      setAvailableDevelopers([]);
+    }
+  }, [selectedFilmData, selectedFormat, selectedDeveloper]);
+
   return (
     <main className="min-h-screen flex flex-col items-center p-8 pt-12">
       <div className="max-w-md w-full space-y-8">
@@ -263,12 +298,34 @@ export default function Home() {
 
               <div>
                 <label className="text-sm font-medium mb-2 block">Select Developer</label>
-                <Combobox
-                  options={developers}
-                  value={selectedDeveloper}
-                  onChange={setSelectedDeveloper}
-                  placeholder="Search for a developer..."
-                />
+                {selectedFilmData && (
+                  <>
+                    <Combobox
+                      options={availableDevelopers.map(dev => ({ name: dev.name, type: dev.type }))}
+                      value={selectedDeveloper}
+                      onChange={setSelectedDeveloper}
+                      placeholder={
+                        availableDevelopers.length > 0 
+                          ? "Search for a developer..." 
+                          : "No developers available for this film and format"
+                      }
+                    />
+                    {availableDevelopers.length === 0 && (
+                      <p className="text-sm text-amber-600 mt-2">
+                        No developers available for this film in {selectedFormat} format.
+                        Try selecting a different format.
+                      </p>
+                    )}
+                  </>
+                )}
+                {!selectedFilmData && (
+                  <Combobox
+                    options={[]}
+                    value=""
+                    onChange={() => {}}
+                    placeholder="Select a film first"
+                  />
+                )}
               </div>
 
               {/* ISO Selection - Moved below developer selection */}
