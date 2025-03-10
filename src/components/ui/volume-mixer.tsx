@@ -14,6 +14,11 @@ export function VolumeMixer({ dilution, totalVolume, onVolumeChange }: VolumeMix
   const [ratio1, setRatio1] = React.useState("1")
   const [ratio2, setRatio2] = React.useState("1")
 
+  // Normalize dilution display
+  const normalizeDilutionDisplay = (dilution: string): string => {
+    return dilution.replace(':', '+');
+  };
+
   // Parse initial dilution when component mounts or dilution changes
   React.useEffect(() => {
     if (dilution.includes("+")) {
@@ -66,7 +71,7 @@ export function VolumeMixer({ dilution, totalVolume, onVolumeChange }: VolumeMix
               onChange={(e) => setRatio1(e.target.value)}
               className="flex h-10 w-20 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             />
-            <span className="text-sm font-medium">:</span>
+            <span className="text-sm font-medium">+</span>
             <input
               type="number"
               min="0"
@@ -76,7 +81,7 @@ export function VolumeMixer({ dilution, totalVolume, onVolumeChange }: VolumeMix
             />
           </div>
           <p className="text-sm text-muted-foreground mt-1">
-            Original dilution: {dilution}
+            Original dilution: {normalizeDilutionDisplay(dilution)}
           </p>
         </div>
 

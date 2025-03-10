@@ -51,11 +51,12 @@ export function Timer({
   temperatureUnit = "celsius", 
   isColor = false 
 }: TimerProps) {
-  const [isRunning, setIsRunning] = React.useState(false)
-  const [currentStep, setCurrentStep] = React.useState<Step>('dev')
-  const [timeLeft, setTimeLeft] = React.useState(developmentTime * 60)
-  const [nextAgitation, setNextAgitation] = React.useState<number | null>(null)
-  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false)
+  const [timeLeft, setTimeLeft] = React.useState(developmentTime * 60);
+  const [isRunning, setIsRunning] = React.useState(false);
+  const [isPaused, setIsPaused] = React.useState(false);
+  const [currentStep, setCurrentStep] = React.useState<Step | null>(null);
+  const [nextAgitation, setNextAgitation] = React.useState<number | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const [washingMethod, setWashingMethod] = React.useState<WashingMethod>({
     type: 'running',
     runningWaterTime: isColor ? 3 : 5,
@@ -76,6 +77,14 @@ export function Timer({
     wash: isColor ? 3 : 5, // 3 minutes for color, 5 for B&W
   })
   
+  // Step labels for display
+  const stepLabels: Record<Step, string> = {
+    dev: 'Development',
+    stop: 'Stop Bath',
+    fix: 'Fixer',
+    wash: 'Washing'
+  };
+
   const steps = React.useMemo(() => ({
     dev: {
       name: "Development",
@@ -123,62 +132,25 @@ export function Timer({
     }
   }), [developmentTime, customTimes, temperature, isColor])
 
+  // Timer logic
   React.useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
+    let interval: NodeJS.Timeout;
 
-    if (isRunning && timeLeft > 0) {
+    if (isRunning && !isPaused && timeLeft > 0) {
       interval = setInterval(() => {
-        setTimeLeft((time) => {
-          const newTime = time - 1;
-          
-          // Update next agitation time
-          if (currentStep && steps[currentStep].agitation) {
-            const { initial, interval: agitationInterval, duration } = steps[currentStep].agitation;
-            const totalTime = steps[currentStep].time;
-            const elapsed = totalTime - newTime;
-            
-            // Start initial agitation immediately
-            if (elapsed === 0) {
-              setNextAgitation(initial);
-            } else if (elapsed < initial) {
-              // During initial agitation
-              setNextAgitation(initial - elapsed);
-            } else {
-              // Calculate time until next interval agitation
-              const timeSinceInitial = elapsed - initial;
-              const timeUntilNext = agitationInterval - (timeSinceInitial % agitationInterval);
-              if (timeUntilNext <= duration) {
-                // Show agitation instruction
-                setNextAgitation(timeUntilNext);
-              } else {
-                // Show countdown to next agitation
-                setNextAgitation(timeUntilNext);
-              }
-            }
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            setIsRunning(false);
+            setIsPaused(false);
+            return 0;
           }
-          
-          return newTime;
+          return prev - 1;
         });
       }, 1000);
-    } else if (timeLeft === 0) {
-      setIsRunning(false);
-      setNextAgitation(null);
-      if (currentStep === 'dev') {
-        setCurrentStep('stop');
-        setTimeLeft(steps.stop.time);
-      } else if (currentStep === 'stop') {
-        setCurrentStep('fix');
-        setTimeLeft(steps.fix.time);
-      } else if (currentStep === 'fix') {
-        setCurrentStep('wash');
-        setTimeLeft(steps.wash.time);
-      }
     }
 
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isRunning, timeLeft, currentStep, steps]);
+    return () => clearInterval(interval);
+  }, [isRunning, isPaused, timeLeft]);
 
   // Reset timer when development time changes
   React.useEffect(() => {
@@ -208,23 +180,27 @@ export function Timer({
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const startTimer = (step: 'dev' | 'stop' | 'fix' | 'wash') => {
+  const startTimer = (step: Step) => {
     setCurrentStep(step);
     setTimeLeft(steps[step].time);
-    // Set initial agitation duration immediately
-    setNextAgitation(steps[step].agitation.initial);
     setIsRunning(true);
+    setIsPaused(false);
+    setNextAgitation(null);
   };
 
   const toggleTimer = () => {
-    setIsRunning(!isRunning);
+    if (isRunning) {
+      setIsPaused(!isPaused);
+    }
   };
 
   const resetTimer = () => {
-    setIsRunning(false);
-    setCurrentStep('dev');
-    setTimeLeft(developmentTime * 60);
-    setNextAgitation(null);
+    if (currentStep) {
+      setTimeLeft(steps[currentStep].time);
+      setIsRunning(false);
+      setIsPaused(false);
+      setNextAgitation(null);
+    }
   };
 
   const getStepTemp = (step: 'dev' | 'stop' | 'fix' | 'wash') => {
@@ -324,17 +300,118 @@ export function Timer({
     }
   };
 
+  // Normalize dilution display
+  const normalizeDilutionDisplay = (dilution: string): string => {
+    return dilution ? dilution.replace(':', '+') : dilution;
+  };
+
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h3 className="font-medium">Development</h3>
+      {/* Main Timer Display */}
+      <div className="bg-black text-white p-6 rounded-lg">
+        <div className="flex flex-col items-center justify-center">
+          <h2 className="text-xl font-medium mb-2">
+            {currentStep ? stepLabels[currentStep] : 'Development Process'}
+          </h2>
+          <div className="text-6xl font-mono font-bold my-4">
+            {formatTime(timeLeft)}
+          </div>
+          <p className="text-lg mb-4">
+            at {getStepTemp(currentStep || 'dev')}
+          </p>
+          <div className="flex gap-4 mt-2">
+            {isRunning ? (
+              <>
+                <button
+                  onClick={toggleTimer}
+                  className="p-2 rounded-full hover:bg-gray-800 transition-colors"
+                  title={isPaused ? "Resume Timer" : "Pause Timer"}
+                >
+                  {isPaused ? <Play className="w-8 h-8" /> : <Pause className="w-8 h-8" />}
+                </button>
+                <button
+                  onClick={resetTimer}
+                  className="p-2 rounded-full hover:bg-gray-800 transition-colors"
+                  title="Reset Timer"
+                >
+                  <RotateCcw className="w-8 h-8" />
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => startTimer('dev')}
+                className="px-6 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors text-lg"
+              >
+                Start Development
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Development Info Card */}
+      <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <h3 className="text-lg font-medium mb-4">Development Process</h3>
+        
+        {/* Film and Developer Info */}
+        <div className="space-y-2 mb-4">
+          {filmName && (
+            <p>
+              <span className="font-medium">Film:</span> {filmName} {filmFormat && `(${filmFormat})`} {filmIso && `@ ISO ${filmIso}`}
+            </p>
+          )}
+          {developerName && (
+            <p>
+              <span className="font-medium">Developer:</span> {developerName} {developerDilution && `(${normalizeDilutionDisplay(developerDilution)})`}
+            </p>
+          )}
+          {totalVolume && (
+            <p>
+              <span className="font-medium">Volume:</span> {totalVolume}ml
+            </p>
+          )}
+        </div>
+        
+        {/* Process Steps */}
+        <div className="space-y-3 mt-4">
+          <div className="flex items-center gap-3 p-3 rounded-md hover:bg-gray-100 cursor-pointer" onClick={() => !isRunning && startTimer('dev')}>
+            <PlayCircle className={`w-6 h-6 ${currentStep === 'dev' ? 'text-blue-500' : 'text-gray-400'}`} />
+            <div className="flex-1">
+              <p className="font-medium">Development</p>
+              <p className="text-sm text-gray-600">{formatTime(steps.dev.time)} at {getStepTemp('dev')}</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-3 p-3 rounded-md hover:bg-gray-100 cursor-pointer" onClick={() => !isRunning && startTimer('stop')}>
+            <PlayCircle className={`w-6 h-6 ${currentStep === 'stop' ? 'text-blue-500' : 'text-gray-400'}`} />
+            <div className="flex-1">
+              <p className="font-medium">Stop Bath</p>
+              <p className="text-sm text-gray-600">{formatTime(steps.stop.time)} at {getStepTemp('stop')}</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-3 p-3 rounded-md hover:bg-gray-100 cursor-pointer" onClick={() => !isRunning && startTimer('fix')}>
+            <PlayCircle className={`w-6 h-6 ${currentStep === 'fix' ? 'text-blue-500' : 'text-gray-400'}`} />
+            <div className="flex-1">
+              <p className="font-medium">Fixer</p>
+              <p className="text-sm text-gray-600">{formatTime(steps.fix.time)} at {getStepTemp('fix')}</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-3 p-3 rounded-md hover:bg-gray-100 cursor-pointer" onClick={() => !isRunning && startTimer('wash')}>
+            <PlayCircle className={`w-6 h-6 ${currentStep === 'wash' ? 'text-blue-500' : 'text-gray-400'}`} />
+            <div className="flex-1">
+              <p className="font-medium">Washing</p>
+              <p className="text-sm text-gray-600">{formatTime(steps.wash.time)} at {getStepTemp('wash')}</p>
+            </div>
+          </div>
+        </div>
+        
         <button
           onClick={() => setIsEditModalOpen(true)}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
-          title="Edit Process Times"
+          className="mt-4 text-sm flex items-center gap-1 text-gray-500 hover:text-gray-700"
         >
-          <Pencil className="w-4 h-4" />
-          <span>Edit times</span>
+          <Pencil size={14} /> Edit Process
         </button>
       </div>
 
@@ -566,176 +643,6 @@ export function Timer({
           </div>
         </div>
       )}
-
-      <div className="space-y-4">
-        <div className="text-4xl font-mono font-bold text-center">
-          {timeLeft > 0 ? formatTime(timeLeft) : "0:00"}
-        </div>
-        
-        {currentStep && (
-          <div className="text-center space-y-2">
-            <p className="text-lg font-medium">{steps[currentStep].name}</p>
-            <p className="text-sm text-gray-600">Temperature: {getStepTemp(currentStep)}</p>
-            {(isRunning || nextAgitation) && getAgitationInstructions()}
-          </div>
-        )}
-
-        <div className="flex justify-center space-x-4">
-          {timeLeft > 0 ? (
-            <>
-              <button
-                onClick={toggleTimer}
-                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-                title={isRunning ? "Pause" : "Resume"}
-              >
-                {isRunning ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
-              </button>
-              <button
-                onClick={resetTimer}
-                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-                title="Reset Timer"
-              >
-                <RotateCcw className="w-6 h-6" />
-              </button>
-            </>
-          ) : (
-            <button
-              onClick={() => startTimer('dev')}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-            >
-              Start Development ({formatTime(steps.dev.time)})
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <h3 className="font-medium">Process Steps:</h3>
-        <div className="space-y-1 text-sm">
-          <div className="flex items-start gap-2">
-            <button 
-              onClick={() => !isRunning && startTimer('dev')}
-              className="mt-1 p-1 hover:bg-gray-100 rounded-full transition-colors"
-              disabled={isRunning}
-              title="Start Development"
-            >
-              <PlayCircle className="w-5 h-5 text-blue-500" />
-            </button>
-            <div className="flex-1">
-              <p>1. Development: {formatTime(steps.dev.time)} at {getStepTemp('dev')}</p>
-              <p className="text-sm text-gray-600 pl-4">
-                {isColor ? 
-                  "• 1 minute initial agitation, then invert every 30 seconds" :
-                  "• 30 seconds initial agitation, then 10 seconds every 30 seconds"}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start gap-2">
-            <button 
-              onClick={() => !isRunning && startTimer('stop')}
-              className="mt-1 p-1 hover:bg-gray-100 rounded-full transition-colors"
-              disabled={isRunning}
-              title="Start Stop Bath"
-            >
-              <PlayCircle className="w-5 h-5 text-yellow-500" />
-            </button>
-            <div className="flex-1">
-              <p>2. Stop Bath: {formatTime(steps.stop.time)} at {getStepTemp('stop')}</p>
-              <p className="text-sm text-gray-600 pl-4">
-                • 30 seconds initial agitation, then 5 seconds every 30 seconds
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start gap-2">
-            <button 
-              onClick={() => !isRunning && startTimer('fix')}
-              className="mt-1 p-1 hover:bg-gray-100 rounded-full transition-colors"
-              disabled={isRunning}
-              title="Start Fixer"
-            >
-              <PlayCircle className="w-5 h-5 text-green-500" />
-            </button>
-            <div className="flex-1">
-              <p>3. Fixer: {formatTime(steps.fix.time)} at {getStepTemp('fix')}</p>
-              <p className="text-sm text-gray-600 pl-4">
-                • 30 seconds initial agitation, then 10 seconds every minute
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start gap-2">
-            <button 
-              onClick={() => !isRunning && startTimer('wash')}
-              className="mt-1 p-1 hover:bg-gray-100 rounded-full transition-colors"
-              disabled={isRunning}
-              title="Start Washing"
-            >
-              <PlayCircle className="w-5 h-5 text-cyan-500" />
-            </button>
-            <div className="flex-1">
-              <p>4. Washing: {formatTime(steps.wash.time)} at {getStepTemp('wash')}</p>
-              <p className="text-sm text-gray-600 pl-4">
-                {getWashingMethodDescription()}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-6 space-y-4">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold">Development Process</h2>
-          <button
-            onClick={() => setIsEditModalOpen(true)}
-            className="text-sm flex items-center gap-1 text-gray-500 hover:text-gray-700"
-          >
-            <Pencil size={14} /> Edit
-          </button>
-        </div>
-
-        {/* Film and Developer Info */}
-        {(filmName || developerName) && (
-          <div className="bg-muted p-3 rounded-md text-sm mb-4">
-            {filmName && (
-              <p>
-                <span className="font-medium">Film:</span> {filmName} {filmFormat && `(${filmFormat})`} {filmIso && `@ ISO ${filmIso}`}
-              </p>
-            )}
-            {developerName && (
-              <p>
-                <span className="font-medium">Developer:</span> {developerName} {developerDilution && `(${developerDilution})`}
-              </p>
-            )}
-            {totalVolume && (
-              <p>
-                <span className="font-medium">Volume:</span> {totalVolume}ml
-              </p>
-            )}
-          </div>
-        )}
-
-        {/* Steps */}
-        <div className="space-y-2">
-          {Object.entries(steps).map(([step, details]) => (
-            <button
-              key={step}
-              onClick={() => startTimer(step as Step)}
-              className={`w-full text-left p-3 rounded-md flex justify-between items-center ${
-                currentStep === step
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted hover:bg-muted/80"
-              }`}
-            >
-              <div>
-                <div className="font-medium">{details.name}</div>
-                <div className="text-sm opacity-90">
-                  {formatTime(details.time)} at {getStepTemp(step as Step)}°{temperatureUnit === "celsius" ? "C" : "F"}
-                </div>
-              </div>
-              <PlayCircle size={20} className={currentStep === step ? "" : "opacity-50"} />
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 } 

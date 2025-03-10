@@ -1,0 +1,12 @@
+---
+description: Workflow preferences
+globs: 
+alwaysApply: false
+---
+# Workflow preferences
+
+- Focus on the areas of code relevant to the task
+- Do not touch code that is unrelated to the task
+- Write tests for all the major functionalities
+- Avoid making changes to the patterns and architecture of how a feature works, after it has shown that it works well, unless instructed to do so
+- Always think about what other methods and areas of code might be affected by code changes 
