@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Play, Pause, RotateCcw, PlayCircle, Pencil } from "lucide-react"
+import { DevelopmentMode } from "@/components/development-mode"
 
 interface TimerProps {
   developmentTime: number
@@ -57,6 +58,7 @@ export function Timer({
   const [currentStep, setCurrentStep] = React.useState<Step | null>(null);
   const [nextAgitation, setNextAgitation] = React.useState<number | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
+  const [isDevelopmentModeOpen, setIsDevelopmentModeOpen] = React.useState(false);
   const [washingMethod, setWashingMethod] = React.useState<WashingMethod>({
     type: 'running',
     runningWaterTime: isColor ? 3 : 5,
@@ -319,34 +321,44 @@ export function Timer({
           <p className="text-lg mb-4">
             at {getStepTemp(currentStep || 'dev')}
           </p>
-          <div className="flex gap-4 mt-2">
-            {isRunning ? (
-              <>
-                <button
-                  onClick={toggleTimer}
-                  className="p-2 rounded-full hover:bg-gray-800 transition-colors"
-                  title={isPaused ? "Resume Timer" : "Pause Timer"}
-                >
-                  {isPaused ? <Play className="w-8 h-8" /> : <Pause className="w-8 h-8" />}
-                </button>
-                <button
-                  onClick={resetTimer}
-                  className="p-2 rounded-full hover:bg-gray-800 transition-colors"
-                  title="Reset Timer"
-                >
-                  <RotateCcw className="w-8 h-8" />
-                </button>
-              </>
-            ) : (
+          
+          {isRunning ? (
+            <div className="flex gap-4 mt-2">
               <button
-                onClick={() => startTimer('dev')}
-                className="px-6 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors text-lg"
+                onClick={toggleTimer}
+                className="p-2 rounded-full hover:bg-gray-800 transition-colors"
+                title={isPaused ? "Resume Timer" : "Pause Timer"}
               >
-                Start Development
+                {isPaused ? <Play className="w-8 h-8" /> : <Pause className="w-8 h-8" />}
               </button>
-            )}
-          </div>
+              <button
+                onClick={resetTimer}
+                className="p-2 rounded-full hover:bg-gray-800 transition-colors"
+                title="Reset Timer"
+              >
+                <RotateCcw className="w-8 h-8" />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => startTimer('dev')}
+              className="p-4 rounded-full bg-white text-black hover:bg-gray-200 transition-colors"
+              title="Start Timer"
+            >
+              <Play className="w-8 h-8" />
+            </button>
+          )}
         </div>
+      </div>
+
+      {/* Darkroom Mode Button */}
+      <div className="w-full mt-4">
+        <button
+          onClick={() => setIsDevelopmentModeOpen(true)}
+          className="w-full px-6 py-4 bg-black text-white hover:bg-gray-900 transition-colors text-lg flex items-center justify-center gap-2"
+        >
+          <PlayCircle className="w-5 h-5" /> Darkroom mode
+        </button>
       </div>
 
       {/* Development Info Card */}
@@ -643,6 +655,17 @@ export function Timer({
           </div>
         </div>
       )}
+
+      {/* Development Mode */}
+      <DevelopmentMode
+        isOpen={isDevelopmentModeOpen}
+        onClose={() => setIsDevelopmentModeOpen(false)}
+        filmName={filmName || "Unknown Film"}
+        developerName={developerName || "Unknown Developer"}
+        volume={totalVolume.toString()}
+        dilution={developerDilution || "Unknown"}
+        time={developmentTime * 60}
+      />
     </div>
   );
 } 

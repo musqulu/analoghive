@@ -57,3 +57,31 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Darkroom mode styles */
+html.darkroom-mode-active,
+html.darkroom-mode-active body {
+  background-color: #000 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100vh !important;
+  width: 100vw !important;
+  overflow: hidden !important;
+  position: fixed !important;
+}
+
+/* Ensure the darkroom mode container covers everything */
+html.darkroom-mode-active [class*="development-mode"] {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 9999 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
