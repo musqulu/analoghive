@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Play, Pause, RotateCcw, PlayCircle, Pencil } from "lucide-react"
+import { Play, Pause, RotateCcw, PlayCircle, Pencil, Vibrate } from "lucide-react"
 import { DevelopmentMode } from "@/components/development-mode"
 
 interface TimerProps {
@@ -59,6 +59,8 @@ export function Timer({
   const [nextAgitation, setNextAgitation] = React.useState<number | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const [isDevelopmentModeOpen, setIsDevelopmentModeOpen] = React.useState(false);
+  const [shouldShake, setShouldShake] = React.useState(false);
+  const [initialShakePeriod, setInitialShakePeriod] = React.useState(true);
   const [washingMethod, setWashingMethod] = React.useState<WashingMethod>({
     type: 'running',
     runningWaterTime: isColor ? 3 : 5,
@@ -173,6 +175,52 @@ export function Timer({
     }
     setCustomTimes(prev => ({ ...prev, wash: washTime }));
   }, [washingMethod]);
+
+  // Handle shaking intervals for development step
+  React.useEffect(() => {
+    // Only apply shaking logic during the developer step and when timer is running
+    if (currentStep !== 'dev' || !isRunning || isPaused) {
+      setShouldShake(false);
+      return;
+    }
+
+    // Calculate total development time in seconds
+    const totalTime = developmentTime * 60;
+    
+    // Calculate elapsed seconds from the start
+    const elapsedSeconds = totalTime - timeLeft;
+    
+    // Initial continuous shaking for first 30 seconds
+    if (elapsedSeconds < 30) {
+      setShouldShake(true);
+      setInitialShakePeriod(true);
+    } else {
+      // After 30 seconds, switch to interval mode
+      if (initialShakePeriod) {
+        setInitialShakePeriod(false);
+        setShouldShake(false);
+      }
+      
+      // Only apply the 10-second interval logic after the initial period
+      // AND after the first minute has passed
+      if (!initialShakePeriod && elapsedSeconds >= 60) {
+        // Calculate seconds within the current minute (mod 60)
+        const secondsInCurrentMinute = timeLeft % 60;
+        // Shake for the first 10 seconds of each minute (50-59 in reverse countdown)
+        setShouldShake(secondsInCurrentMinute >= 50);
+      }
+    }
+  }, [currentStep, isRunning, isPaused, timeLeft, developmentTime, initialShakePeriod]);
+
+  // Reset shaking state when starting timer
+  React.useEffect(() => {
+    if (currentStep === 'dev') {
+      setInitialShakePeriod(true);
+    } else {
+      setShouldShake(false);
+      setInitialShakePeriod(false);
+    }
+  }, [currentStep]);
 
   const formatTime = (seconds: number) => {
     // Round to nearest second to avoid floating point precision issues
@@ -321,6 +369,28 @@ export function Timer({
           <p className="text-lg mb-4">
             at {getStepTemp(currentStep || 'dev')}
           </p>
+
+          {/* Shake indicator */}
+          {currentStep === 'dev' && isRunning && !isPaused && (
+            <div className="mb-4">
+              <div className={`flex items-center justify-center gap-2 ${shouldShake ? 'animate-pulse' : ''}`}>
+                <Vibrate 
+                  size={32} 
+                  className={`text-white ${shouldShake ? 'animate-vibrate' : 'opacity-50'}`} 
+                  strokeWidth={shouldShake ? 2.5 : 1.5}
+                />
+                <span className={`text-lg font-bold ${shouldShake ? 'text-white' : 'text-white/50'}`}>
+                  {shouldShake ? 'SHAKE NOW!' : 'Rest'}
+                </span>
+              </div>
+              {initialShakePeriod && shouldShake && (
+                <p className="text-sm mt-2 text-white/70">Continuous initial shaking</p>
+              )}
+              {!initialShakePeriod && (
+                <p className="text-sm mt-2 text-white/70">Shake for 10 seconds every minute</p>
+              )}
+            </div>
+          )}
           
           {isRunning ? (
             <div className="flex gap-4 mt-2">

@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from "react"
-import { X, RotateCcw } from "lucide-react"
+import { X, RotateCcw, Vibrate } from "lucide-react"
 
 interface DevelopmentModeProps {
   isOpen: boolean
@@ -26,6 +26,8 @@ export function DevelopmentMode({
   const [isRunning, setIsRunning] = useState(false)
   const [currentStep, setCurrentStep] = useState<'developer' | 'stop' | 'fixer' | 'wash' | 'complete'>('developer')
   const scrollPositionRef = useRef<number>(0)
+  const [shouldShake, setShouldShake] = useState(false)
+  const [initialShakePeriod, setInitialShakePeriod] = useState(true)
   
   // Save scroll position when opening and restore when closing
   useEffect(() => {
@@ -89,20 +91,62 @@ export function DevelopmentMode({
   useEffect(() => {
     if (currentStep === 'developer') {
       setSeconds(time)
+      setInitialShakePeriod(true) // Reset to initial shake period when we start/reset development
     } else if (currentStep === 'stop') {
       setSeconds(30) // 30 seconds for stop bath
+      setShouldShake(false) // No shaking for other steps
     } else if (currentStep === 'fixer') {
       setSeconds(300) // 5 minutes for fixer
+      setShouldShake(false)
     } else if (currentStep === 'wash') {
       setSeconds(600) // 10 minutes for washing
+      setShouldShake(false)
     }
   }, [currentStep, time])
+
+  // Handle shaking intervals for development step
+  useEffect(() => {
+    // Only apply shaking logic during the developer step and when timer is running
+    if (currentStep !== 'developer' || !isRunning) {
+      setShouldShake(false);
+      return;
+    }
+
+    let shakeInterval: NodeJS.Timeout | null = null;
+
+    // Initial continuous shaking for first 30 seconds
+    if (initialShakePeriod) {
+      // Calculate how many seconds have passed since start
+      const elapsedSeconds = time - seconds;
+      
+      if (elapsedSeconds < 30) {
+        setShouldShake(true);
+      } else {
+        setInitialShakePeriod(false);
+        setShouldShake(false);
+      }
+    } 
+    // After initial period, shake for 10 seconds every minute
+    else {
+      // Calculate seconds within the current minute (mod 60)
+      const secondsInCurrentMinute = seconds % 60;
+      
+      // Shake for the first 10 seconds of each minute (0-9)
+      setShouldShake(secondsInCurrentMinute < 10);
+    }
+
+    return () => {
+      if (shakeInterval) clearInterval(shakeInterval);
+    }
+  }, [currentStep, isRunning, seconds, time, initialShakePeriod]);
   
   // Reset development process
   const resetDevelopment = () => {
     setIsRunning(false)
     setCurrentStep('developer')
     setSeconds(time)
+    setInitialShakePeriod(true)
+    setShouldShake(false)
   }
   
   // Handle close with scroll position preservation
@@ -162,6 +206,28 @@ export function DevelopmentMode({
           <p className="text-xl md:text-2xl uppercase font-bold">
             {currentStep === 'complete' ? 'DEVELOPMENT COMPLETE' : `${currentStep.toUpperCase()} STEP`}
           </p>
+          
+          {/* Shake indicator */}
+          {currentStep === 'developer' && isRunning && (
+            <div className="mt-4">
+              <div className={`flex items-center justify-center gap-2 ${shouldShake ? 'animate-pulse' : ''}`}>
+                <Vibrate 
+                  size={32} 
+                  className={`text-red-600 ${shouldShake ? 'animate-vibrate' : 'opacity-50'}`} 
+                  strokeWidth={shouldShake ? 2.5 : 1.5}
+                />
+                <span className={`text-lg font-bold ${shouldShake ? 'text-red-500' : 'text-red-600/50'}`}>
+                  {shouldShake ? 'SHAKE NOW!' : 'Rest'}
+                </span>
+              </div>
+              {initialShakePeriod && shouldShake && (
+                <p className="text-sm mt-2">Continuous initial shaking</p>
+              )}
+              {!initialShakePeriod && (
+                <p className="text-sm mt-2">Shake for 10 seconds every minute</p>
+              )}
+            </div>
+          )}
         </div>
         
         {/* Controls */}
