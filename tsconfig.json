@@ -23,5 +23,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "src/data/fix-*.ts", "src/data/process-*.ts", "src/data/verify-*.ts"]
+  "exclude": ["node_modules", "scripts"]
 }

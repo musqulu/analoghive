@@ -112,7 +112,7 @@ export function DevelopmentMode({
       return;
     }
 
-    let shakeInterval: NodeJS.Timeout | null = null;
+    const shakeInterval: NodeJS.Timeout | null = null;
 
     // Initial continuous shaking for first 30 seconds
     if (initialShakePeriod) {

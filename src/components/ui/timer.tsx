@@ -1,8 +1,16 @@
 "use client"
 
 import * as React from "react"
-import { Play, Pause, RotateCcw, PlayCircle, Pencil, Vibrate } from "lucide-react"
+import { PlayCircle, Pencil } from "lucide-react"
+import { useTimer } from "@/hooks/use-timer"
+import { useWakeLock } from "@/hooks/use-wake-lock"
+import { normalizeDilutionDisplay } from "@/utils/normalize-dilution"
+import { displayTemp } from "@/utils/temperature"
+import { TimerDisplay } from "@/components/timer/timer-display"
+import { StepIndicator } from "@/components/timer/step-indicator"
+import { ProcessEditor } from "@/components/timer/process-editor"
 import { DevelopmentMode } from "@/components/development-mode"
+import type { ProcessTimes, WashingMethod, Step } from "@/types/development"
 
 interface TimerProps {
   developmentTime: number
@@ -15,413 +23,78 @@ interface TimerProps {
   totalVolume?: number
   temperatureUnit?: string
   isColor?: boolean
+  /** e.g. "Pushed +2 (EI 1600)" */
+  pushPullLine?: string
+  /** e.g. "From chart" / approximate note */
+  chartNote?: string
 }
 
-type Step = 'dev' | 'stop' | 'fix' | 'wash';
-
-interface ProcessTimes {
-  dev: number;
-  stop: number;
-  fix: number;
-  wash: number;
-}
-
-interface WashingMethod {
-  type: 'running' | 'ilford' | 'custom';
-  runningWaterTime: number;
-  ilfordInversions: {
-    first: number;
-    second: number;
-    third: number;
-  };
-  custom: {
-    totalTime: number;
-    waterChanges: number;
-  };
-}
-
-export function Timer({ 
-  developmentTime, 
-  temperature, 
-  filmName, 
+export function Timer({
+  developmentTime,
+  temperature,
+  filmName,
   filmFormat = "35mm",
   filmIso,
   developerName,
   developerDilution,
   totalVolume = 500,
-  temperatureUnit = "celsius", 
-  isColor = false 
+  temperatureUnit = "celsius",
+  isColor = false,
+  pushPullLine,
+  chartNote,
 }: TimerProps) {
-  const [timeLeft, setTimeLeft] = React.useState(developmentTime * 60);
-  const [isRunning, setIsRunning] = React.useState(false);
-  const [isPaused, setIsPaused] = React.useState(false);
-  const [currentStep, setCurrentStep] = React.useState<Step | null>(null);
-  const [nextAgitation, setNextAgitation] = React.useState<number | null>(null);
-  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
-  const [isDevelopmentModeOpen, setIsDevelopmentModeOpen] = React.useState(false);
-  const [shouldShake, setShouldShake] = React.useState(false);
-  const [initialShakePeriod, setInitialShakePeriod] = React.useState(true);
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false)
+  const [isDevelopmentModeOpen, setIsDevelopmentModeOpen] = React.useState(false)
   const [washingMethod, setWashingMethod] = React.useState<WashingMethod>({
-    type: 'running',
+    type: "running",
     runningWaterTime: isColor ? 3 : 5,
-    ilfordInversions: {
-      first: 5,
-      second: 10,
-      third: 20
-    },
-    custom: {
-      totalTime: 5,
-      waterChanges: 3
-    }
+    ilfordInversions: { first: 5, second: 10, third: 20 },
+    custom: { totalTime: 5, waterChanges: 3 },
   })
   const [customTimes, setCustomTimes] = React.useState<ProcessTimes>({
     dev: developmentTime,
-    stop: 1, // 1 minute default
-    fix: isColor ? 2 : 5, // 2 minutes for color, 5 for B&W
-    wash: isColor ? 3 : 5, // 3 minutes for color, 5 for B&W
+    stop: 1,
+    fix: isColor ? 2 : 5,
+    wash: isColor ? 3 : 5,
   })
-  
-  // Step labels for display
-  const stepLabels: Record<Step, string> = {
-    dev: 'Development',
-    stop: 'Stop Bath',
-    fix: 'Fixer',
-    wash: 'Washing'
-  };
 
-  const steps = React.useMemo(() => ({
-    dev: {
-      name: "Development",
-      time: developmentTime * 60,
-      temp: temperature,
-      agitation: isColor ? {
-        initial: 60,
-        interval: 30,
-        duration: 5
-      } : {
-        initial: 30,
-        interval: 30,
-        duration: 10
-      }
-    },
-    stop: {
-      name: "Stop Bath",
-      time: customTimes.stop * 60,
-      temp: 20,
-      agitation: {
-        initial: 30,
-        interval: 30,
-        duration: 5
-      }
-    },
-    fix: {
-      name: "Fixer",
-      time: customTimes.fix * 60,
-      temp: 20,
-      agitation: {
-        initial: 30,
-        interval: 60,
-        duration: 10
-      }
-    },
-    wash: {
-      name: "Washing",
-      time: customTimes.wash * 60,
-      temp: 20,
-      agitation: {
-        initial: 0,
-        interval: 60,
-        duration: 10
-      }
-    }
-  }), [developmentTime, customTimes, temperature, isColor])
+  const timer = useTimer({ developmentTime, temperature, isColor, customTimes })
+  const wakeLock = useWakeLock()
 
-  // Timer logic
   React.useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let washTime = 5
+    if (washingMethod.type === "running") washTime = washingMethod.runningWaterTime
+    else if (washingMethod.type === "ilford") washTime = 3
+    else if (washingMethod.type === "custom") washTime = washingMethod.custom.totalTime
+    setCustomTimes((prev) => ({ ...prev, wash: washTime }))
+  }, [washingMethod])
 
-    if (isRunning && !isPaused && timeLeft > 0) {
-      interval = setInterval(() => {
-        setTimeLeft(prev => {
-          if (prev <= 1) {
-            setIsRunning(false);
-            setIsPaused(false);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-
-    return () => clearInterval(interval);
-  }, [isRunning, isPaused, timeLeft]);
-
-  // Reset timer when development time changes
   React.useEffect(() => {
-    // Round to nearest second when converting from minutes to seconds
-    setTimeLeft(Math.round(developmentTime * 60));
-  }, [developmentTime]);
-
-  // Add effect to update wash time based on washing method
-  React.useEffect(() => {
-    let washTime = 5; // default
-    if (washingMethod.type === 'running') {
-      washTime = washingMethod.runningWaterTime;
-    } else if (washingMethod.type === 'ilford') {
-      // Roughly 1 minute per cycle
-      washTime = 3;
-    } else if (washingMethod.type === 'custom') {
-      washTime = washingMethod.custom.totalTime;
-    }
-    setCustomTimes(prev => ({ ...prev, wash: washTime }));
-  }, [washingMethod]);
-
-  // Handle shaking intervals for development step
-  React.useEffect(() => {
-    // Only apply shaking logic during the developer step and when timer is running
-    if (currentStep !== 'dev' || !isRunning || isPaused) {
-      setShouldShake(false);
-      return;
-    }
-
-    // Calculate total development time in seconds
-    const totalTime = developmentTime * 60;
-    
-    // Calculate elapsed seconds from the start
-    const elapsedSeconds = totalTime - timeLeft;
-    
-    // Initial continuous shaking for first 30 seconds
-    if (elapsedSeconds < 30) {
-      setShouldShake(true);
-      setInitialShakePeriod(true);
+    if (timer.isRunning) {
+      wakeLock.request()
     } else {
-      // After 30 seconds, switch to interval mode
-      if (initialShakePeriod) {
-        setInitialShakePeriod(false);
-        setShouldShake(false);
-      }
-      
-      // Only apply the 10-second interval logic after the initial period
-      // AND after the first minute has passed
-      if (!initialShakePeriod && elapsedSeconds >= 60) {
-        // Calculate seconds within the current minute (mod 60)
-        const secondsInCurrentMinute = timeLeft % 60;
-        // Shake for the first 10 seconds of each minute (50-59 in reverse countdown)
-        setShouldShake(secondsInCurrentMinute >= 50);
-      }
+      wakeLock.release()
     }
-  }, [currentStep, isRunning, isPaused, timeLeft, developmentTime, initialShakePeriod]);
+  }, [timer.isRunning, wakeLock])
 
-  // Reset shaking state when starting timer
-  React.useEffect(() => {
-    if (currentStep === 'dev') {
-      setInitialShakePeriod(true);
-    } else {
-      setShouldShake(false);
-      setInitialShakePeriod(false);
-    }
-  }, [currentStep]);
-
-  const formatTime = (seconds: number) => {
-    // Round to nearest second to avoid floating point precision issues
-    seconds = Math.round(seconds);
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const startTimer = (step: Step) => {
-    setCurrentStep(step);
-    setTimeLeft(steps[step].time);
-    setIsRunning(true);
-    setIsPaused(false);
-    setNextAgitation(null);
-  };
-
-  const toggleTimer = () => {
-    if (isRunning) {
-      setIsPaused(!isPaused);
-    }
-  };
-
-  const resetTimer = () => {
-    if (currentStep) {
-      setTimeLeft(steps[currentStep].time);
-      setIsRunning(false);
-      setIsPaused(false);
-      setNextAgitation(null);
-    }
-  };
-
-  const getStepTemp = (step: 'dev' | 'stop' | 'fix' | 'wash') => {
-    const temp = steps[step].temp;
-    return temperatureUnit === 'celsius' 
-      ? `${temp}°C` 
-      : `${(temp * 9/5 + 32).toFixed(1)}°F`;
-  };
-
-  const getAgitationInstructions = () => {
-    if (!currentStep || !steps[currentStep].agitation) return null;
-    
-    const { initial, duration } = steps[currentStep].agitation;
-    const totalTime = steps[currentStep].time;
-    const elapsed = totalTime - timeLeft;
-    
-    if (currentStep === 'wash') {
-      if (washingMethod.type === 'ilford') {
-        const currentCycle = Math.floor(elapsed / 60) + 1;
-        const inversionsForCycle = currentCycle === 1 
-          ? washingMethod.ilfordInversions.first 
-          : currentCycle === 2 
-            ? washingMethod.ilfordInversions.second 
-            : washingMethod.ilfordInversions.third;
-        
-        return (
-          <div className="text-orange-600 font-medium">
-            Cycle {currentCycle}: {inversionsForCycle} inversions
-          </div>
-        );
-      } else if (washingMethod.type === 'custom') {
-        const changeInterval = Math.floor(totalTime / washingMethod.custom.waterChanges);
-        const nextChange = changeInterval - (elapsed % changeInterval);
-        const currentChange = Math.floor(elapsed / changeInterval) + 1;
-        
-        if (currentChange <= washingMethod.custom.waterChanges) {
-          return (
-            <div className="text-orange-600 font-medium">
-              Water change {currentChange} of {washingMethod.custom.waterChanges} in {formatTime(nextChange)}
-            </div>
-          );
-        }
-      }
-    }
-    
-    if (elapsed < initial) {
-      return (
-        <div className="text-orange-600 font-medium">
-          Continue initial agitation for {formatTime(nextAgitation || 0)}
-        </div>
-      );
-    }
-    
-    if (nextAgitation && nextAgitation <= duration) {
-      return (
-        <div className="text-orange-600 font-medium">
-          Agitate for {nextAgitation} seconds
-        </div>
-      );
-    }
-    
-    return (
-      <div className="text-gray-600">
-        Next agitation in {formatTime(nextAgitation || 0)}
-      </div>
-    );
-  };
-
-  React.useEffect(() => {
-    if (!isRunning || timeLeft > 0) return;
-
-    // Move to next step when current step is complete
-    if (currentStep === 'dev') {
-      setCurrentStep('stop');
-      setTimeLeft(steps.stop.time);
-    } else if (currentStep === 'stop') {
-      setCurrentStep('fix');
-      setTimeLeft(steps.fix.time);
-    } else if (currentStep === 'fix') {
-      setCurrentStep('wash');
-      setTimeLeft(steps.wash.time);
-    } else {
-      setIsRunning(false);
-    }
-  }, [isRunning, timeLeft, currentStep, steps]);
-
-  const getWashingMethodDescription = () => {
-    switch (washingMethod.type) {
-      case 'running':
-        return `• Running water rinse for ${washingMethod.runningWaterTime} minutes`;
-      case 'ilford':
-        return `• Ilford method: ${washingMethod.ilfordInversions.first}/${washingMethod.ilfordInversions.second}/${washingMethod.ilfordInversions.third} inversions`;
-      case 'custom':
-        return `• ${washingMethod.custom.waterChanges} water changes over ${washingMethod.custom.totalTime} minutes`;
-      default:
-        return '';
-    }
-  };
-
-  // Normalize dilution display
-  const normalizeDilutionDisplay = (dilution: string): string => {
-    return dilution ? dilution.replace(':', '+') : dilution;
-  };
+  const getStepTemp = (step: Step) =>
+    displayTemp(timer.steps[step].temp, temperatureUnit)
 
   return (
     <div className="space-y-6">
-      {/* Main Timer Display */}
-      <div className="bg-black text-white p-6 rounded-lg">
-        <div className="flex flex-col items-center justify-center">
-          <h2 className="text-xl font-medium mb-2">
-            {currentStep ? stepLabels[currentStep] : 'Development Process'}
-          </h2>
-          <div className="text-6xl font-mono font-bold my-4">
-            {formatTime(timeLeft)}
-          </div>
-          <p className="text-lg mb-4">
-            at {getStepTemp(currentStep || 'dev')}
-          </p>
+      <TimerDisplay
+        timeLeft={timer.timeLeft}
+        currentStep={timer.currentStep}
+        isRunning={timer.isRunning}
+        isPaused={timer.isPaused}
+        shouldShake={timer.shouldShake}
+        initialShakePeriod={timer.initialShakePeriod}
+        temperatureDisplay={getStepTemp(timer.currentStep || "dev")}
+        onStart={() => timer.startTimer("dev")}
+        onToggle={timer.toggleTimer}
+        onReset={timer.resetTimer}
+      />
 
-          {/* Shake indicator */}
-          {currentStep === 'dev' && isRunning && !isPaused && (
-            <div className="mb-4">
-              <div className={`flex items-center justify-center gap-2 ${shouldShake ? 'animate-pulse' : ''}`}>
-                <Vibrate 
-                  size={32} 
-                  className={`text-white ${shouldShake ? 'animate-vibrate' : 'opacity-50'}`} 
-                  strokeWidth={shouldShake ? 2.5 : 1.5}
-                />
-                <span className={`text-lg font-bold ${shouldShake ? 'text-white' : 'text-white/50'}`}>
-                  {shouldShake ? 'SHAKE NOW!' : 'Rest'}
-                </span>
-              </div>
-              {initialShakePeriod && shouldShake && (
-                <p className="text-sm mt-2 text-white/70">Continuous initial shaking</p>
-              )}
-              {!initialShakePeriod && (
-                <p className="text-sm mt-2 text-white/70">Shake for 10 seconds every minute</p>
-              )}
-            </div>
-          )}
-          
-          {isRunning ? (
-            <div className="flex gap-4 mt-2">
-              <button
-                onClick={toggleTimer}
-                className="p-2 rounded-full hover:bg-gray-800 transition-colors"
-                title={isPaused ? "Resume Timer" : "Pause Timer"}
-              >
-                {isPaused ? <Play className="w-8 h-8" /> : <Pause className="w-8 h-8" />}
-              </button>
-              <button
-                onClick={resetTimer}
-                className="p-2 rounded-full hover:bg-gray-800 transition-colors"
-                title="Reset Timer"
-              >
-                <RotateCcw className="w-8 h-8" />
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => startTimer('dev')}
-              className="p-4 rounded-full bg-white text-black hover:bg-gray-200 transition-colors"
-              title="Start Timer"
-            >
-              <Play className="w-8 h-8" />
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Darkroom Mode Button */}
       <div className="w-full mt-4">
         <button
           onClick={() => setIsDevelopmentModeOpen(true)}
@@ -431,20 +104,20 @@ export function Timer({
         </button>
       </div>
 
-      {/* Development Info Card */}
       <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
         <h3 className="text-lg font-medium mb-4">Development Process</h3>
-        
-        {/* Film and Developer Info */}
         <div className="space-y-2 mb-4">
           {filmName && (
             <p>
-              <span className="font-medium">Film:</span> {filmName} {filmFormat && `(${filmFormat})`} {filmIso && `@ ISO ${filmIso}`}
+              <span className="font-medium">Film:</span> {filmName}{" "}
+              {filmFormat && `(${filmFormat})`} {filmIso && `@ ISO ${filmIso}`}
             </p>
           )}
           {developerName && (
             <p>
-              <span className="font-medium">Developer:</span> {developerName} {developerDilution && `(${normalizeDilutionDisplay(developerDilution)})`}
+              <span className="font-medium">Developer:</span> {developerName}{" "}
+              {developerDilution &&
+                `(${normalizeDilutionDisplay(developerDilution)})`}
             </p>
           )}
           {totalVolume && (
@@ -452,43 +125,22 @@ export function Timer({
               <span className="font-medium">Volume:</span> {totalVolume}ml
             </p>
           )}
+          {pushPullLine && (
+            <p className="text-sm text-gray-600">{pushPullLine}</p>
+          )}
+          {chartNote && (
+            <p className="text-sm text-gray-600">{chartNote}</p>
+          )}
         </div>
-        
-        {/* Process Steps */}
-        <div className="space-y-3 mt-4">
-          <div className="flex items-center gap-3 p-3 rounded-md hover:bg-gray-100 cursor-pointer" onClick={() => !isRunning && startTimer('dev')}>
-            <PlayCircle className={`w-6 h-6 ${currentStep === 'dev' ? 'text-blue-500' : 'text-gray-400'}`} />
-            <div className="flex-1">
-              <p className="font-medium">Development</p>
-              <p className="text-sm text-gray-600">{formatTime(steps.dev.time)} at {getStepTemp('dev')}</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-3 p-3 rounded-md hover:bg-gray-100 cursor-pointer" onClick={() => !isRunning && startTimer('stop')}>
-            <PlayCircle className={`w-6 h-6 ${currentStep === 'stop' ? 'text-blue-500' : 'text-gray-400'}`} />
-            <div className="flex-1">
-              <p className="font-medium">Stop Bath</p>
-              <p className="text-sm text-gray-600">{formatTime(steps.stop.time)} at {getStepTemp('stop')}</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-3 p-3 rounded-md hover:bg-gray-100 cursor-pointer" onClick={() => !isRunning && startTimer('fix')}>
-            <PlayCircle className={`w-6 h-6 ${currentStep === 'fix' ? 'text-blue-500' : 'text-gray-400'}`} />
-            <div className="flex-1">
-              <p className="font-medium">Fixer</p>
-              <p className="text-sm text-gray-600">{formatTime(steps.fix.time)} at {getStepTemp('fix')}</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-3 p-3 rounded-md hover:bg-gray-100 cursor-pointer" onClick={() => !isRunning && startTimer('wash')}>
-            <PlayCircle className={`w-6 h-6 ${currentStep === 'wash' ? 'text-blue-500' : 'text-gray-400'}`} />
-            <div className="flex-1">
-              <p className="font-medium">Washing</p>
-              <p className="text-sm text-gray-600">{formatTime(steps.wash.time)} at {getStepTemp('wash')}</p>
-            </div>
-          </div>
-        </div>
-        
+
+        <StepIndicator
+          steps={timer.steps}
+          currentStep={timer.currentStep}
+          isRunning={timer.isRunning}
+          onStartStep={timer.startTimer}
+          getStepTemp={getStepTemp}
+        />
+
         <button
           onClick={() => setIsEditModalOpen(true)}
           className="mt-4 text-sm flex items-center gap-1 text-gray-500 hover:text-gray-700"
@@ -497,236 +149,20 @@ export function Timer({
         </button>
       </div>
 
-      {/* Edit Modal */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 space-y-6">
-            <h3 className="text-lg font-medium">Edit Process Times</h3>
-            
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Stop Bath Time (min)</label>
-                  <input
-                    type="number"
-                    min="0.1"
-                    step="0.1"
-                    value={customTimes.stop}
-                    onChange={(e) => setCustomTimes(prev => ({ ...prev, stop: Number(e.target.value) }))}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Fixer Time (min)</label>
-                  <input
-                    type="number"
-                    min="0.1"
-                    step="0.1"
-                    value={customTimes.fix}
-                    onChange={(e) => setCustomTimes(prev => ({ ...prev, fix: Number(e.target.value) }))}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  />
-                </div>
-              </div>
-
-              <div className="border-t pt-4">
-                <h4 className="text-sm font-medium mb-3">Washing Method</h4>
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <div className="flex items-start space-x-3">
-                      <input
-                        type="radio"
-                        id="running-water"
-                        checked={washingMethod.type === 'running'}
-                        onChange={() => setWashingMethod(prev => ({
-                          ...prev,
-                          type: 'running'
-                        }))}
-                        className="mt-1"
-                      />
-                      <div>
-                        <label htmlFor="running-water" className="text-sm font-medium">Running Water Rinse</label>
-                        <p className="text-xs text-gray-500 mt-1">
-                          Steady stream of water at processing temperature
-                        </p>
-                        {washingMethod.type === 'running' && (
-                          <div className="mt-2">
-                            <label className="text-sm font-medium mb-2 block">Wash Time (min)</label>
-                            <input
-                              type="number"
-                              min="5"
-                              max="20"
-                              step="1"
-                              value={customTimes.wash}
-                              onChange={(e) => {
-                                const newTime = Number(e.target.value);
-                                setCustomTimes(prev => ({ ...prev, wash: newTime }));
-                                setWashingMethod(prev => ({ ...prev, runningWaterTime: newTime }));
-                              }}
-                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-3">
-                      <input
-                        type="radio"
-                        id="custom-method"
-                        checked={washingMethod.type === 'custom'}
-                        onChange={() => setWashingMethod(prev => ({
-                          ...prev,
-                          type: 'custom'
-                        }))}
-                        className="mt-1"
-                      />
-                      <div>
-                        <label htmlFor="custom-method" className="text-sm font-medium">Custom Method</label>
-                        <p className="text-xs text-gray-500 mt-1">
-                          Specify total time and number of water changes
-                        </p>
-                        {washingMethod.type === 'custom' && (
-                          <div className="grid grid-cols-2 gap-2 mt-2">
-                            <div>
-                              <label className="text-sm mb-1 block">Total Time (min)</label>
-                              <input
-                                type="number"
-                                min="1"
-                                value={washingMethod.custom.totalTime}
-                                onChange={(e) => setWashingMethod(prev => ({
-                                  ...prev,
-                                  custom: {
-                                    ...prev.custom,
-                                    totalTime: Number(e.target.value)
-                                  }
-                                }))}
-                                className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-sm"
-                              />
-                            </div>
-                            <div>
-                              <label className="text-sm mb-1 block">Water Changes</label>
-                              <input
-                                type="number"
-                                min="1"
-                                value={washingMethod.custom.waterChanges}
-                                onChange={(e) => setWashingMethod(prev => ({
-                                  ...prev,
-                                  custom: {
-                                    ...prev.custom,
-                                    waterChanges: Number(e.target.value)
-                                  }
-                                }))}
-                                className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-sm"
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="flex items-start space-x-3">
-                      <input
-                        type="radio"
-                        id="ilford-method"
-                        checked={washingMethod.type === 'ilford'}
-                        onChange={() => setWashingMethod(prev => ({
-                          ...prev,
-                          type: 'ilford'
-                        }))}
-                        className="mt-1"
-                      />
-                      <div>
-                        <label htmlFor="ilford-method" className="text-sm font-medium">Ilford Method (Fill-and-Dump)</label>
-                        <p className="text-xs text-gray-500 mt-1">
-                          Three cycles of filling, inverting, and dumping
-                        </p>
-                        {washingMethod.type === 'ilford' && (
-                          <div className="grid grid-cols-3 gap-2 mt-2">
-                            <div>
-                              <label className="text-xs mb-1 block">First Cycle</label>
-                              <input
-                                type="number"
-                                min="1"
-                                value={washingMethod.ilfordInversions?.first || 5}
-                                onChange={(e) => setWashingMethod(prev => ({
-                                  ...prev,
-                                  ilfordInversions: {
-                                    ...prev.ilfordInversions,
-                                    first: Number(e.target.value)
-                                  }
-                                }))}
-                                className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-sm"
-                              />
-                            </div>
-                            <div>
-                              <label className="text-xs mb-1 block">Second Cycle</label>
-                              <input
-                                type="number"
-                                min="1"
-                                value={washingMethod.ilfordInversions?.second || 10}
-                                onChange={(e) => setWashingMethod(prev => ({
-                                  ...prev,
-                                  ilfordInversions: {
-                                    ...prev.ilfordInversions,
-                                    second: Number(e.target.value)
-                                  }
-                                }))}
-                                className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-sm"
-                              />
-                            </div>
-                            <div>
-                              <label className="text-xs mb-1 block">Third Cycle</label>
-                              <input
-                                type="number"
-                                min="1"
-                                value={washingMethod.ilfordInversions?.third || 20}
-                                onChange={(e) => setWashingMethod(prev => ({
-                                  ...prev,
-                                  ilfordInversions: {
-                                    ...prev.ilfordInversions,
-                                    third: Number(e.target.value)
-                                  }
-                                }))}
-                                className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-sm"
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-end space-x-2 pt-4">
-              <button
-                onClick={() => setIsEditModalOpen(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  setIsEditModalOpen(false)
-                  // Reset timer if it's not running
-                  if (!isRunning) {
-                    resetTimer()
-                  }
-                }}
-                className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
+        <ProcessEditor
+          customTimes={customTimes}
+          onCustomTimesChange={setCustomTimes}
+          washingMethod={washingMethod}
+          onWashingMethodChange={setWashingMethod}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={() => {
+            setIsEditModalOpen(false)
+            if (!timer.isRunning) timer.resetTimer()
+          }}
+        />
       )}
 
-      {/* Development Mode */}
       <DevelopmentMode
         isOpen={isDevelopmentModeOpen}
         onClose={() => setIsDevelopmentModeOpen(false)}
@@ -737,5 +173,5 @@ export function Timer({
         time={developmentTime * 60}
       />
     </div>
-  );
-} 
+  )
+}

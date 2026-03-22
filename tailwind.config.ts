@@ -42,6 +42,13 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        stripe: {
+          orange: "hsl(var(--stripe-orange))",
+          "red-orange": "hsl(var(--stripe-red-orange))",
+          red: "hsl(var(--stripe-red))",
+          magenta: "hsl(var(--stripe-magenta))",
+          plum: "hsl(var(--stripe-plum))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -25,8 +25,6 @@ export function Timer({
   developerDilution,
   totalVolume = 500,
   temperatureUnit = "celsius",
-  isColor = false,
-  constantAgitation = false
 }: TimerProps) {
   const [currentStep, setCurrentStep] = React.useState<string | null>(null);
   const [isRunning, setIsRunning] = React.useState(false);
@@ -45,7 +43,7 @@ export function Timer({
   };
   
   // Get temperature display with unit
-  const getStepTemp = (step: string) => {
+  const getStepTemp = () => {
     return `${temperature}°${temperatureUnit === "celsius" ? "C" : "F"}`;
   };
   
@@ -60,7 +58,7 @@ export function Timer({
       <div className="timer-display">
         <h2>{currentStep || 'Development Process'}</h2>
         <div className="time">{formatTime(developmentTime * 60)}</div>
-        <p>at {getStepTemp(currentStep || 'dev')}</p>
+        <p>at {getStepTemp()}</p>
         
         {!isRunning ? (
           <button 
