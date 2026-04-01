@@ -19,17 +19,17 @@ export function PresetCard({ preset, onDelete }: PresetCardProps) {
       : "—"
 
   return (
-    <div className="p-4 bg-white rounded-lg border border-gray-200 shadow-sm flex items-start justify-between">
+    <div className="p-4 bg-card rounded-lg border border-border shadow-sm flex items-start justify-between">
       <div className="space-y-1 flex-1 min-w-0">
         <p className="font-medium truncate">{preset.label}</p>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-foreground">
           {preset.filmName} ({preset.filmFormat}) · ISO {preset.filmIso}
         </p>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted-foreground">
           {preset.developerName} (
           {normalizeDilutionDisplay(preset.developerDilution)}) · {timeDisplay}
         </p>
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-muted-foreground">
           {preset.totalVolume}ml · {preset.modifiedTemperature}
           {preset.temperatureUnit === "celsius" ? "°C" : "°F"}
         </p>
@@ -43,7 +43,7 @@ export function PresetCard({ preset, onDelete }: PresetCardProps) {
         </Link>
         <button
           onClick={() => onDelete(preset.id)}
-          className="p-1.5 rounded hover:bg-gray-100 text-red-500 transition-colors"
+          className="p-1.5 rounded hover:bg-muted text-destructive transition-colors"
         >
           <Trash2 size={14} />
         </button>

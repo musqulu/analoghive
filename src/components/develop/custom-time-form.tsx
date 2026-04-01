@@ -156,7 +156,7 @@ export function CustomTimeForm({ initial, onSave, onCancel }: CustomTimeFormProp
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+          className="px-4 py-2 text-sm font-medium text-foreground hover:bg-muted rounded-md transition-colors"
         >
           Cancel
         </button>

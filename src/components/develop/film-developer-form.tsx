@@ -58,7 +58,7 @@ export function FilmDeveloperForm({
   onTemperatureUnitChange,
 }: FilmDeveloperFormProps) {
   return (
-    <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+    <div className="p-6 bg-card rounded-lg border border-border shadow-sm">
       <h3 className="text-lg font-medium mb-4">Film & Developer Selection</h3>
       <div className="space-y-6">
         <div className="space-y-4">
@@ -140,7 +140,7 @@ export function FilmDeveloperForm({
                 }
               />
               {availableDevelopers.length === 0 && (
-                <p className="text-sm text-amber-600 mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   No developers available for this film in {selectedFormat} format.
                   Try selecting a different format.
                 </p>

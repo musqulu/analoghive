@@ -29,15 +29,15 @@ export function DevelopmentSummary({
   if (!selectedFilm && !selectedDeveloper && !developmentInfo) return null
 
   return (
-    <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-4">
+    <div className="p-4 bg-card rounded-lg border border-border space-y-4">
       {selectedFilm && (
         <div>
           <p className="text-lg font-medium">Film: {selectedFilm}</p>
           {selectedIso && (
-            <p className="text-sm text-gray-600">ISO: {selectedIso}</p>
+            <p className="text-sm text-muted-foreground">ISO: {selectedIso}</p>
           )}
           {isColor && (
-            <p className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-md inline-block mt-1">
+            <p className="text-sm bg-muted text-muted-foreground px-2 py-1 rounded-md inline-block mt-1">
               Color Film
             </p>
           )}

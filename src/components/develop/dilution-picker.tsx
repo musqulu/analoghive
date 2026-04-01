@@ -34,7 +34,7 @@ export function DilutionPicker({
         {pushPullLine && (
           <p className="text-xs text-muted-foreground mb-2">{pushPullLine}</p>
         )}
-        <span className="block text-xs font-normal text-gray-500 mb-2">
+        <span className="block text-xs font-normal text-muted-foreground mb-2">
           Sorted by development time. Times are derived from chart data; see note
           per row when approximate.
         </span>
@@ -78,31 +78,31 @@ export function DilutionPicker({
   if (isColor && !Array.isArray(developmentInfo)) {
     const info = developmentInfo
     return (
-      <div className="mt-4 p-3 bg-blue-50 rounded-md">
+      <div className="mt-4 p-3 bg-muted rounded-md">
         <p className="text-sm font-medium">Color Film Development</p>
         {pushPullLine && (
           <p className="text-xs text-muted-foreground mt-1">{pushPullLine}</p>
         )}
         <div className="mt-2 grid grid-cols-2 gap-2">
           <div>
-            <p className="text-xs text-gray-600">Dilution</p>
+            <p className="text-xs text-muted-foreground">Dilution</p>
             <p className="text-sm">
               {normalizeDilutionDisplay(info.dilution)}
             </p>
           </div>
           <div>
-            <p className="text-xs text-gray-600">Time</p>
+            <p className="text-xs text-muted-foreground">Time</p>
             <p className="text-sm">{info.time} min</p>
           </div>
           <div>
-            <p className="text-xs text-gray-600">Temperature</p>
+            <p className="text-xs text-muted-foreground">Temperature</p>
             <p className="text-sm">
               {displayTemp(info.temperature, temperatureUnit)}
             </p>
           </div>
           {info.approximateNote && (
             <div className="col-span-2">
-              <p className="text-xs text-gray-600">Source</p>
+              <p className="text-xs text-muted-foreground">Source</p>
               <p className="text-sm">{info.approximateNote}</p>
             </div>
           )}
@@ -110,7 +110,7 @@ export function DilutionPicker({
         <button
           type="button"
           onClick={() => onDilutionChange(info.dilution)}
-          className="mt-2 w-full py-2 px-3 rounded-md text-sm font-medium bg-blue-100 hover:bg-blue-200 text-blue-800"
+          className="mt-2 w-full py-2 px-3 rounded-md text-sm font-medium bg-secondary hover:bg-secondary/80 text-secondary-foreground transition-colors"
         >
           Use These Settings
         </button>

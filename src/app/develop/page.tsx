@@ -82,7 +82,7 @@ export default function DevelopPage() {
             selection.selectedIso &&
             selection.selectedDilution && (
               <>
-                <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                <div className="p-6 bg-card rounded-lg border border-border shadow-sm">
                   <h3 className="text-lg font-medium mb-4">Volume Mixer</h3>
                   <VolumeMixer
                     dilution={selection.selectedDilution}
@@ -107,7 +107,7 @@ export default function DevelopPage() {
                   pushPullLine={selection.pushPullLine}
                 />
 
-                <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                <div className="p-6 bg-card rounded-lg border border-border shadow-sm">
                   <Timer
                     filmName={selection.selectedFilm}
                     filmFormat={selection.selectedFormat}

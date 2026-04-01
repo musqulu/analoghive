@@ -35,7 +35,7 @@ export function TemperatureCorrection({
   pushPullLine,
 }: TemperatureCorrectionProps) {
   return (
-    <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+    <div className="p-6 bg-card rounded-lg border border-border shadow-sm">
       <h3 className="text-lg font-medium mb-4">Temperature Correction</h3>
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
@@ -77,13 +77,13 @@ export function TemperatureCorrection({
               id="constant-agitation"
               checked={constantAgitation}
               onChange={(e) => onConstantAgitationChange(e.target.checked)}
-              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+              className="h-4 w-4 rounded border-input text-primary focus:ring-ring"
             />
             <label htmlFor="constant-agitation" className="text-sm font-medium">
               Constant Agitation
             </label>
           </div>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Enable this if you plan to use constant agitation instead of
             intermittent agitation
           </p>
@@ -95,7 +95,7 @@ export function TemperatureCorrection({
               {Math.floor(correctedTime)}:
               {String(Math.round((correctedTime % 1) * 60)).padStart(2, "0")} min
             </p>
-            <p className="text-xs text-gray-600 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               For {selectedFilm} ({selectedFormat}) at {selectedIso} ISO in{" "}
               {selectedDeveloper} {selectedDilution}
             </p>
@@ -108,7 +108,7 @@ export function TemperatureCorrection({
               <p className="text-xs text-muted-foreground mt-1">{pushPullLine}</p>
             )}
             {constantAgitation && (
-              <p className="text-xs text-gray-600 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 Time adjusted for constant agitation
               </p>
             )}
