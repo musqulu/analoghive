@@ -161,7 +161,7 @@ export function DevelopmentMode({
       {/* Header with info and close button */}
       <div className="w-full flex justify-between items-center bg-black border-b border-red-900/30">
         <div className="text-red-600 text-sm md:text-base p-2">
-          {dilution} @ {formatTime(time / 60)}
+          {dilution} @ {formatTime(time)}
         </div>
         <button 
           onClick={handleClose}

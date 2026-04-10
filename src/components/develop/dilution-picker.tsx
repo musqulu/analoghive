@@ -2,6 +2,7 @@
 
 import { normalizeDilutionDisplay } from "@/utils/normalize-dilution"
 import { displayTemp } from "@/utils/temperature"
+import { formatTime } from "@/utils/format-time"
 import type { DevelopmentOption } from "@/types/development"
 
 interface DilutionPickerProps {
@@ -53,7 +54,7 @@ export function DilutionPicker({
               <div className="flex justify-between items-center w-full gap-2">
                 <span>{normalizeDilutionDisplay(info.dilution)}</span>
                 <span className="shrink-0">
-                  {info.time} min @{" "}
+                  {formatTime(info.time * 60)} @{" "}
                   {displayTemp(info.temperature, temperatureUnit)}
                 </span>
               </div>
@@ -92,7 +93,7 @@ export function DilutionPicker({
           </div>
           <div>
             <p className="text-xs text-muted-foreground">Time</p>
-            <p className="text-sm">{info.time} min</p>
+            <p className="text-sm">{formatTime(info.time * 60)}</p>
           </div>
           <div>
             <p className="text-xs text-muted-foreground">Temperature</p>

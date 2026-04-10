@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { calculateCorrectedTime } from "@/data/processed-development-times"
+import { formatTime } from "@/utils/format-time"
 
 export default function TemperatureCorrectionPage() {
   const [baseTemp, setBaseTemp] = React.useState(20)
@@ -13,12 +14,6 @@ export default function TemperatureCorrectionPage() {
     () => calculateCorrectedTime(baseTemp, baseTime, newTemp, constantAgitation),
     [baseTemp, baseTime, newTemp, constantAgitation]
   )
-
-  const formatTime = (minutes: number) => {
-    const mins = Math.floor(minutes)
-    const secs = String(Math.round((minutes % 1) * 60)).padStart(2, "0")
-    return `${mins}:${secs}`
-  }
 
   const inputClass =
     "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -93,7 +88,7 @@ export default function TemperatureCorrectionPage() {
               Adjusted Development Time
             </p>
             <p className="text-3xl font-mono font-bold">
-              {formatTime(correctedTime)} min
+              {formatTime(correctedTime * 60)}
             </p>
             {newTemp !== baseTemp && (
               <p className="text-xs text-muted-foreground mt-2">

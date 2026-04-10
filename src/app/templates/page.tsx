@@ -6,6 +6,7 @@ import { useCustomTimes } from "@/hooks/use-custom-times"
 import { PresetCard } from "@/components/preset-card"
 import { CustomTimeForm } from "@/components/develop/custom-time-form"
 import { normalizeDilutionDisplay } from "@/utils/normalize-dilution"
+import { formatTime } from "@/utils/format-time"
 import { Pencil, Trash2, Plus, Lock } from "lucide-react"
 import type { CustomDevelopmentTime } from "@/types/development"
 
@@ -144,7 +145,7 @@ export default function TemplatesPage() {
                     {normalizeDilutionDisplay(ct.dilution)})
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    ISO {ct.iso} · {ct.time} min @ {ct.temperature}°C ·{" "}
+                    ISO {ct.iso} · {formatTime(ct.time * 60)} @ {ct.temperature}°C ·{" "}
                     {ct.format}
                   </p>
                   {ct.notes && (

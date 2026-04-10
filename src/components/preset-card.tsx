@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { Trash2 } from "lucide-react"
 import { normalizeDilutionDisplay } from "@/utils/normalize-dilution"
+import { formatTime } from "@/utils/format-time"
 import type { Preset } from "@/types/development"
 
 interface PresetCardProps {
@@ -13,9 +14,7 @@ interface PresetCardProps {
 export function PresetCard({ preset, onDelete }: PresetCardProps) {
   const timeDisplay =
     preset.correctedTime !== null
-      ? `${Math.floor(preset.correctedTime)}:${String(
-          Math.round((preset.correctedTime % 1) * 60)
-        ).padStart(2, "0")} min`
+      ? formatTime(preset.correctedTime * 60)
       : "—"
 
   return (

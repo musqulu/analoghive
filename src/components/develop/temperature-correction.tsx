@@ -1,6 +1,7 @@
 "use client"
 
 import { displayTemp } from "@/utils/temperature"
+import { formatTime } from "@/utils/format-time"
 import type { DevelopmentOption, FilmFormat } from "@/types/development"
 
 interface TemperatureCorrectionProps {
@@ -47,7 +48,7 @@ export function TemperatureCorrection({
           </div>
           <div>
             <p className="text-sm font-medium mb-2">Recommended Time</p>
-            <p className="text-2xl font-mono">{selectedInfo?.time ?? 0} min</p>
+            <p className="text-2xl font-mono">{formatTime((selectedInfo?.time ?? 0) * 60)}</p>
             {selectedInfo?.approximateNote && (
               <p className="text-xs text-muted-foreground mt-1">
                 {selectedInfo.approximateNote}
@@ -92,8 +93,7 @@ export function TemperatureCorrection({
           <div className="mt-4 p-3 bg-muted rounded-md">
             <p className="text-sm font-medium">
               Adjusted development time:{" "}
-              {Math.floor(correctedTime)}:
-              {String(Math.round((correctedTime % 1) * 60)).padStart(2, "0")} min
+              {formatTime(correctedTime * 60)}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
               For {selectedFilm} ({selectedFormat}) at {selectedIso} ISO in{" "}
