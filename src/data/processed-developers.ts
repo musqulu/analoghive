@@ -7885,41 +7885,6 @@ export const developers: Developer[] = [
     }
   },
   {
-    "id": "ilfordilfosol3",
-    "name": "Ilford Ilfosol 3",
-    "manufacturer": "Ilford",
-    "type": "B&W",
-    "dilutions": {
-      "1:9": {
-        "ratio": "1+9",
-        "temperature": 20,
-        "times": {
-          "50": 18,
-          "80": 7,
-          "250": 6.5,
-          "400": 6
-        }
-      },
-      "1:14": {
-        "ratio": "1+14",
-        "temperature": 20,
-        "times": {
-          "100": 8,
-          "125": 10,
-          "400": 6,
-          "800": 12
-        }
-      },
-      "1:19": {
-        "ratio": "1+19",
-        "temperature": 20,
-        "times": {
-          "64": 5
-        }
-      }
-    }
-  },
-  {
     "id": "spursd2525",
     "name": "Spur SD 2525",
     "manufacturer": "Generic",

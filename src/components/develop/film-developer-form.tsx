@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import { Combobox } from "@/components/ui/combobox"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import {
@@ -34,6 +35,54 @@ interface FilmDeveloperFormProps {
   onPushPullChange: (stops: number, iso: string) => void
   temperatureUnit: string
   onTemperatureUnitChange: (value: string) => void
+}
+
+function PushPullToggle({
+  ratingIso,
+  availableIsoValues,
+  pushPullStops,
+  onPushPullChange,
+}: {
+  ratingIso: number
+  availableIsoValues: number[]
+  pushPullStops: number
+  onPushPullChange: (stops: number, iso: string) => void
+}) {
+  const [enabled, setEnabled] = React.useState(pushPullStops !== 0)
+
+  const handleToggle = (checked: boolean) => {
+    setEnabled(checked)
+    if (!checked) {
+      const closest =
+        availableIsoValues.find((v) => v === ratingIso) ??
+        availableIsoValues.reduce((prev, curr) =>
+          Math.abs(curr - ratingIso) < Math.abs(prev - ratingIso) ? curr : prev
+        )
+      onPushPullChange(0, String(closest))
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      <label className="flex items-center gap-2 cursor-pointer select-none">
+        <input
+          type="checkbox"
+          checked={enabled}
+          onChange={(e) => handleToggle(e.target.checked)}
+          className="h-4 w-4 rounded border-border accent-primary"
+        />
+        <span className="text-sm font-medium">Push / Pull</span>
+      </label>
+      {enabled && (
+        <PushPullSelector
+          ratingIso={ratingIso}
+          availableIsoValues={availableIsoValues}
+          pushPullStops={pushPullStops}
+          onPushPullChange={onPushPullChange}
+        />
+      )}
+    </div>
+  )
 }
 
 export function FilmDeveloperForm({
@@ -159,7 +208,7 @@ export function FilmDeveloperForm({
         {selectedFilm && selectedDeveloper && (
           <>
             {selectedFilmData && availableIsoValues.length > 0 && (
-              <PushPullSelector
+              <PushPullToggle
                 ratingIso={ratingIso}
                 availableIsoValues={availableIsoValues}
                 pushPullStops={pushPullStops}

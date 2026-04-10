@@ -14,7 +14,11 @@ function readJSON<T>(key: string): T[] {
 }
 
 function writeJSON<T>(key: string, data: T[]) {
-  localStorage.setItem(key, JSON.stringify(data))
+  try {
+    localStorage.setItem(key, JSON.stringify(data))
+  } catch {
+    // localStorage may throw on quota exceeded
+  }
 }
 
 export function getPresets(): Preset[] {

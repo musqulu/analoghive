@@ -43,6 +43,16 @@ function generateFilmId(name: string): string {
     .replace(/\s+/g, '');
 }
 
+const DEVELOPER_NAME_ALIASES: Record<string, string> = {
+  "Ilford Ilfosol 3": "Ilfosol 3",
+  "Ilford Multigrade": "Multigrade",
+}
+
+function normalizeDeveloperName(name: string): string {
+  const trimmed = name.trim()
+  return DEVELOPER_NAME_ALIASES[trimmed] ?? trimmed
+}
+
 // Function to generate a unique ID from a developer name
 function generateDeveloperId(name: string): string {
   return name
@@ -66,7 +76,7 @@ function extractTemperature(tempStr: string): number {
 
 // Process all film data files
 async function processFilmData() {
-  const filmDataDir = path.join(__dirname, 'film_data');
+  const filmDataDir = path.join(__dirname, '..', 'src', 'data', 'film_data');
   const files = fs.readdirSync(filmDataDir).filter((file: string) => file.endsWith('.json'));
   
   const films = new Map();
@@ -114,7 +124,8 @@ async function processFilmData() {
       }
       
       // Process development times
-      const developerId = generateDeveloperId(entry.Developer);
+      const developerName = normalizeDeveloperName(entry.Developer);
+      const developerId = generateDeveloperId(developerName);
       const temperature = extractTemperature(entry.Temp);
       
       // Add 35mm development time
@@ -168,7 +179,7 @@ async function processFilmData() {
   
   // Write to files
   fs.writeFileSync(
-    path.join(__dirname, 'processed-films.ts'),
+    path.join(__dirname, '..', 'src', 'data', 'processed-films.ts'),
     `export interface Film {
   id: string;
   name: string;
@@ -204,7 +215,7 @@ export function getFilmFormats(filmId: string): ("35mm" | "120" | "sheet")[] {
   );
   
   fs.writeFileSync(
-    path.join(__dirname, 'processed-development-times.ts'),
+    path.join(__dirname, '..', 'src', 'data', 'processed-development-times.ts'),
     `export interface DevelopmentTime {
   filmId: string;
   developerId: string;

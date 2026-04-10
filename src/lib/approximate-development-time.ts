@@ -34,6 +34,17 @@ function extrapolateTime(
   return Math.max(0.1, y)
 }
 
+function preferStandardTemp(a: DevelopmentTime, b: DevelopmentTime): number {
+  if (a.temperature === b.temperature) return a.temperature
+  if (a.temperature === 20) return 20
+  if (b.temperature === 20) return 20
+  return a.temperature
+}
+
+function round2(n: number): number {
+  return Math.round(n * 100) / 100
+}
+
 export interface ResolvedTime {
   time: number
   temperature: number
@@ -72,20 +83,14 @@ export function resolveTimeFromRows(
       const a = uniq[0]
       const b = uniq[1]
       return {
-        time: extrapolateTime(
+        time: round2(extrapolateTime(
           targetIso,
           a.iso as number,
           a.time,
           b.iso as number,
           b.time
-        ),
-        temperature: extrapolateTime(
-          targetIso,
-          a.iso as number,
-          a.temperature,
-          b.iso as number,
-          b.temperature
-        ),
+        )),
+        temperature: preferStandardTemp(a, b),
         source: "extrapolated",
       }
     }
@@ -105,20 +110,14 @@ export function resolveTimeFromRows(
       const b = uniq[uniq.length - 1]
       const a = uniq[uniq.length - 2]
       return {
-        time: extrapolateTime(
+        time: round2(extrapolateTime(
           targetIso,
           a.iso as number,
           a.time,
           b.iso as number,
           b.time
-        ),
-        temperature: extrapolateTime(
-          targetIso,
-          a.iso as number,
-          a.temperature,
-          b.iso as number,
-          b.temperature
-        ),
+        )),
+        temperature: preferStandardTemp(b, a),
         source: "extrapolated",
       }
     }
@@ -143,8 +142,8 @@ export function resolveTimeFromRows(
     const x1 = upper.iso as number
     const t = (targetIso - x0) / (x1 - x0)
     return {
-      time: lerp(lower.time, upper.time, t),
-      temperature: lerp(lower.temperature, upper.temperature, t),
+      time: round2(lerp(lower.time, upper.time, t)),
+      temperature: preferStandardTemp(lower, upper),
       source: "interpolated",
     }
   }

@@ -165,33 +165,52 @@ export function useDevelopmentSelection() {
       ...new Set(validTimes.map((t) => t.dilution)),
     ] as string[]
 
+    const targetEI = Math.round(ratingIso * Math.pow(2, pushPullStops))
+
     const options: DevelopmentOption[] = []
     for (const dilution of dilutionKeys) {
       const rows = validTimes.filter(
         (t) => t.dilution === dilution && t.iso !== null
       )
       if (rows.length === 0) continue
-      const baseResolved = resolveTimeFromRows(rows, ratingIso)
-      const pp = getPushPullAdjustedDevelopmentTime(
-        baseResolved.time,
-        pushPullStops
-      )
-      const chartNote = sourceToUserNote(baseResolved.source)
-      const stopsLabel =
-        pp.stopsApplied > 0
-          ? `+${pp.stopsApplied}`
-          : `${pp.stopsApplied}`
-      const approximateNote =
-        pp.stopsApplied === 0
-          ? chartNote
-          : `${chartNote} Approximate push/pull: ×${pp.factor.toFixed(2)} (${stopsLabel} stop${Math.abs(pp.stopsApplied) === 1 ? "" : "s"}).`
-      options.push({
-        dilution,
-        time: pp.adjustedMinutes,
-        temperature: baseResolved.temperature,
-        timeSource: baseResolved.source,
-        approximateNote,
-      })
+
+      if (pushPullStops === 0) {
+        const resolved = resolveTimeFromRows(rows, ratingIso)
+        options.push({
+          dilution,
+          time: resolved.time,
+          temperature: resolved.temperature,
+          timeSource: resolved.source,
+          approximateNote: sourceToUserNote(resolved.source),
+        })
+      } else {
+        const chartAtEI = resolveTimeFromRows(rows, targetEI)
+        if (chartAtEI.source === "exact" || chartAtEI.source === "interpolated") {
+          const stopsLabel = pushPullStops > 0 ? `+${pushPullStops}` : `${pushPullStops}`
+          options.push({
+            dilution,
+            time: chartAtEI.time,
+            temperature: chartAtEI.temperature,
+            timeSource: chartAtEI.source,
+            approximateNote: `${sourceToUserNote(chartAtEI.source)} (${stopsLabel} stop${Math.abs(pushPullStops) === 1 ? "" : "s"})`,
+          })
+        } else {
+          const baseResolved = resolveTimeFromRows(rows, ratingIso)
+          const pp = getPushPullAdjustedDevelopmentTime(
+            baseResolved.time,
+            pushPullStops
+          )
+          const chartNote = sourceToUserNote(baseResolved.source)
+          const stopsLabel = pp.stopsApplied > 0 ? `+${pp.stopsApplied}` : `${pp.stopsApplied}`
+          options.push({
+            dilution,
+            time: pp.adjustedMinutes,
+            temperature: baseResolved.temperature,
+            timeSource: baseResolved.source,
+            approximateNote: `${chartNote} Approximate push/pull: ×${pp.factor.toFixed(2)} (${stopsLabel} stop${Math.abs(pp.stopsApplied) === 1 ? "" : "s"}).`,
+          })
+        }
+      }
     }
 
     if (options.length === 0) return null

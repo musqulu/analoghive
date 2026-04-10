@@ -25,6 +25,16 @@ interface Developer {
   }>;
 }
 
+const DEVELOPER_NAME_ALIASES: Record<string, string> = {
+  "Ilford Ilfosol 3": "Ilfosol 3",
+  "Ilford Multigrade": "Multigrade",
+}
+
+function normalizeDeveloperName(name: string): string {
+  const trimmed = name.trim()
+  return DEVELOPER_NAME_ALIASES[trimmed] ?? trimmed
+}
+
 // Function to generate a unique ID from a developer name
 function generateDeveloperId(name: string): string {
   return name
@@ -88,13 +98,13 @@ function guessManufacturer(developerName: string): string {
 
 // Process all film data files to extract developer information
 async function processDeveloperData() {
-  const filmDataDir = path.join(__dirname, 'film_data');
+  const filmDataDir = path.join(__dirname, '..', 'src', 'data', 'film_data');
   const files = fs.readdirSync(filmDataDir).filter(file => file.endsWith('.json'));
   
   const developers = new Map<string, Developer>();
   
   // Read existing developers.ts file
-  const developersFile = fs.readFileSync(path.join(__dirname, 'developers.ts'), 'utf8');
+  const developersFile = fs.readFileSync(path.join(__dirname, '..', 'src', 'data', 'developers.ts'), 'utf8');
   const developersMatch = developersFile.match(/export const developers: Developer\[\] = (\[[\s\S]*?\]);/);
   
   if (developersMatch) {
@@ -121,7 +131,7 @@ async function processDeveloperData() {
       // Skip entries with no development times or no developer info
       if ((!entry['35mm'] && !entry['120'] && !entry.Sheet) || !entry.Developer) continue;
       
-      const developerName = entry.Developer.trim();
+      const developerName = normalizeDeveloperName(entry.Developer);
       const developerId = generateDeveloperId(developerName);
       
       // Skip if we already have this developer with the same ID
@@ -204,7 +214,7 @@ async function processDeveloperData() {
   
   // Write to file
   fs.writeFileSync(
-    path.join(__dirname, 'processed-developers.ts'),
+    path.join(__dirname, '..', 'src', 'data', 'processed-developers.ts'),
     `export interface Developer {
   id: string;
   name: string;
