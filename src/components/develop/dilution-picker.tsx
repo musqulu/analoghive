@@ -7,8 +7,8 @@ import type { DevelopmentOption } from "@/types/development"
 
 interface DilutionPickerProps {
   developmentInfo: DevelopmentOption[] | DevelopmentOption | null
-  selectedDilution: string
-  onDilutionChange: (value: string) => void
+  selectedOptionKey: string
+  onOptionChange: (value: string) => void
   selectedIso: string
   temperatureUnit: string
   isColor: boolean
@@ -17,8 +17,8 @@ interface DilutionPickerProps {
 
 export function DilutionPicker({
   developmentInfo,
-  selectedDilution,
-  onDilutionChange,
+  selectedOptionKey,
+  onOptionChange,
   selectedIso,
   temperatureUnit,
   isColor,
@@ -42,11 +42,11 @@ export function DilutionPicker({
         <div className="grid grid-cols-1 gap-2">
           {developmentInfo.map((info) => (
             <button
-              key={info.dilution}
+              key={info.optionKey}
               type="button"
-              onClick={() => onDilutionChange(info.dilution)}
+              onClick={() => onOptionChange(info.optionKey)}
               className={`py-2 px-3 rounded-md text-sm font-medium text-left flex flex-col gap-1 ${
-                selectedDilution === info.dilution
+                selectedOptionKey === info.optionKey
                   ? "bg-primary text-primary-foreground"
                   : "bg-muted hover:bg-muted/80"
               }`}
@@ -61,7 +61,7 @@ export function DilutionPicker({
               {info.approximateNote && (
                 <span
                   className={`text-xs font-normal ${
-                    selectedDilution === info.dilution
+                    selectedOptionKey === info.optionKey
                       ? "text-primary-foreground/90"
                       : "text-muted-foreground"
                   }`}
@@ -110,7 +110,7 @@ export function DilutionPicker({
         </div>
         <button
           type="button"
-          onClick={() => onDilutionChange(info.dilution)}
+          onClick={() => onOptionChange(info.optionKey)}
           className="mt-2 w-full py-2 px-3 rounded-md text-sm font-medium bg-secondary hover:bg-secondary/80 text-secondary-foreground transition-colors"
         >
           Use These Settings

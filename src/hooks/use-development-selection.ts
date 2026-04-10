@@ -55,7 +55,7 @@ export function useDevelopmentSelection() {
   const [selectedIso, setSelectedIso] = React.useState("")
   const [selectedFormat, setSelectedFormat] = React.useState<FilmFormat>("35mm")
   const [selectedDeveloper, setSelectedDeveloper] = React.useState("")
-  const [selectedDilution, setSelectedDilution] = React.useState("")
+  const [selectedOptionKey, setSelectedOptionKey] = React.useState("")
   const [pushPullStops, setPushPullStops] = React.useState(0)
   const [availableDevelopers, setAvailableDevelopers] = React.useState<
     Developer[]
@@ -79,7 +79,7 @@ export function useDevelopmentSelection() {
 
   React.useEffect(() => {
     setSelectedIso("")
-    setSelectedDilution("")
+    setSelectedOptionKey("")
     setPushPullStops(0)
     if (availableFormats.length === 1) {
       setSelectedFormat(availableFormats[0])
@@ -87,7 +87,7 @@ export function useDevelopmentSelection() {
   }, [selectedFilm, availableFormats])
 
   React.useEffect(() => {
-    setSelectedDilution("")
+    setSelectedOptionKey("")
     setSelectedIso("")
     setPushPullStops(0)
   }, [selectedDeveloper, selectedFormat])
@@ -140,10 +140,13 @@ export function useDevelopmentSelection() {
     const validTimes = times.filter((time) => time.iso !== null)
     if (validTimes.length === 0) return null
 
+    const makeOptionKey = (dilution: string, temp: number) => `${dilution}|${temp}`
+
     const withNote = (
       dilution: string,
       resolved: ReturnType<typeof resolveTimeFromRows>
     ): DevelopmentOption => ({
+      optionKey: makeOptionKey(dilution, resolved.temperature),
       dilution,
       time: resolved.time,
       temperature: resolved.temperature,
@@ -169,46 +172,58 @@ export function useDevelopmentSelection() {
 
     const options: DevelopmentOption[] = []
     for (const dilution of dilutionKeys) {
-      const rows = validTimes.filter(
+      const dilutionRows = validTimes.filter(
         (t) => t.dilution === dilution && t.iso !== null
       )
-      if (rows.length === 0) continue
+      if (dilutionRows.length === 0) continue
 
-      if (pushPullStops === 0) {
-        const resolved = resolveTimeFromRows(rows, ratingIso)
-        options.push({
-          dilution,
-          time: resolved.time,
-          temperature: resolved.temperature,
-          timeSource: resolved.source,
-          approximateNote: sourceToUserNote(resolved.source),
-        })
-      } else {
-        const chartAtEI = resolveTimeFromRows(rows, targetEI)
-        if (chartAtEI.source === "exact" || chartAtEI.source === "interpolated") {
-          const stopsLabel = pushPullStops > 0 ? `+${pushPullStops}` : `${pushPullStops}`
+      const tempGroups = new Map<number, typeof dilutionRows>()
+      for (const row of dilutionRows) {
+        const existing = tempGroups.get(row.temperature)
+        if (existing) existing.push(row)
+        else tempGroups.set(row.temperature, [row])
+      }
+
+      for (const [temp, rows] of tempGroups) {
+        if (pushPullStops === 0) {
+          const resolved = resolveTimeFromRows(rows, ratingIso)
           options.push({
+            optionKey: makeOptionKey(dilution, temp),
             dilution,
-            time: chartAtEI.time,
-            temperature: chartAtEI.temperature,
-            timeSource: chartAtEI.source,
-            approximateNote: `${sourceToUserNote(chartAtEI.source)} (${stopsLabel} stop${Math.abs(pushPullStops) === 1 ? "" : "s"})`,
+            time: resolved.time,
+            temperature: resolved.temperature,
+            timeSource: resolved.source,
+            approximateNote: sourceToUserNote(resolved.source),
           })
         } else {
-          const baseResolved = resolveTimeFromRows(rows, ratingIso)
-          const pp = getPushPullAdjustedDevelopmentTime(
-            baseResolved.time,
-            pushPullStops
-          )
-          const chartNote = sourceToUserNote(baseResolved.source)
-          const stopsLabel = pp.stopsApplied > 0 ? `+${pp.stopsApplied}` : `${pp.stopsApplied}`
-          options.push({
-            dilution,
-            time: pp.adjustedMinutes,
-            temperature: baseResolved.temperature,
-            timeSource: baseResolved.source,
-            approximateNote: `${chartNote} Approximate push/pull: ×${pp.factor.toFixed(2)} (${stopsLabel} stop${Math.abs(pp.stopsApplied) === 1 ? "" : "s"}).`,
-          })
+          const chartAtEI = resolveTimeFromRows(rows, targetEI)
+          if (chartAtEI.source === "exact" || chartAtEI.source === "interpolated") {
+            const stopsLabel = pushPullStops > 0 ? `+${pushPullStops}` : `${pushPullStops}`
+            options.push({
+              optionKey: makeOptionKey(dilution, temp),
+              dilution,
+              time: chartAtEI.time,
+              temperature: chartAtEI.temperature,
+              timeSource: chartAtEI.source,
+              approximateNote: `${sourceToUserNote(chartAtEI.source)} (${stopsLabel} stop${Math.abs(pushPullStops) === 1 ? "" : "s"})`,
+            })
+          } else {
+            const baseResolved = resolveTimeFromRows(rows, ratingIso)
+            const pp = getPushPullAdjustedDevelopmentTime(
+              baseResolved.time,
+              pushPullStops
+            )
+            const chartNote = sourceToUserNote(baseResolved.source)
+            const stopsLabel = pp.stopsApplied > 0 ? `+${pp.stopsApplied}` : `${pp.stopsApplied}`
+            options.push({
+              optionKey: makeOptionKey(dilution, temp),
+              dilution,
+              time: pp.adjustedMinutes,
+              temperature: baseResolved.temperature,
+              timeSource: baseResolved.source,
+              approximateNote: `${chartNote} Approximate push/pull: ×${pp.factor.toFixed(2)} (${stopsLabel} stop${Math.abs(pp.stopsApplied) === 1 ? "" : "s"}).`,
+            })
+          }
         }
       }
     }
@@ -232,19 +247,21 @@ export function useDevelopmentSelection() {
 
   const selectedInfo =
     developmentInfo && Array.isArray(developmentInfo)
-      ? developmentInfo.find((info) => info.dilution === selectedDilution)
+      ? developmentInfo.find((info) => info.optionKey === selectedOptionKey)
       : developmentInfo
+
+  const selectedDilution = selectedInfo?.dilution ?? ""
 
   React.useEffect(() => {
     if (
       developmentInfo &&
       Array.isArray(developmentInfo) &&
       developmentInfo.length > 0 &&
-      !selectedDilution
+      !selectedOptionKey
     ) {
-      setSelectedDilution(developmentInfo[0].dilution)
+      setSelectedOptionKey(developmentInfo[0].optionKey)
     }
-  }, [developmentInfo, selectedDilution])
+  }, [developmentInfo, selectedOptionKey])
 
   React.useEffect(() => {
     if (selectedFilmData) {
@@ -259,7 +276,7 @@ export function useDevelopmentSelection() {
       ) {
         setSelectedDeveloper("")
         setSelectedIso("")
-        setSelectedDilution("")
+        setSelectedOptionKey("")
         setPushPullStops(0)
       }
     } else {
@@ -304,7 +321,8 @@ export function useDevelopmentSelection() {
     selectedDeveloper,
     setSelectedDeveloper,
     selectedDilution,
-    setSelectedDilution,
+    selectedOptionKey,
+    setSelectedOptionKey,
     selectedFilmData,
     selectedDeveloperData,
     availableFormats,

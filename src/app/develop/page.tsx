@@ -53,8 +53,8 @@ export default function DevelopPage() {
             isColor={isColor}
             selectedDeveloper={selection.selectedDeveloper}
             developmentInfo={selection.developmentInfo}
-            selectedDilution={selection.selectedDilution}
-            onDilutionChange={selection.setSelectedDilution}
+            selectedOptionKey={selection.selectedOptionKey}
+            onOptionChange={selection.setSelectedOptionKey}
             temperatureUnit={correction.temperatureUnit}
             pushPullLine={selection.pushPullLine}
           />

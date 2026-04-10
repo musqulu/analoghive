@@ -9,8 +9,8 @@ interface DevelopmentSummaryProps {
   isColor: boolean
   selectedDeveloper: string
   developmentInfo: DevelopmentOption[] | DevelopmentOption | null
-  selectedDilution: string
-  onDilutionChange: (value: string) => void
+  selectedOptionKey: string
+  onOptionChange: (value: string) => void
   temperatureUnit: string
   pushPullLine: string
 }
@@ -21,8 +21,8 @@ export function DevelopmentSummary({
   isColor,
   selectedDeveloper,
   developmentInfo,
-  selectedDilution,
-  onDilutionChange,
+  selectedOptionKey,
+  onOptionChange,
   temperatureUnit,
   pushPullLine,
 }: DevelopmentSummaryProps) {
@@ -50,8 +50,8 @@ export function DevelopmentSummary({
             <div className="mt-2 space-y-2">
               <DilutionPicker
                 developmentInfo={developmentInfo}
-                selectedDilution={selectedDilution}
-                onDilutionChange={onDilutionChange}
+                selectedOptionKey={selectedOptionKey}
+                onOptionChange={onOptionChange}
                 selectedIso={selectedIso}
                 temperatureUnit={temperatureUnit}
                 isColor={isColor}

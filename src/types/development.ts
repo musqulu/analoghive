@@ -3,6 +3,8 @@ import type { TimeSource } from "@/lib/approximate-development-time"
 export type FilmFormat = "35mm" | "120" | "sheet"
 
 export interface DevelopmentOption {
+  /** Unique key for selection — combines dilution and temperature (e.g. "1+9|20") */
+  optionKey: string
   dilution: string
   time: number
   temperature: number

@@ -9,6 +9,7 @@ jest.mock("@/data/processed-development-times", () => ({
 }))
 
 const baseInfo: DevelopmentOption = {
+  optionKey: "1+50|20",
   dilution: "1+50",
   time: 10,
   temperature: 20,

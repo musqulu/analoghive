@@ -11,6 +11,20 @@ export function useCorrectedTime(selectedInfo: DevelopmentOption | undefined | n
   const [correctedTime, setCorrectedTime] = React.useState<number | null>(null)
   const [constantAgitation, setConstantAgitation] = React.useState(false)
 
+  const prevOptionKeyRef = React.useRef<string | undefined>(undefined)
+  React.useEffect(() => {
+    const key = selectedInfo?.optionKey
+    if (key && key !== prevOptionKeyRef.current) {
+      const temp = selectedInfo!.temperature
+      setModifiedTemperature(
+        temperatureUnit === "fahrenheit"
+          ? Number(celsiusToFahrenheit(temp).toFixed(1))
+          : temp
+      )
+    }
+    prevOptionKeyRef.current = key
+  }, [selectedInfo?.optionKey, selectedInfo?.temperature, temperatureUnit])
+
   React.useEffect(() => {
     if (selectedInfo) {
       const newTime = calculateCorrectedTime(
@@ -20,6 +34,8 @@ export function useCorrectedTime(selectedInfo: DevelopmentOption | undefined | n
         constantAgitation
       )
       setCorrectedTime(newTime)
+    } else {
+      setCorrectedTime(null)
     }
   }, [selectedInfo, modifiedTemperature, constantAgitation])
 
