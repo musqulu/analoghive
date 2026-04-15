@@ -2,10 +2,10 @@ import Link from "next/link"
 import { Container } from "./container"
 
 const links = [
-  { href: "/develop", label: "Film Dev Calculator" },
-  { href: "/tools/temperature-correction", label: "Temperature Correction" },
-  { href: "/tools/volume-mixer", label: "Volume Mixer" },
-  { href: "/templates", label: "Templates" },
+  { href: "/develop", label: "Develop film" },
+  { href: "/tools/temperature-correction", label: "Temperature correction" },
+  { href: "/tools/volume-mixer", label: "Volume mixer" },
+  { href: "/stories", label: "Stories" },
 ]
 
 export function Footer() {
