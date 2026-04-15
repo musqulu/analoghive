@@ -10,11 +10,13 @@ const links = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-olive-200 dark:border-olive-800">
-      <div className="nav-sunset-stripe" aria-hidden />
+    <footer className="border-t border-border bg-background">
       <Container>
         <div className="flex flex-col items-center gap-6 py-12 sm:flex-row sm:justify-between">
-          <Link href="/" className="text-sm font-bold tracking-tight text-olive-950 dark:text-white">
+          <Link
+            href="/"
+            className="text-sm font-semibold tracking-tight text-foreground"
+          >
             Analog Hive
           </Link>
           <nav className="flex flex-wrap justify-center gap-6">
@@ -22,13 +24,13 @@ export function Footer() {
               <Link
                 key={href}
                 href={href}
-                className="text-sm/7 text-olive-600 hover:text-olive-950 dark:text-olive-400 dark:hover:text-white transition-colors"
+                className="text-sm/7 text-muted-foreground transition-colors hover:text-foreground"
               >
                 {label}
               </Link>
             ))}
           </nav>
-          <p className="text-sm text-olive-500 dark:text-olive-500">
+          <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Analog Hive
           </p>
         </div>

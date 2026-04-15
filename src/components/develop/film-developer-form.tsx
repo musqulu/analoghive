@@ -107,8 +107,8 @@ export function FilmDeveloperForm({
   onTemperatureUnitChange,
 }: FilmDeveloperFormProps) {
   return (
-    <div className="p-6 bg-card rounded-lg border border-border shadow-sm">
-      <h3 className="text-lg font-medium mb-4">Film & Developer Selection</h3>
+    <div className="rounded-lg bg-card p-6 ds-card">
+      <h3 className="mb-4 text-lg font-medium">Film & Developer Selection</h3>
       <div className="space-y-6">
         <div className="space-y-4">
           <div>

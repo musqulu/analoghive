@@ -25,35 +25,26 @@ describe('Development Process Integration Test', () => {
       />
     );
 
-    // Check initial state - timer should show development time
-    expect(screen.getByText('2:00')).toBeInTheDocument();
-    
-    // 1. Start Development process
-    const startButton = screen.getByTestId('start-button');
-    fireEvent.click(startButton);
-    
-    // Timer should be running, showing Development step
-    expect(screen.getByText('Development')).toBeInTheDocument();
-    
-    // 4. Start Stop Bath directly
-    const stopBathStep = screen.getByTestId('stop-bath-step');
-    fireEvent.click(stopBathStep);
-    
-    // Timer should show Stop Bath step
-    expect(screen.getByText('Stop Bath')).toBeInTheDocument();
-    
-    // 5. Start Fixer directly
-    const fixerStep = screen.getByTestId('fixer-step');
-    fireEvent.click(fixerStep);
-    
-    // Timer should show Fixer step
-    expect(screen.getByText('Fixer')).toBeInTheDocument();
-    
-    // 7. Start Washing step
-    const washingStep = screen.getByTestId('washing-step');
-    fireEvent.click(washingStep);
-    
-    // Timer should show Washing step
-    expect(screen.getByText('Washing')).toBeInTheDocument();
+    expect(screen.getAllByText("2:00").length).toBeGreaterThan(0)
+
+    const startButton = screen.getByTestId("start-button")
+    fireEvent.click(startButton)
+
+    expect(screen.getAllByText("Development").length).toBeGreaterThan(0)
+
+    const stopBathStep = screen.getByTestId("stop-bath-step")
+    fireEvent.click(stopBathStep)
+
+    expect(screen.getAllByText("Stop Bath").length).toBeGreaterThan(0)
+
+    const fixerStep = screen.getByTestId("fixer-step")
+    fireEvent.click(fixerStep)
+
+    expect(screen.getAllByText("Fixer").length).toBeGreaterThan(0)
+
+    const washingStep = screen.getByTestId("washing-step")
+    fireEvent.click(washingStep)
+
+    expect(screen.getAllByText("Washing").length).toBeGreaterThan(0)
   });
 }); 

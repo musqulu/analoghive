@@ -29,7 +29,7 @@ export function DevelopmentSummary({
   if (!selectedFilm && !selectedDeveloper && !developmentInfo) return null
 
   return (
-    <div className="p-4 bg-card rounded-lg border border-border space-y-4">
+    <div className="space-y-4 rounded-lg bg-card p-4 ds-card">
       {selectedFilm && (
         <div>
           <p className="text-lg font-medium">Film: {selectedFilm}</p>

@@ -20,7 +20,7 @@ export default function DevelopPage() {
   return (
     <main className="min-h-screen flex flex-col items-center p-8 pt-12">
       <div className="max-w-md w-full space-y-8">
-        <h1 className="text-2xl font-bold text-center mb-8">
+        <h1 className="mb-8 text-center text-2xl font-semibold tracking-tight text-foreground">
           Film Development Calculator
         </h1>
 
@@ -82,8 +82,8 @@ export default function DevelopPage() {
             selection.selectedIso &&
             selection.selectedDilution && (
               <>
-                <div className="p-6 bg-card rounded-lg border border-border shadow-sm">
-                  <h3 className="text-lg font-medium mb-4">Volume Mixer</h3>
+                <div className="rounded-lg bg-card p-6 ds-card">
+                  <h3 className="mb-4 text-lg font-medium">Volume Mixer</h3>
                   <VolumeMixer
                     dilution={selection.selectedDilution}
                     totalVolume={totalVolume}
@@ -107,7 +107,7 @@ export default function DevelopPage() {
                   pushPullLine={selection.pushPullLine}
                 />
 
-                <div className="p-6 bg-card rounded-lg border border-border shadow-sm">
+                <div className="rounded-lg bg-card p-6 ds-card">
                   <Timer
                     filmName={selection.selectedFilm}
                     filmFormat={selection.selectedFormat}

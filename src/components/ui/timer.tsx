@@ -81,7 +81,7 @@ export function Timer({
     displayTemp(timer.steps[step].temp, temperatureUnit)
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="timer-component">
       <TimerDisplay
         timeLeft={timer.timeLeft}
         currentStep={timer.currentStep}
@@ -104,8 +104,8 @@ export function Timer({
         </button>
       </div>
 
-      <div className="bg-card p-6 rounded-lg border border-border">
-        <h3 className="text-lg font-medium mb-4">Development Process</h3>
+      <div className="rounded-lg bg-card p-6 ds-card">
+        <h3 className="mb-4 text-lg font-medium">Development Process</h3>
         <div className="space-y-2 mb-4">
           {filmName && (
             <p>

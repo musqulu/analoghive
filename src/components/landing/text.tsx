@@ -11,8 +11,8 @@ export function Text({
     <div
       className={cn(
         size === "md" && "text-base/7",
-        size === "lg" && "text-lg/8",
-        "text-olive-700 dark:text-olive-400",
+        size === "lg" && "text-xl leading-[1.8]",
+        "text-muted-foreground",
         className,
       )}
       {...props}

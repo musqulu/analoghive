@@ -40,8 +40,7 @@ export function CustomTimeForm({ initial, onSave, onCancel }: CustomTimeFormProp
     })
   }
 
-  const inputClass =
-    "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+  const inputClass = "ds-input"
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -149,7 +148,7 @@ export function CustomTimeForm({ initial, onSave, onCancel }: CustomTimeFormProp
           onChange={(e) => setNotes(e.target.value)}
           rows={2}
           placeholder="Any additional notes..."
-          className={inputClass + " h-auto"}
+          className={`${inputClass} min-h-[4.5rem] items-start py-2`}
         />
       </div>
       <div className="flex justify-end gap-2 pt-2">

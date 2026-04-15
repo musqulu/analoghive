@@ -11,15 +11,17 @@ export default function VolumeMixerPage() {
     <main className="min-h-screen flex flex-col items-center p-8 pt-12">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h1 className="text-2xl font-bold">Volume Mixer</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Volume Mixer
+          </h1>
           <p className="text-muted-foreground mt-1">
             Calculate developer and water volumes for any dilution ratio.
           </p>
         </div>
 
-        <div className="p-6 bg-card rounded-lg border border-border shadow-sm space-y-4">
+        <div className="space-y-4 rounded-lg bg-card p-6 ds-card">
           <div>
-            <label className="text-sm font-medium mb-2 block">
+            <label className="mb-2 block text-sm font-medium">
               Dilution (e.g. 1+50, 1+1, stock)
             </label>
             <input
@@ -27,7 +29,7 @@ export default function VolumeMixerPage() {
               value={dilution}
               onChange={(e) => setDilution(e.target.value)}
               placeholder="1+50"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="ds-input"
             />
           </div>
 

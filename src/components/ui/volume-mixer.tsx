@@ -36,8 +36,13 @@ export function VolumeMixer({ dilution, totalVolume, onVolumeChange }: VolumeMix
   }, [dilution]);
 
   const calculateMixture = () => {
-    const r1 = parseInt(ratio1);
-    const r2 = parseInt(ratio2);
+    const r1 = parseInt(ratio1, 10)
+    const r2 = parseInt(ratio2, 10)
+
+    if (Number.isNaN(r1) || Number.isNaN(r2)) {
+      setResult(null)
+      return
+    }
 
     if (r2 === 0) {
       // Stock solution
@@ -69,7 +74,7 @@ export function VolumeMixer({ dilution, totalVolume, onVolumeChange }: VolumeMix
               min="1"
               value={ratio1}
               onChange={(e) => setRatio1(e.target.value)}
-              className="flex h-10 w-20 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="ds-input w-20"
             />
             <span className="text-sm font-medium">+</span>
             <input
@@ -77,7 +82,7 @@ export function VolumeMixer({ dilution, totalVolume, onVolumeChange }: VolumeMix
               min="0"
               value={ratio2}
               onChange={(e) => setRatio2(e.target.value)}
-              className="flex h-10 w-20 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="ds-input w-20"
             />
           </div>
           <p className="text-sm text-muted-foreground mt-1">
@@ -98,7 +103,7 @@ export function VolumeMixer({ dilution, totalVolume, onVolumeChange }: VolumeMix
                 setVolume(newVolume);
                 onVolumeChange(newVolume);
               }}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="ds-input file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
             />
           </div>
           <button

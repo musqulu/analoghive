@@ -20,6 +20,13 @@ interface StepIndicatorProps {
 
 const STEP_ORDER: Step[] = ["dev", "stop", "fix", "wash"]
 
+const STEP_TEST_IDS: Record<Step, string> = {
+  dev: "development-step",
+  stop: "stop-bath-step",
+  fix: "fixer-step",
+  wash: "washing-step",
+}
+
 export function StepIndicator({
   steps,
   currentStep,
@@ -32,15 +39,16 @@ export function StepIndicator({
       {STEP_ORDER.map((step) => (
         <div
           key={step}
-          className="flex items-center gap-3 p-3 rounded-md hover:bg-gray-100 cursor-pointer"
+          data-testid={STEP_TEST_IDS[step]}
+          className="flex cursor-pointer items-center gap-3 rounded-md p-3 hover:bg-muted"
           onClick={() => !isRunning && onStartStep(step)}
         >
           <PlayCircle
-            className={`w-6 h-6 ${currentStep === step ? "text-blue-500" : "text-gray-400"}`}
+            className={`h-6 w-6 ${currentStep === step ? "text-link" : "text-muted-foreground"}`}
           />
           <div className="flex-1">
             <p className="font-medium">{steps[step].name}</p>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               {formatTime(steps[step].time)} at {getStepTemp(step)}
             </p>
           </div>

@@ -43,7 +43,7 @@ export function TimerDisplay({
         <h2 className="text-xl font-medium mb-2">
           {currentStep ? STEP_LABELS[currentStep] : "Development Process"}
         </h2>
-        <div className="text-6xl font-mono font-bold my-4">
+        <div className="my-4 font-mono text-6xl font-semibold">
           {formatTime(timeLeft)}
         </div>
         <p className="text-lg mb-4">at {temperatureDisplay}</p>
@@ -79,8 +79,10 @@ export function TimerDisplay({
           </div>
         ) : (
           <button
+            type="button"
+            data-testid="start-button"
             onClick={onStart}
-            className="p-4 rounded-full bg-white text-black hover:bg-gray-200 transition-colors"
+            className="rounded-full bg-white p-4 text-black transition-colors hover:bg-gray-200"
             title="Start Timer"
           >
             <Play className="w-8 h-8" />

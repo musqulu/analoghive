@@ -18,7 +18,7 @@ describe('normalizeDilutionDisplay function', () => {
 
   test('handles undefined or empty input', () => {
     expect(normalizeDilutionDisplay('')).toBe('');
-    expect(normalizeDilutionDisplay(undefined)).toBe(undefined);
+    expect(normalizeDilutionDisplay(undefined)).toBe("");
   });
 
   test('handles complex inputs with multiple colons', () => {

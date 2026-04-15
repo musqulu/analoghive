@@ -10,8 +10,7 @@ export function Heading({
   return (
     <h1
       className={cn(
-        "font-display text-5xl/12 tracking-tight text-balance sm:text-[5rem]/20",
-        color === "dark/light" && "text-olive-950 dark:text-white",
+        "text-balance font-semibold leading-[1.05] tracking-[-0.06em] text-[3rem] text-foreground",
         color === "light" && "text-white",
         className,
       )}

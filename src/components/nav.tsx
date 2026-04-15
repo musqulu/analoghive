@@ -15,11 +15,8 @@ export function Nav() {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 z-10 bg-background border-b border-border">
-      <div className="nav-sunset-stripe" aria-hidden />
+    <header className="sticky top-0 z-10 bg-background nav-edge">
       <nav className="mx-auto flex h-[4.5rem] max-w-7xl items-center px-6 lg:px-10">
-
-        {/* Left: nav links */}
         <div className="flex flex-1 items-center gap-6 max-md:hidden">
           {navLinks.map(({ href, label }) => (
             <Link
@@ -28,7 +25,7 @@ export function Nav() {
               className={cn(
                 "text-sm/7 font-medium transition-colors",
                 pathname === href
-                  ? "text-foreground"
+                  ? "font-semibold text-foreground"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
@@ -37,24 +34,27 @@ export function Nav() {
           ))}
         </div>
 
-        {/* Center: Brand */}
         <Link
           href="/"
-          className="absolute left-1/2 -translate-x-1/2 font-display text-xl tracking-tight text-foreground"
+          className="absolute left-1/2 -translate-x-1/2 text-xl font-medium tracking-tight text-foreground"
         >
           Analog Hive
         </Link>
 
-        {/* Right: Auth buttons */}
         <div className="flex flex-1 items-center justify-end gap-3">
-          <button className="inline-flex items-center justify-center rounded-full px-4 py-1.5 text-sm/7 font-medium text-foreground hover:bg-muted transition-colors">
+          <button
+            type="button"
+            className="inline-flex items-center justify-center rounded-md bg-background px-4 py-2 text-sm/7 font-medium text-foreground shadow-ds transition-colors hover:bg-muted"
+          >
             Login
           </button>
-          <button className="inline-flex items-center justify-center rounded-full px-4 py-1.5 text-sm/7 font-medium bg-foreground text-background hover:bg-foreground/90 transition-colors">
+          <button
+            type="button"
+            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm/7 font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+          >
             Sign Up
           </button>
         </div>
-
       </nav>
     </header>
   )

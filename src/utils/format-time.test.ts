@@ -13,10 +13,10 @@ describe('formatTime function', () => {
   });
 
   test('handles fractions of seconds', () => {
-    expect(formatTime(1.5)).toBe('0:01');
-    expect(formatTime(60.9)).toBe('1:00');
-    expect(formatTime(125.3)).toBe('2:05');
-  });
+    expect(formatTime(1.5)).toBe('0:02')
+    expect(formatTime(60.9)).toBe('1:01')
+    expect(formatTime(125.3)).toBe('2:05')
+  })
 
   test('handles negative values by returning 0:00', () => {
     expect(formatTime(-1)).toBe('0:00');

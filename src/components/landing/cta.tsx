@@ -18,13 +18,19 @@ export function CTA({
   return (
     <section className={cn("py-16", className)} {...props}>
       <Container>
-        <div className="rounded-2xl bg-olive-950 px-8 py-16 text-center dark:bg-olive-900">
+        <div className="rounded-xl bg-primary px-8 py-16 text-center">
           <div className="flex flex-col items-center gap-6">
-            <Subheading color="light" className="max-w-xl">{headline}</Subheading>
+            <Subheading color="light" className="max-w-xl">
+              {headline}
+            </Subheading>
             {subheadline && (
-              <Text className="max-w-md text-olive-300">{subheadline}</Text>
+              <Text className="max-w-md text-primary-foreground/80">{subheadline}</Text>
             )}
-            {cta && <div className="flex flex-wrap items-center justify-center gap-3">{cta}</div>}
+            {cta && (
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                {cta}
+              </div>
+            )}
           </div>
         </div>
       </Container>

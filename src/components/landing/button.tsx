@@ -3,7 +3,7 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 
 const sizes = {
-  md: "px-3 py-1",
+  md: "px-4 py-2",
   lg: "px-4 py-2",
 }
 
@@ -21,10 +21,11 @@ export function Button({
     <button
       type={type}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center gap-1 rounded-full text-sm/7 font-medium",
+        "inline-flex shrink-0 items-center justify-center gap-1 rounded-md text-sm/7 font-medium transition-colors",
         color === "dark/light" &&
-          "bg-olive-950 text-white hover:bg-olive-800 dark:bg-olive-300 dark:text-olive-950 dark:hover:bg-olive-200",
-        color === "light" && "bg-white text-olive-950 hover:bg-olive-100 dark:bg-olive-100 dark:hover:bg-white",
+          "bg-primary text-primary-foreground hover:bg-primary/90",
+        color === "light" &&
+          "bg-background text-foreground shadow-ds hover:bg-muted",
         sizes[size],
         className,
       )}
@@ -48,10 +49,11 @@ export function ButtonLink({
     <Link
       href={href}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center gap-1 rounded-full text-sm/7 font-medium",
+        "inline-flex shrink-0 items-center justify-center gap-1 rounded-md text-sm/7 font-medium transition-colors",
         color === "dark/light" &&
-          "bg-olive-950 text-white hover:bg-olive-800 dark:bg-olive-300 dark:text-olive-950 dark:hover:bg-olive-200",
-        color === "light" && "bg-white text-olive-950 hover:bg-olive-100 dark:bg-olive-100 dark:hover:bg-white",
+          "bg-primary text-primary-foreground hover:bg-primary/90",
+        color === "light" &&
+          "bg-background text-foreground shadow-ds hover:bg-muted",
         sizes[size],
         className,
       )}
@@ -72,7 +74,7 @@ export function SoftButton({
     <button
       type={type}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center gap-1 rounded-full bg-olive-950/10 text-sm/7 font-medium text-olive-950 hover:bg-olive-950/15 dark:bg-white/10 dark:text-white dark:hover:bg-white/20",
+        "inline-flex shrink-0 items-center justify-center gap-1 rounded-md bg-muted text-sm/7 font-medium text-foreground transition-colors hover:bg-muted/80",
         sizes[size],
         className,
       )}
@@ -94,7 +96,7 @@ export function SoftButtonLink({
     <Link
       href={href}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center gap-1 rounded-full bg-olive-950/10 text-sm/7 font-medium text-olive-950 hover:bg-olive-950/15 dark:bg-white/10 dark:text-white dark:hover:bg-white/20",
+        "inline-flex shrink-0 items-center justify-center gap-1 rounded-md bg-muted text-sm/7 font-medium text-foreground transition-colors hover:bg-muted/80",
         sizes[size],
         className,
       )}
@@ -118,9 +120,10 @@ export function PlainButtonLink({
     <Link
       href={href}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center gap-2 rounded-full text-sm/7 font-medium",
-        color === "dark/light" && "text-olive-950 hover:bg-olive-950/10 dark:text-white dark:hover:bg-white/10",
-        color === "light" && "text-white hover:bg-white/15 dark:hover:bg-white/10",
+        "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm/7 font-medium transition-colors",
+        color === "dark/light" &&
+          "text-foreground hover:bg-muted",
+        color === "light" && "text-white hover:bg-white/10",
         sizes[size],
         className,
       )}

@@ -29,7 +29,7 @@ export function AgitationCue({
           strokeWidth={shouldShake ? 2.5 : 1.5}
         />
         <span
-          className={`text-lg font-bold ${shouldShake ? activeColor : inactiveColor}`}
+          className={`text-lg font-semibold ${shouldShake ? activeColor : inactiveColor}`}
         >
           {shouldShake ? "SHAKE NOW!" : "Rest"}
         </span>

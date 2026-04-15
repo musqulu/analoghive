@@ -26,7 +26,7 @@ export function Combobox({ options, value, onChange, placeholder = "Select an op
       <PopoverPrimitive.Trigger asChild>
         <button
           className={cn(
-            "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+            "flex h-10 w-full items-center justify-between rounded-md bg-background px-3 py-2 text-sm shadow-ds ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
           )}
         >
           {value ? options.find(option => option.name === value)?.name : placeholder}
@@ -35,12 +35,12 @@ export function Combobox({ options, value, onChange, placeholder = "Select an op
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
-          className="z-50 w-[var(--radix-popover-trigger-width)] min-w-[var(--radix-popover-trigger-width)] p-0 bg-popover rounded-md border shadow-md"
+          className="z-50 w-[var(--radix-popover-trigger-width)] min-w-[var(--radix-popover-trigger-width)] rounded-md bg-popover p-0 shadow-ds-card"
           align="start"
         >
           <div className="p-2">
             <input
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              className="ds-input placeholder:text-muted-foreground"
               placeholder="Search films..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}

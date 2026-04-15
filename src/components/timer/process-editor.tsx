@@ -19,14 +19,12 @@ export function ProcessEditor({
   onClose,
   onSave,
 }: ProcessEditorProps) {
-  const inputClass =
-    "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-  const smallInputClass =
-    "flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-sm"
+  const inputClass = "ds-input"
+  const smallInputClass = "ds-input-sm"
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 space-y-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="mx-4 w-full max-w-2xl space-y-6 rounded-lg bg-card p-6 ds-card-elevated">
         <h3 className="text-lg font-medium">Edit Process Times</h3>
 
         <div className="space-y-6">
@@ -87,7 +85,7 @@ export function ProcessEditor({
                     <label htmlFor="running-water" className="text-sm font-medium">
                       Running Water Rinse
                     </label>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       Steady stream of water at processing temperature
                     </p>
                     {washingMethod.type === "running" && (
@@ -130,7 +128,7 @@ export function ProcessEditor({
                     <label htmlFor="custom-method" className="text-sm font-medium">
                       Custom Method
                     </label>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       Specify total time and number of water changes
                     </p>
                     {washingMethod.type === "custom" && (
@@ -196,7 +194,7 @@ export function ProcessEditor({
                     <label htmlFor="ilford-method" className="text-sm font-medium">
                       Ilford Method (Fill-and-Dump)
                     </label>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       Three cycles of filling, inverting, and dumping
                     </p>
                     {washingMethod.type === "ilford" && (
@@ -235,7 +233,7 @@ export function ProcessEditor({
         <div className="flex justify-end space-x-2 pt-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+            className="rounded-md px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
           >
             Cancel
           </button>

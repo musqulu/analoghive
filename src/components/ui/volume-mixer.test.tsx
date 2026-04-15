@@ -14,20 +14,23 @@ describe("VolumeMixer", () => {
     defaultProps.onVolumeChange.mockClear()
   })
 
-  it("parses a plus-format dilution and auto-calculates", () => {
+  it("parses a plus-format dilution and calculates on demand", () => {
     render(<VolumeMixer {...defaultProps} dilution="1+50" />)
+    fireEvent.click(screen.getByRole("button", { name: /calculate/i }))
     expect(screen.getByText("9.8 ml")).toBeInTheDocument()
     expect(screen.getByText("490.2 ml")).toBeInTheDocument()
   })
 
   it("parses a colon-format dilution", () => {
     render(<VolumeMixer {...defaultProps} dilution="1:50" />)
+    fireEvent.click(screen.getByRole("button", { name: /calculate/i }))
     expect(screen.getByText("9.8 ml")).toBeInTheDocument()
     expect(screen.getByText("490.2 ml")).toBeInTheDocument()
   })
 
   it("parses stock dilution (all developer, no water)", () => {
     render(<VolumeMixer {...defaultProps} dilution="stock" />)
+    fireEvent.click(screen.getByRole("button", { name: /calculate/i }))
     const developerSection = screen.getByText("Developer").closest("div")!
     expect(developerSection).toHaveTextContent("500 ml")
     expect(screen.getByText("0 ml")).toBeInTheDocument()
@@ -35,6 +38,7 @@ describe("VolumeMixer", () => {
 
   it("calculates 1+1 dilution correctly (50/50)", () => {
     render(<VolumeMixer {...defaultProps} dilution="1+1" totalVolume={1000} />)
+    fireEvent.click(screen.getByRole("button", { name: /calculate/i }))
     const results = screen.getAllByText("500 ml")
     expect(results).toHaveLength(2)
   })
@@ -54,10 +58,12 @@ describe("VolumeMixer", () => {
 
   it("clears result on empty ratio input (NaN guard)", () => {
     render(<VolumeMixer {...defaultProps} dilution="1+50" />)
+    fireEvent.click(screen.getByRole("button", { name: /calculate/i }))
     expect(screen.getByText("9.8 ml")).toBeInTheDocument()
 
     const inputs = screen.getAllByRole("spinbutton")
     fireEvent.change(inputs[0], { target: { value: "" } })
+    fireEvent.click(screen.getByRole("button", { name: /calculate/i }))
     expect(screen.queryByText("9.8 ml")).not.toBeInTheDocument()
     expect(screen.queryByText(/NaN/)).not.toBeInTheDocument()
   })

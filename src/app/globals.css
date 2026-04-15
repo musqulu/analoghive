@@ -1,118 +1,79 @@
-@import '@fontsource-variable/mona-sans';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Olive palette (warm off-white → near-black, hue ~60-69°) */
-    --background: 60 7% 95%;
-    --foreground: 69 3% 15%;
-    --card: 60 10% 97%;
-    --card-foreground: 69 3% 15%;
-    --popover: 60 10% 97%;
-    --popover-foreground: 69 3% 15%;
-    --primary: 69 3% 15%;
-    --primary-foreground: 60 7% 95%;
-    --secondary: 62 6% 91%;
-    --secondary-foreground: 69 3% 15%;
-    --muted: 62 6% 91%;
-    --muted-foreground: 67 8% 46%;
-    --accent: 62 6% 91%;
-    --accent-foreground: 69 3% 15%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 60 7% 95%;
-    --border: 63 9% 86%;
-    --input: 63 9% 86%;
-    --ring: 69 3% 15%;
+    /* Design system: light, Vercel-inspired (see design.md) */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 98%;
+    --muted-foreground: 0 0% 30%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 92%;
+    --input: 0 0% 92%;
+    --ring: 212 100% 48%;
     --radius: 0.5rem;
-    /* Sunset stripe (nav gradient, glow button) */
-    --stripe-orange: 28 83% 55%;
-    --stripe-red-orange: 9 70% 50%;
-    --stripe-red: 0 74% 41%;
-    --stripe-magenta: 341 67% 32%;
-    --stripe-plum: 330 44% 23%;
-  }
-
-  .dark {
-    --background: 69 4% 14%;       /* olive-950: very dark near-black */
-    --foreground: 65 6% 95%;       /* olive-100: warm off-white */
-    --card: 68 4% 18%;             /* slightly lighter than bg for panels */
-    --card-foreground: 65 6% 95%;
-    --popover: 68 4% 18%;
-    --popover-foreground: 65 6% 95%;
-    --primary: 65 6% 95%;          /* olive-100: inverted primary in dark */
-    --primary-foreground: 69 4% 14%;
-    --secondary: 68 5% 22%;        /* olive-900 */
-    --secondary-foreground: 65 6% 95%;
-    --muted: 68 5% 22%;
-    --muted-foreground: 67 8% 46%; /* olive-600: medium-light text */
-    --accent: 68 5% 22%;
-    --accent-foreground: 65 6% 95%;
-    --destructive: 0 72% 50%;      /* brighter red, visible on dark bg */
-    --destructive-foreground: 65 6% 95%;
-    --border: 68 5% 22%;           /* olive-900: subtle separation */
-    --input: 68 5% 22%;
-    --ring: 65 6% 75%;             /* olive-300 level */
+    --link: 211 100% 48%;
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
     @apply bg-background text-foreground font-sans;
+    font-feature-settings: "liga" 1;
   }
 }
 
 @layer components {
-  .nav-sunset-stripe {
-    @apply h-0.5 w-full shrink-0;
-    background: linear-gradient(
-      to right,
-      hsl(var(--stripe-orange)),
-      hsl(var(--stripe-red-orange)),
-      hsl(var(--stripe-red)),
-      hsl(var(--stripe-magenta)),
-      hsl(var(--stripe-plum))
-    );
+  /* Shadow-as-border (design.md §4) */
+  .ds-ring {
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
   }
 
-  .nav-glow-btn {
-    @apply px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-md transition-all;
-    background: linear-gradient(
-      135deg,
-      hsl(var(--stripe-orange)),
-      hsl(var(--stripe-red-orange))
-    );
-    color: #fff;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    box-shadow:
-      0 0 8px hsl(var(--stripe-orange) / 0.5),
-      0 0 20px hsl(var(--stripe-orange) / 0.2);
-    animation: glow 2s ease-in-out infinite alternate;
+  .ds-ring-light {
+    box-shadow: 0 0 0 1px rgb(235, 235, 235);
   }
 
-  .nav-glow-btn:hover {
+  .ds-card {
     box-shadow:
-      0 0 12px hsl(var(--stripe-orange) / 0.7),
-      0 0 30px hsl(var(--stripe-orange) / 0.35);
-    transform: translateY(-1px);
+      rgba(0, 0, 0, 0.08) 0 0 0 1px,
+      rgba(0, 0, 0, 0.04) 0 2px 2px,
+      #fafafa 0 0 0 1px;
   }
-}
 
-@keyframes glow {
-  from {
+  .ds-card-elevated {
     box-shadow:
-      0 0 6px hsl(var(--stripe-orange) / 0.4),
-      0 0 16px hsl(var(--stripe-orange) / 0.15);
+      rgba(0, 0, 0, 0.08) 0 0 0 1px,
+      rgba(0, 0, 0, 0.04) 0 2px 2px,
+      rgba(0, 0, 0, 0.04) 0 8px 8px -8px,
+      #fafafa 0 0 0 1px;
   }
-  to {
-    box-shadow:
-      0 0 10px hsl(var(--stripe-red-orange) / 0.6),
-      0 0 24px hsl(var(--stripe-orange) / 0.3);
+
+  /* Header / footer bottom edge */
+  .nav-edge {
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.08);
+  }
+
+  .ds-input {
+    @apply flex h-10 w-full rounded-md bg-background px-3 py-2 text-sm shadow-ds ring-offset-background;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  .ds-input-sm {
+    @apply flex h-8 w-full rounded-md bg-background px-2 py-1 text-sm shadow-ds ring-offset-background;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 }
 

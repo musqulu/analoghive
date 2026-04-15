@@ -30,11 +30,13 @@ export function SpinningText({
         {characters.map((char, i) => (
           <span
             key={i}
-            className="absolute left-1/2 top-0 origin-[0_var(--radius)] text-sm font-medium tracking-widest text-olive-950 dark:text-white"
-            style={{
-              transform: `rotate(${i * angleStep}deg)`,
-              "--radius": `${radius}rem`,
-            } as React.CSSProperties}
+            className="absolute left-1/2 top-0 origin-[0_var(--radius)] text-sm font-medium tracking-normal text-foreground"
+            style={
+              {
+                transform: `rotate(${i * angleStep}deg)`,
+                "--radius": `${radius}rem`,
+              } as React.CSSProperties
+            }
           >
             {char}
           </span>

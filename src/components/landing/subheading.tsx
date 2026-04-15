@@ -10,8 +10,7 @@ export function Subheading({
   return (
     <h2
       className={cn(
-        "font-display text-[2rem]/10 tracking-tight text-pretty sm:text-5xl/14",
-        color === "dark/light" && "text-olive-950 dark:text-white",
+        "text-pretty font-semibold leading-tight tracking-[-0.06em] text-[2rem] text-foreground sm:text-[2.5rem] sm:leading-[1.2]",
         color === "light" && "text-white",
         className,
       )}

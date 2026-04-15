@@ -36,7 +36,11 @@ function TimerContent() {
 
 export default function TimerPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center">Loading timer...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-8 text-center text-muted-foreground">Loading timer...</div>
+      }
+    >
       <TimerContent />
     </Suspense>
   )

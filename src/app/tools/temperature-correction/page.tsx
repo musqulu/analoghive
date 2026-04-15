@@ -15,20 +15,21 @@ export default function TemperatureCorrectionPage() {
     [baseTemp, baseTime, newTemp, constantAgitation]
   )
 
-  const inputClass =
-    "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+  const inputClass = "ds-input"
 
   return (
     <main className="min-h-screen flex flex-col items-center p-8 pt-12">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h1 className="text-2xl font-bold">Temperature Correction</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Temperature Correction
+          </h1>
           <p className="text-muted-foreground mt-1">
             Adjust development time for a different processing temperature.
           </p>
         </div>
 
-        <div className="p-6 bg-card rounded-lg border border-border shadow-sm space-y-4">
+        <div className="space-y-4 rounded-lg bg-card p-6 ds-card">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-2 block">
@@ -87,7 +88,7 @@ export default function TemperatureCorrectionPage() {
             <p className="text-sm font-medium text-muted-foreground mb-1">
               Adjusted Development Time
             </p>
-            <p className="text-3xl font-mono font-bold">
+            <p className="font-mono text-3xl font-semibold text-foreground">
               {formatTime(correctedTime * 60)}
             </p>
             {newTemp !== baseTemp && (

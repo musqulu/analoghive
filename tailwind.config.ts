@@ -9,9 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Mona Sans Variable", "system-ui", "sans-serif"],
-        display: ["var(--font-instrument-serif)", "serif"],
-        mono: ["var(--font-geist-mono)", "monospace"],
+        sans: ["var(--font-geist-sans)", "Arial", "system-ui", "sans-serif"],
+        display: ["var(--font-geist-sans)", "Arial", "system-ui", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -47,26 +47,14 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        stripe: {
-          orange: "hsl(var(--stripe-orange))",
-          "red-orange": "hsl(var(--stripe-red-orange))",
-          red: "hsl(var(--stripe-red))",
-          magenta: "hsl(var(--stripe-magenta))",
-          plum: "hsl(var(--stripe-plum))",
-        },
-        olive: {
-          50:  "oklch(98.8% 0.003 106.5)",
-          100: "oklch(96.6% 0.005 106.5)",
-          200: "oklch(93%   0.007 106.5)",
-          300: "oklch(88%   0.011 106.6)",
-          400: "oklch(73.7% 0.021 106.9)",
-          500: "oklch(58%   0.031 107.3)",
-          600: "oklch(46.6% 0.025 107.3)",
-          700: "oklch(39.4% 0.023 107.4)",
-          800: "oklch(28.6% 0.016 107.4)",
-          900: "oklch(22.8% 0.013 107.4)",
-          950: "oklch(15.3% 0.006 107.1)",
-        },
+        link: "hsl(var(--link))",
+      },
+      boxShadow: {
+        ds: "0 0 0 1px rgba(0,0,0,0.08)",
+        "ds-card":
+          "0 0 0 1px rgba(0,0,0,0.08), 0 2px 2px rgba(0,0,0,0.04), 0 0 0 1px #fafafa",
+        "ds-card-lg":
+          "0 0 0 1px rgba(0,0,0,0.08), 0 2px 2px rgba(0,0,0,0.04), 0 8px 8px -8px rgba(0,0,0,0.04), 0 0 0 1px #fafafa",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -74,21 +62,21 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       animation: {
-        'vibrate': 'vibrate 0.3s ease-in-out infinite',
-        'gradient': 'gradient 8s linear infinite',
+        vibrate: "vibrate 0.3s ease-in-out infinite",
+        gradient: "gradient 8s linear infinite",
       },
       keyframes: {
         gradient: {
-          '0%, 100%': { backgroundPosition: '0% 50%' },
-          '50%': { backgroundPosition: '100% 50%' },
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
         },
         vibrate: {
-          '0%': { transform: 'translate(0)' },
-          '20%': { transform: 'translate(-2px, 2px)' },
-          '40%': { transform: 'translate(-2px, -2px)' },
-          '60%': { transform: 'translate(2px, 2px)' },
-          '80%': { transform: 'translate(2px, -2px)' },
-          '100%': { transform: 'translate(0)' },
+          "0%": { transform: "translate(0)" },
+          "20%": { transform: "translate(-2px, 2px)" },
+          "40%": { transform: "translate(-2px, -2px)" },
+          "60%": { transform: "translate(2px, 2px)" },
+          "80%": { transform: "translate(2px, -2px)" },
+          "100%": { transform: "translate(0)" },
         },
       },
     },

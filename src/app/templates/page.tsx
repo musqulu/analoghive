@@ -33,7 +33,9 @@ export default function TemplatesPage() {
       <main className="min-h-screen flex flex-col items-center justify-center p-8">
         <div className="max-w-sm w-full text-center space-y-4">
           <Lock className="w-12 h-12 mx-auto text-muted-foreground" />
-          <h1 className="text-2xl font-bold">Templates</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Templates
+          </h1>
           <p className="text-muted-foreground">
             Log in to save and manage your development templates.
           </p>
@@ -51,7 +53,9 @@ export default function TemplatesPage() {
   return (
     <main className="min-h-screen flex flex-col items-center p-8 pt-12">
       <div className="max-w-2xl w-full space-y-6">
-        <h1 className="text-2xl font-bold">Templates</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+          Templates
+        </h1>
 
         <div className="flex gap-1 border-b border-border">
           {(["presets", "custom"] as const).map((t) => (
@@ -104,7 +108,7 @@ export default function TemplatesPage() {
             </div>
 
             {(showForm || editing) && (
-              <div className="p-6 bg-card rounded-lg border border-border shadow-sm">
+              <div className="rounded-lg bg-card p-6 ds-card">
                 <h3 className="text-lg font-medium mb-4">
                   {editing ? "Edit Development Time" : "New Development Time"}
                 </h3>
@@ -136,7 +140,7 @@ export default function TemplatesPage() {
             {customTimes.map((ct) => (
               <div
                 key={ct.id}
-                className="p-4 bg-card rounded-lg border border-border shadow-sm flex items-start justify-between"
+                className="flex items-start justify-between rounded-lg bg-card p-4 ds-card"
               >
                 <div className="space-y-1">
                   <p className="font-medium">{ct.label}</p>

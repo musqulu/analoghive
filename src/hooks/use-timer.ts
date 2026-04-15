@@ -67,11 +67,7 @@ export function useTimer({
     if (isRunning && !isPaused && timeLeft > 0) {
       interval = setInterval(() => {
         setTimeLeft((prev) => {
-          if (prev <= 1) {
-            setIsRunning(false)
-            setIsPaused(false)
-            return 0
-          }
+          if (prev <= 1) return 0
           return prev - 1
         })
       }, 1000)

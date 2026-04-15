@@ -175,35 +175,37 @@ export function DevelopmentMode({
       {/* Main content */}
       <div className="flex flex-col w-full max-w-4xl mx-auto px-8 py-8">
         {/* Development info */}
-        <h1 className="text-2xl md:text-3xl font-bold mb-8 text-red-600 text-center">Development Mode</h1>
+        <h1 className="mb-8 text-center text-2xl font-semibold text-red-600 md:text-3xl">
+          Development Mode
+        </h1>
         
         <div className="w-full text-red-600 mb-8 flex justify-center">
           <div className="flex flex-col space-y-2">
             <div className="flex justify-between">
               <span className="text-right mr-3">Film:</span>
-              <span className="font-bold">{filmName}</span>
+              <span className="font-semibold">{filmName}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-right mr-3">Developer:</span>
-              <span className="font-bold">{developerName}</span>
+              <span className="font-semibold">{developerName}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-right mr-3">Volume:</span>
-              <span className="font-bold">{volume}ml</span>
+              <span className="font-semibold">{volume}ml</span>
             </div>
             <div className="flex justify-between">
               <span className="text-right mr-3">Dilution:</span>
-              <span className="font-bold">{dilution}</span>
+              <span className="font-semibold">{dilution}</span>
             </div>
           </div>
         </div>
         
         {/* Timer display */}
         <div className="text-red-600 text-center mb-8 w-full">
-          <div className="text-8xl md:text-9xl font-mono font-bold mb-4">
+          <div className="mb-4 font-mono text-8xl font-semibold text-red-600 md:text-9xl">
             {formatTime(seconds)}
           </div>
-          <p className="text-xl md:text-2xl uppercase font-bold">
+          <p className="text-xl font-semibold uppercase md:text-2xl">
             {currentStep === 'complete' ? 'DEVELOPMENT COMPLETE' : `${currentStep.toUpperCase()} STEP`}
           </p>
           
@@ -216,7 +218,7 @@ export function DevelopmentMode({
                   className={`text-red-600 ${shouldShake ? 'animate-vibrate' : 'opacity-50'}`} 
                   strokeWidth={shouldShake ? 2.5 : 1.5}
                 />
-                <span className={`text-lg font-bold ${shouldShake ? 'text-red-500' : 'text-red-600/50'}`}>
+                <span className={`text-lg font-semibold ${shouldShake ? "text-red-500" : "text-red-600/50"}`}>
                   {shouldShake ? 'SHAKE NOW!' : 'Rest'}
                 </span>
               </div>
@@ -267,19 +269,19 @@ export function DevelopmentMode({
       {/* Process steps */}
       <div className="w-full flex justify-center gap-1 md:gap-4 px-2 overflow-x-auto py-4 border-t border-red-900/30">
         <div className={`p-2 md:p-4 border rounded-md text-xs md:text-base ${currentStep === 'developer' ? 'border-red-600 bg-red-900/30' : 'border-red-900/50 bg-transparent'}`}>
-          <p className="text-red-600 font-bold">Developer</p>
+          <p className="font-semibold text-red-600">Developer</p>
         </div>
         <div className={`p-2 md:p-4 border rounded-md text-xs md:text-base ${currentStep === 'stop' ? 'border-red-600 bg-red-900/30' : 'border-red-900/50 bg-transparent'}`}>
-          <p className="text-red-600 font-bold">Stop Bath</p>
+          <p className="font-semibold text-red-600">Stop Bath</p>
         </div>
         <div className={`p-2 md:p-4 border rounded-md text-xs md:text-base ${currentStep === 'fixer' ? 'border-red-600 bg-red-900/30' : 'border-red-900/50 bg-transparent'}`}>
-          <p className="text-red-600 font-bold">Fixer</p>
+          <p className="font-semibold text-red-600">Fixer</p>
         </div>
         <div className={`p-2 md:p-4 border rounded-md text-xs md:text-base ${currentStep === 'wash' ? 'border-red-600 bg-red-900/30' : 'border-red-900/50 bg-transparent'}`}>
-          <p className="text-red-600 font-bold">Wash</p>
+          <p className="font-semibold text-red-600">Wash</p>
         </div>
         <div className={`p-2 md:p-4 border rounded-md text-xs md:text-base ${currentStep === 'complete' ? 'border-red-600 bg-red-900/30' : 'border-red-900/50 bg-transparent'}`}>
-          <p className="text-red-600 font-bold">Complete</p>
+          <p className="font-semibold text-red-600">Complete</p>
         </div>
       </div>
     </div>

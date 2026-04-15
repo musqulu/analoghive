@@ -36,8 +36,8 @@ export function TemperatureCorrection({
   pushPullLine,
 }: TemperatureCorrectionProps) {
   return (
-    <div className="p-6 bg-card rounded-lg border border-border shadow-sm">
-      <h3 className="text-lg font-medium mb-4">Temperature Correction</h3>
+    <div className="rounded-lg bg-card p-6 ds-card">
+      <h3 className="mb-4 text-lg font-medium">Temperature Correction</h3>
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -68,7 +68,7 @@ export function TemperatureCorrection({
             value={modifiedTemperature}
             onChange={(e) => onModifiedTemperatureChange(Number(e.target.value))}
             step="0.1"
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="ds-input"
           />
         </div>
         <div className="mt-4">

@@ -18,7 +18,7 @@ export function PresetCard({ preset, onDelete }: PresetCardProps) {
       : "—"
 
   return (
-    <div className="p-4 bg-card rounded-lg border border-border shadow-sm flex items-start justify-between">
+    <div className="flex items-start justify-between rounded-lg bg-card p-4 ds-card">
       <div className="space-y-1 flex-1 min-w-0">
         <p className="font-medium truncate">{preset.label}</p>
         <p className="text-sm text-foreground">

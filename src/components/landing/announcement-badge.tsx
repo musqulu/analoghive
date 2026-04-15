@@ -21,11 +21,11 @@ export function AnnouncementBadge({
       href={href}
       {...props}
       className={cn(
-        "group relative inline-flex max-w-full gap-x-3 overflow-hidden rounded-md px-3.5 py-2 text-sm/6 max-sm:flex-col sm:items-center sm:rounded-full sm:px-3 sm:py-0.5",
+        "group relative inline-flex max-w-full gap-x-3 overflow-hidden rounded-full px-3 py-0.5 text-xs font-medium max-sm:flex-col sm:items-center",
         variant === "normal" &&
-          "bg-olive-950/5 text-olive-950 hover:bg-olive-950/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10",
+          "bg-[#ebf5ff] text-[#0068d6] hover:bg-[#ebf5ff]/90",
         variant === "overlay" &&
-          "bg-olive-950/15 text-white hover:bg-olive-950/20 dark:bg-olive-950/20 dark:hover:bg-olive-950/25",
+          "bg-white/15 text-white hover:bg-white/25",
         className,
       )}
     >
@@ -33,14 +33,14 @@ export function AnnouncementBadge({
       <span
         className={cn(
           "h-3 w-px max-sm:hidden",
-          variant === "normal" && "bg-olive-950/20 dark:bg-white/10",
+          variant === "normal" && "bg-[#0068d6]/20",
           variant === "overlay" && "bg-white/20",
         )}
       />
       <span
         className={cn(
-          "inline-flex shrink-0 items-center gap-2 font-semibold",
-          variant === "normal" && "text-olive-950 dark:text-white",
+          "inline-flex shrink-0 items-center gap-2 font-medium",
+          variant === "normal" && "text-[#0068d6]",
         )}
       >
         {cta} <ChevronRight className="size-3.5 shrink-0" />
