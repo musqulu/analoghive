@@ -23,7 +23,7 @@ export function useCorrectedTime(selectedInfo: DevelopmentOption | undefined | n
       )
     }
     prevOptionKeyRef.current = key
-  }, [selectedInfo?.optionKey, selectedInfo?.temperature, temperatureUnit])
+  }, [selectedInfo, temperatureUnit])
 
   React.useEffect(() => {
     if (selectedInfo) {
