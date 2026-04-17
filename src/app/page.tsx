@@ -6,6 +6,7 @@ import { Footer } from "@/components/landing/footer"
 import { SpinningText } from "@/components/magicui/spinning-text"
 import { Eyebrow } from "@/components/landing/eyebrow"
 import { ButtonLink } from "@/components/landing/button"
+import { createClient } from "@/lib/supabase/server"
 
 const features = [
   {
@@ -42,17 +43,39 @@ const features = [
   },
 ]
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   return (
     <main>
       <Hero
-        eyebrow={<Eyebrow>Analog Film Development</Eyebrow>}
-        headline="Calculate. Develop. Perfect."
-        subheadline="Precise development times, temperature correction, and volume mixing for analog film — all in one place."
+        eyebrow={
+          user ? <Eyebrow>Your dashboard</Eyebrow> : <Eyebrow>Analog Film Development</Eyebrow>
+        }
+        headline={user ? "Welcome back." : "Calculate. Develop. Perfect."}
+        subheadline={
+          user
+            ? "Open your dashboard for saved items, or continue with the calculators and tools."
+            : "Precise development times, temperature correction, and volume mixing for analog film — all in one place."
+        }
         cta={
-          <ButtonLink href="/develop" size="lg" color="dark/light">
-            Start Developing
-          </ButtonLink>
+          user ? (
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <ButtonLink href="/workspace" size="lg" color="dark/light">
+                Open dashboard
+              </ButtonLink>
+              <ButtonLink href="/develop" size="lg" color="light">
+                Start developing
+              </ButtonLink>
+            </div>
+          ) : (
+            <ButtonLink href="/develop" size="lg" color="dark/light">
+              Start Developing
+            </ButtonLink>
+          )
         }
       />
 

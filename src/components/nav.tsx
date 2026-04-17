@@ -6,6 +6,7 @@ import { ChevronDown, Menu, X } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
+import { AuthNav } from "@/components/auth-nav"
 import { cn } from "@/lib/utils"
 
 const toolLinks = [
@@ -15,25 +16,6 @@ const toolLinks = [
 ]
 
 const STORIES_HREF = "/stories"
-
-const loginButtonClass =
-  "inline-flex items-center justify-center rounded-md bg-background px-4 py-2 text-sm/7 font-medium text-foreground shadow-ds transition-colors hover:bg-muted"
-
-const signUpButtonClass =
-  "inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm/7 font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-
-function AuthButtons({ className }: { className?: string }) {
-  return (
-    <>
-      <button type="button" className={cn(loginButtonClass, className)}>
-        Login
-      </button>
-      <button type="button" className={cn(signUpButtonClass, className)}>
-        Sign Up
-      </button>
-    </>
-  )
-}
 
 function isToolsActive(pathname: string) {
   return toolLinks.some(({ href }) => pathname === href)
@@ -81,7 +63,11 @@ function toolMenuItemClass(pathname: string, href: string) {
   )
 }
 
-export function Nav() {
+export function Nav({
+  authenticatedOnServer = false,
+}: {
+  authenticatedOnServer?: boolean
+}) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -193,14 +179,17 @@ export function Nav() {
                   </Link>
                 </div>
                 <div className="flex flex-col gap-3 border-t border-border pt-4">
-                  <AuthButtons className="w-full" />
+                  <AuthNav
+                    authenticatedOnServer={authenticatedOnServer}
+                    className="flex-col items-stretch"
+                  />
                 </div>
               </Dialog.Content>
             </Dialog.Portal>
           </Dialog.Root>
 
           <div className="hidden md:flex md:items-center md:gap-3">
-            <AuthButtons />
+            <AuthNav authenticatedOnServer={authenticatedOnServer} />
           </div>
         </div>
       </nav>
