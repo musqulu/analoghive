@@ -4,7 +4,10 @@ import { createClient } from "@/lib/supabase/server"
 import { ButtonLink } from "@/components/landing/button"
 import { Container } from "@/components/landing/container"
 import { FavoritesList } from "@/components/favorites-list"
-import type { DevelopmentFavoriteRow } from "@/types/favorite"
+import {
+  DEVELOPMENT_FAVORITES_LIST_COLUMNS,
+  type DevelopmentFavoriteRow,
+} from "@/types/favorite"
 
 export const metadata: Metadata = {
   title: "Favorites — Analog Hive",
@@ -23,7 +26,7 @@ export default async function FavoritesPage() {
 
   const { data } = await supabase
     .from("development_favorites")
-    .select("*")
+    .select(DEVELOPMENT_FAVORITES_LIST_COLUMNS)
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
 

@@ -20,10 +20,11 @@ const DISPLAY_NAME_MAX = 120
 interface FavoriteCardProps {
   row: DevelopmentFavoriteRow
   onDeleted: (id: string) => void
+  onRestore: (row: DevelopmentFavoriteRow) => void
   onRenamed: (id: string, next: DevelopmentFavoriteRow) => void
 }
 
-export function FavoriteCard({ row, onDeleted, onRenamed }: FavoriteCardProps) {
+export function FavoriteCard({ row, onDeleted, onRestore, onRenamed }: FavoriteCardProps) {
   const [busy, setBusy] = React.useState(false)
   const [renameOpen, setRenameOpen] = React.useState(false)
   const [renameValue, setRenameValue] = React.useState("")
@@ -48,10 +49,13 @@ export function FavoriteCard({ row, onDeleted, onRenamed }: FavoriteCardProps) {
 
   const remove = async () => {
     setBusy(true)
+    onDeleted(row.id)
     const supabase = createClient()
     const { error } = await supabase.from("development_favorites").delete().eq("id", row.id)
     setBusy(false)
-    if (!error) onDeleted(row.id)
+    if (error) {
+      onRestore(row)
+    }
   }
 
   const saveRename = async () => {

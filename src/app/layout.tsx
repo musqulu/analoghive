@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
+import { AuthSessionProvider } from "@/components/auth-session-provider"
 import { EmailVerificationBanner } from "@/components/email-verification-banner"
 import { Nav } from "@/components/nav"
 import { createClient } from "@/lib/supabase/server"
@@ -38,11 +39,13 @@ export default async function RootLayout({
       <body
         className={`${GeistSans.variable} ${GeistMono.variable} font-sans antialiased`}
       >
-        <Nav authenticatedOnServer={Boolean(user)} />
-        {unverifiedEmail ? (
-          <EmailVerificationBanner email={unverifiedEmail} graceDays={graceDays} />
-        ) : null}
-        {children}
+        <AuthSessionProvider authenticatedOnServer={Boolean(user)}>
+          <Nav />
+          {unverifiedEmail ? (
+            <EmailVerificationBanner email={unverifiedEmail} graceDays={graceDays} />
+          ) : null}
+          {children}
+        </AuthSessionProvider>
       </body>
     </html>
   )

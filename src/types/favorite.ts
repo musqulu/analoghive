@@ -17,6 +17,10 @@ export interface DevelopmentFavoriteSnapshot {
   correctedTimeMinutes?: number
 }
 
+/** Columns for list queries — avoids `select("*")` payload. */
+export const DEVELOPMENT_FAVORITES_LIST_COLUMNS =
+  "id, user_id, display_name, film_name, film_format, film_iso, developer_name, option_key, push_pull_stops, total_volume, temperature_unit, modified_temperature, constant_agitation, corrected_time_minutes, created_at"
+
 /** Row shape from `public.development_favorites` */
 export interface DevelopmentFavoriteRow {
   id: string

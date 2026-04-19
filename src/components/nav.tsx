@@ -7,7 +7,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import { AuthNav } from "@/components/auth-nav"
-import { useSupabaseUser } from "@/hooks/use-supabase-user"
+import { useAuthSession } from "@/components/auth-session-provider"
 import { cn } from "@/lib/utils"
 
 const toolLinks = [
@@ -74,14 +74,10 @@ function toolMenuItemClass(pathname: string, href: string) {
   )
 }
 
-export function Nav({
-  authenticatedOnServer = false,
-}: {
-  authenticatedOnServer?: boolean
-}) {
+export function Nav() {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const { showAuthed } = useSupabaseUser(authenticatedOnServer)
+  const { showAuthed } = useAuthSession()
 
   useEffect(() => {
     setMobileOpen(false)
@@ -208,17 +204,14 @@ export function Nav({
                   ) : null}
                 </div>
                 <div className="flex flex-col gap-3 border-t border-border pt-4">
-                  <AuthNav
-                    authenticatedOnServer={authenticatedOnServer}
-                    className="flex-col items-stretch"
-                  />
+                  <AuthNav className="flex-col items-stretch" />
                 </div>
               </Dialog.Content>
             </Dialog.Portal>
           </Dialog.Root>
 
           <div className="hidden md:flex md:items-center md:gap-3">
-            <AuthNav authenticatedOnServer={authenticatedOnServer} />
+            <AuthNav />
           </div>
         </div>
       </nav>

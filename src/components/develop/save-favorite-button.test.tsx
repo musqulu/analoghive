@@ -1,20 +1,26 @@
 import React from "react"
-import { render, screen, fireEvent, act } from "@testing-library/react"
+import { render, screen, fireEvent, act, waitFor } from "@testing-library/react"
 import "@testing-library/jest-dom"
+import { AuthSessionProvider } from "@/components/auth-session-provider"
 import { SaveFavoriteButton } from "@/components/develop/save-favorite-button"
 
 jest.mock("lucide-react", () => ({
   Bookmark: () => null,
 }))
 
+const mockGetSession = jest.fn(() => Promise.resolve({ data: { session: null } }))
+
 jest.mock("@/lib/supabase/client", () => ({
   createClient: jest.fn(() => ({
     auth: {
-      getSession: jest.fn(() => Promise.resolve({ data: { session: null } })),
+      getSession: mockGetSession,
       onAuthStateChange: jest.fn(() => ({
         data: { subscription: { unsubscribe: jest.fn() } },
       })),
     },
+    from: jest.fn(() => ({
+      insert: jest.fn(() => Promise.resolve({ error: null })),
+    })),
   })),
 }))
 
@@ -32,18 +38,28 @@ const snapshot = {
   correctedTimeMinutes: 7.5,
 }
 
+function renderWithAuth(ui: React.ReactElement) {
+  return render(
+    <AuthSessionProvider authenticatedOnServer={false}>{ui}</AuthSessionProvider>,
+  )
+}
+
 describe("SaveFavoriteButton", () => {
   it("opens auth dialog when logged out and save is clicked", async () => {
-    render(<SaveFavoriteButton snapshot={snapshot} />)
+    renderWithAuth(<SaveFavoriteButton snapshot={snapshot} />)
 
     await act(async () => {
       await Promise.resolve()
     })
 
     const save = screen.getByRole("button", { name: /save to favorites/i })
-    fireEvent.click(save)
+    await act(async () => {
+      fireEvent.click(save)
+    })
 
-    expect(screen.getByRole("heading", { name: /sign in to save favorites/i })).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByRole("heading", { name: /sign in to save favorites/i })).toBeInTheDocument()
+    })
     expect(screen.getByRole("link", { name: /sign in/i })).toHaveAttribute("href", "/login?next=/develop")
     expect(screen.getByRole("link", { name: /create account/i })).toHaveAttribute(
       "href",

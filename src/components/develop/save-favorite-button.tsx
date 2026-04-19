@@ -3,6 +3,7 @@
 import * as React from "react"
 import * as Dialog from "@radix-ui/react-dialog"
 import { Bookmark } from "lucide-react"
+import { useAuthSession } from "@/components/auth-session-provider"
 import { createClient } from "@/lib/supabase/client"
 import type { DevelopmentFavoriteSnapshot } from "@/types/favorite"
 import { snapshotToInsert } from "@/types/favorite"
@@ -16,36 +17,32 @@ interface SaveFavoriteButtonProps {
 }
 
 export function SaveFavoriteButton({ snapshot, className }: SaveFavoriteButtonProps) {
+  const { user } = useAuthSession()
   const [saved, setSaved] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const [busy, setBusy] = React.useState(false)
   const [authOpen, setAuthOpen] = React.useState(false)
-  const [userId, setUserId] = React.useState<string | null | undefined>(undefined)
-
-  React.useEffect(() => {
-    const supabase = createClient()
-    void supabase.auth.getSession().then(({ data: { session } }) => {
-      setUserId(session?.user.id ?? null)
-    })
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUserId(session?.user.id ?? null)
-    })
-    return () => subscription.unsubscribe()
-  }, [])
 
   const save = async () => {
-    if (!userId) {
-      setAuthOpen(true)
-      return
-    }
     setBusy(true)
     setError(null)
     const supabase = createClient()
+    let uid = user?.id
+    if (!uid) {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+      uid = session?.user.id
+    }
+    if (!uid) {
+      setBusy(false)
+      setAuthOpen(true)
+      return
+    }
+
     const { error: insertError } = await supabase
       .from("development_favorites")
-      .insert(snapshotToInsert(userId, snapshot))
+      .insert(snapshotToInsert(uid, snapshot))
     setBusy(false)
     if (insertError) {
       setError(insertError.message)
@@ -55,15 +52,6 @@ export function SaveFavoriteButton({ snapshot, className }: SaveFavoriteButtonPr
     setTimeout(() => setSaved(false), 2000)
   }
 
-  if (userId === undefined) {
-    return (
-      <div
-        className={cn("h-10 w-36 rounded-md bg-muted", className)}
-        aria-hidden
-      />
-    )
-  }
-
   return (
     <>
       <div className={cn("flex flex-col items-end gap-1", className)}>
@@ -71,6 +59,7 @@ export function SaveFavoriteButton({ snapshot, className }: SaveFavoriteButtonPr
           type="button"
           onClick={() => void save()}
           disabled={busy}
+          aria-busy={busy}
           className="flex items-center gap-1.5 rounded-md bg-muted px-3 py-2 text-sm font-medium transition-colors hover:bg-muted/80 disabled:opacity-60"
         >
           <Bookmark size={14} aria-hidden />
