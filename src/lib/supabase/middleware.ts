@@ -1,9 +1,16 @@
 import { createServerClient } from "@supabase/ssr"
 import { type NextRequest, NextResponse } from "next/server"
 
+/**
+ * Refreshes the Supabase session. Only mutates the *response* cookies — never
+ * `request.cookies.set`, which can break in Next.js 15 middleware / Edge.
+ * @see https://github.com/supabase/ssr/blob/main/docs/design.md
+ */
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
+  const supabaseResponse = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
   })
 
   const supabase = createServerClient(
@@ -14,14 +21,17 @@ export async function updateSession(request: NextRequest) {
         getAll() {
           return request.cookies.getAll()
         },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({
-            request,
+        setAll(cookiesToSet, responseHeaders) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            supabaseResponse.cookies.set(name, value, options)
           })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options),
-          )
+          if (responseHeaders && typeof responseHeaders === "object") {
+            for (const [key, value] of Object.entries(responseHeaders)) {
+              if (typeof value === "string") {
+                supabaseResponse.headers.set(key, value)
+              }
+            }
+          }
         },
       },
     },

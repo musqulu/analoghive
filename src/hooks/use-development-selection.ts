@@ -21,6 +21,8 @@ import {
 import { getPushPullAdjustedDevelopmentTime } from "@/lib/push-pull-adjusted-development-time"
 import { findClosestAvailableIso } from "@/utils/available-chart-iso"
 import type { FilmFormat, DevelopmentOption } from "@/types/development"
+import type { DevelopmentFavoriteSnapshot } from "@/types/favorite"
+import { resolveFavoriteOptionKey } from "@/lib/favorite-restore"
 
 function getDilutionRatio(dilution: string): number {
   if (dilution === "stock" || dilution === "1:0") return 0
@@ -50,7 +52,9 @@ function getAvailableDevelopersForFilm(
     .filter((dev): dev is Developer => dev !== undefined)
 }
 
-export function useDevelopmentSelection() {
+export function useDevelopmentSelection(
+  initialHydration: DevelopmentFavoriteSnapshot | null = null,
+) {
   const [selectedFilm, setSelectedFilm] = React.useState("")
   const [selectedIso, setSelectedIso] = React.useState("")
   const [selectedFormat, setSelectedFormat] = React.useState<FilmFormat>("35mm")
@@ -60,6 +64,32 @@ export function useDevelopmentSelection() {
   const [availableDevelopers, setAvailableDevelopers] = React.useState<
     Developer[]
   >([])
+
+  /** Snapshot for reconcile; cleared when URL has no hydration */
+  const hydrationSnapshotRef = React.useRef<DevelopmentFavoriteSnapshot | null>(null)
+  /** While true, film/dev reset effects must not wipe ISO / dilution (Strict Mode–safe) */
+  const favoriteRestorePendingRef = React.useRef(false)
+  const lastAppliedHydrationJsonRef = React.useRef<string | null>(null)
+
+  React.useLayoutEffect(() => {
+    if (!initialHydration) {
+      hydrationSnapshotRef.current = null
+      favoriteRestorePendingRef.current = false
+      lastAppliedHydrationJsonRef.current = null
+      return
+    }
+    const key = JSON.stringify(initialHydration)
+    if (key === lastAppliedHydrationJsonRef.current) return
+    lastAppliedHydrationJsonRef.current = key
+    hydrationSnapshotRef.current = initialHydration
+    favoriteRestorePendingRef.current = true
+    setSelectedFilm(initialHydration.filmName)
+    setSelectedFormat(initialHydration.filmFormat)
+    setSelectedDeveloper(initialHydration.developerName)
+    setSelectedIso(initialHydration.filmIso)
+    setPushPullStops(initialHydration.pushPullStops)
+    setSelectedOptionKey(initialHydration.optionKey)
+  }, [initialHydration])
 
   const selectedFilmData = findFilmByName(selectedFilm)
   const selectedDeveloperData = findDeveloperByName(selectedDeveloper)
@@ -78,6 +108,7 @@ export function useDevelopmentSelection() {
   )
 
   React.useEffect(() => {
+    if (favoriteRestorePendingRef.current) return
     setSelectedIso("")
     setSelectedOptionKey("")
     setPushPullStops(0)
@@ -87,6 +118,7 @@ export function useDevelopmentSelection() {
   }, [selectedFilm, availableFormats])
 
   React.useEffect(() => {
+    if (favoriteRestorePendingRef.current) return
     setSelectedOptionKey("")
     setSelectedIso("")
     setPushPullStops(0)
@@ -108,6 +140,7 @@ export function useDevelopmentSelection() {
 
   /** Default to box speed: rated ISO in chart if present, else closest chart ISO; always 0 stops (no sync from log2). */
   React.useEffect(() => {
+    if (favoriteRestorePendingRef.current) return
     if (!selectedFilmData || !selectedDeveloperData) return
     if (availableIsoValues.length === 0) return
     if (selectedIso !== "") return
@@ -252,7 +285,44 @@ export function useDevelopmentSelection() {
 
   const selectedDilution = selectedInfo?.dilution ?? ""
 
+  /**
+   * After chart options exist, re-apply saved dilution/ISO/push-pull from the snapshot.
+   * Does not clear favoriteRestorePendingRef here — that runs in a follow-up effect after state commits
+   * so "pick first dilution" cannot overwrite during the same effect pass.
+   */
   React.useEffect(() => {
+    const snap = hydrationSnapshotRef.current
+    if (!snap || !favoriteRestorePendingRef.current) return
+    if (!developmentInfo) return
+    const resolved = resolveFavoriteOptionKey(snap, developmentInfo)
+    if (!resolved) {
+      favoriteRestorePendingRef.current = false
+      return
+    }
+    setSelectedOptionKey(resolved)
+    setSelectedIso(snap.filmIso)
+    setPushPullStops(snap.pushPullStops)
+  }, [developmentInfo])
+
+  /**
+   * End restore only after chart options exist and the dilution row matches the snapshot
+   * (avoids reset effects running before `developmentInfo` is ready — e.g. Strict Mode).
+   */
+  React.useEffect(() => {
+    const snap = hydrationSnapshotRef.current
+    if (!snap || !favoriteRestorePendingRef.current) return
+    if (!developmentInfo) return
+    if (!resolveFavoriteOptionKey(snap, developmentInfo)) {
+      favoriteRestorePendingRef.current = false
+      return
+    }
+    if (selectedOptionKey === snap.optionKey) {
+      favoriteRestorePendingRef.current = false
+    }
+  }, [selectedOptionKey, developmentInfo])
+
+  React.useEffect(() => {
+    if (favoriteRestorePendingRef.current) return
     if (
       developmentInfo &&
       Array.isArray(developmentInfo) &&

@@ -7,6 +7,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import { AuthNav } from "@/components/auth-nav"
+import { useSupabaseUser } from "@/hooks/use-supabase-user"
 import { cn } from "@/lib/utils"
 
 const toolLinks = [
@@ -16,6 +17,7 @@ const toolLinks = [
 ]
 
 const STORIES_HREF = "/stories"
+const FAVORITES_HREF = "/favorites"
 
 function isToolsActive(pathname: string) {
   return toolLinks.some(({ href }) => pathname === href)
@@ -39,6 +41,15 @@ function storiesNavClass(pathname: string) {
   return cn(
     "text-sm/7 font-medium transition-colors",
     isStoriesActive(pathname)
+      ? "font-semibold text-foreground"
+      : "text-muted-foreground hover:text-foreground"
+  )
+}
+
+function favoritesNavClass(pathname: string) {
+  return cn(
+    "text-sm/7 font-medium transition-colors",
+    pathname === FAVORITES_HREF
       ? "font-semibold text-foreground"
       : "text-muted-foreground hover:text-foreground"
   )
@@ -70,6 +81,7 @@ export function Nav({
 }) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { showAuthed } = useSupabaseUser(authenticatedOnServer)
 
   useEffect(() => {
     setMobileOpen(false)
@@ -104,6 +116,12 @@ export function Nav({
           <Link href={STORIES_HREF} className={storiesNavClass(pathname)}>
             Stories
           </Link>
+
+          {showAuthed ? (
+            <Link href={FAVORITES_HREF} className={favoritesNavClass(pathname)}>
+              Favorites
+            </Link>
+          ) : null}
         </div>
 
         <Link
@@ -134,7 +152,7 @@ export function Nav({
               >
                 <Dialog.Title className="sr-only">Main navigation</Dialog.Title>
                 <Dialog.Description className="sr-only">
-                  Tools, stories, and account actions.
+                  Tools, stories, favorites, and account actions.
                 </Dialog.Description>
                 <div className="mb-4 flex shrink-0 items-center justify-between border-b border-border pb-4">
                   <span className="text-sm font-semibold text-foreground">Menu</span>
@@ -177,6 +195,17 @@ export function Nav({
                   >
                     Stories
                   </Link>
+                  {showAuthed ? (
+                    <Link
+                      href={FAVORITES_HREF}
+                      className={cn(
+                        favoritesNavClass(pathname),
+                        "rounded-md px-3 py-3 text-base/7"
+                      )}
+                    >
+                      Favorites
+                    </Link>
+                  ) : null}
                 </div>
                 <div className="flex flex-col gap-3 border-t border-border pt-4">
                   <AuthNav

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "Create an Analog Hive account to save development times and notes.",
 }
 
-type SearchParams = Promise<{ error?: string }>
+type SearchParams = Promise<{ error?: string; next?: string }>
 
 export default async function SignupPage({
   searchParams,
@@ -17,6 +17,8 @@ export default async function SignupPage({
   searchParams: SearchParams
 }) {
   const params = await searchParams
+  const next =
+    params.next?.startsWith("/") && !params.next.startsWith("//") ? params.next : "/workspace"
 
   return (
     <main className="min-h-[calc(100vh-4.5rem)] bg-background py-16 sm:py-24">
@@ -38,6 +40,7 @@ export default async function SignupPage({
           ) : null}
 
           <form action={signup} className="flex flex-col gap-6">
+            <input type="hidden" name="next" value={next} />
             <div className="flex flex-col gap-2">
               <label htmlFor="signup-email" className="text-sm/7 font-medium text-foreground">
                 Email
@@ -87,7 +90,7 @@ export default async function SignupPage({
           <p className="mt-8 text-center text-sm/7 text-muted-foreground">
             Already have an account?{" "}
             <Link
-              href="/login"
+              href={`/login?next=${encodeURIComponent(next)}`}
               className="font-medium text-link underline-offset-4 hover:underline"
             >
               Sign in

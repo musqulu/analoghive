@@ -39,9 +39,12 @@ export async function signup(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim()
   const password = String(formData.get("password") ?? "")
   const confirm = String(formData.get("confirm") ?? "")
+  const next = safeNext(String(formData.get("next") ?? ""))
 
   if (password !== confirm) {
-    redirect(`/signup?error=${encodeURIComponent("Passwords do not match.")}`)
+    redirect(
+      `/signup?error=${encodeURIComponent("Passwords do not match.")}&next=${encodeURIComponent(next)}`,
+    )
   }
 
   const { data, error } = await supabase.auth.signUp({
@@ -53,13 +56,13 @@ export async function signup(formData: FormData) {
   })
 
   if (error) {
-    redirect(`/signup?error=${encodeURIComponent(error.message)}`)
+    redirect(`/signup?error=${encodeURIComponent(error.message)}&next=${encodeURIComponent(next)}`)
   }
 
   revalidatePath("/", "layout")
 
   if (data.session) {
-    redirect("/workspace")
+    redirect(next)
   }
 
   const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
@@ -68,7 +71,7 @@ export async function signup(formData: FormData) {
   })
 
   if (!signInError && signInData.session) {
-    redirect("/workspace")
+    redirect(next)
   }
 
   redirect(
