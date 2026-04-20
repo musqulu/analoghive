@@ -13,13 +13,15 @@ import {
   SaveFavoriteButton,
   buildFavoriteSnapshotFromCalculator,
 } from "@/components/develop/save-favorite-button"
+import { CreateRecipeFromButton } from "@/components/develop/create-recipe-button"
 import { parseDevelopFavoriteSearchParams } from "@/lib/favorite-develop-query"
 
 export function DevelopCalculator() {
   const searchParams = useSearchParams()
+  const searchKey = searchParams.toString()
   const hydration = React.useMemo(
-    () => parseDevelopFavoriteSearchParams(searchParams),
-    [searchParams.toString()],
+    () => parseDevelopFavoriteSearchParams(new URLSearchParams(searchKey)),
+    [searchKey],
   )
 
   const selection = useDevelopmentSelection(hydration)
@@ -98,8 +100,14 @@ export function DevelopCalculator() {
           />
 
           {favoriteSnapshot ? (
-            <div className="flex justify-end">
+            <div className="flex flex-wrap justify-end gap-2">
               <SaveFavoriteButton snapshot={favoriteSnapshot} />
+              <CreateRecipeFromButton
+                snapshot={favoriteSnapshot}
+                isColor={isColor}
+                chartReferenceNote={selection.selectedInfo?.approximateNote}
+                pushPullLine={selection.pushPullLine}
+              />
             </div>
           ) : null}
 

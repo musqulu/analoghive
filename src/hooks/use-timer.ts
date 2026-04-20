@@ -17,21 +17,42 @@ interface UseTimerOptions {
   customTimes: ProcessTimes
 }
 
+function hasPreSoakDuration(customTimes: ProcessTimes): boolean {
+  return (customTimes.preSoak ?? 0) > 0
+}
+
+function initialIdleSeconds(customTimes: ProcessTimes, developmentTime: number): number {
+  if (hasPreSoakDuration(customTimes)) {
+    return Math.round((customTimes.preSoak ?? 0) * 60)
+  }
+  return Math.round(developmentTime * 60)
+}
+
 export function useTimer({
   developmentTime,
   temperature,
   isColor = false,
   customTimes,
 }: UseTimerOptions) {
-  const [timeLeft, setTimeLeft] = React.useState(developmentTime * 60)
+  const [timeLeft, setTimeLeft] = React.useState(() =>
+    initialIdleSeconds(customTimes, developmentTime),
+  )
   const [isRunning, setIsRunning] = React.useState(false)
   const [isPaused, setIsPaused] = React.useState(false)
   const [currentStep, setCurrentStep] = React.useState<Step | null>(null)
   const [shouldShake, setShouldShake] = React.useState(false)
   const [initialShakePeriod, setInitialShakePeriod] = React.useState(true)
 
+  const preSoakActive = hasPreSoakDuration(customTimes)
+
   const steps = React.useMemo<Record<Step, StepConfig>>(
     () => ({
+      preSoak: {
+        name: "Pre soak",
+        time: Math.max(0, Math.round((customTimes.preSoak ?? 0) * 60)),
+        temp: temperature,
+        agitation: { initial: 0, interval: 60, duration: 5 },
+      },
       dev: {
         name: "Development",
         time: developmentTime * 60,
@@ -59,8 +80,19 @@ export function useTimer({
         agitation: { initial: 0, interval: 60, duration: 10 },
       },
     }),
-    [developmentTime, customTimes, temperature, isColor]
+    [developmentTime, customTimes, temperature, isColor],
   )
+
+  const idleFirstSeconds = React.useMemo(() => {
+    if (preSoakActive) {
+      return Math.round((customTimes.preSoak ?? 0) * 60)
+    }
+    return Math.round(developmentTime * 60)
+  }, [preSoakActive, customTimes.preSoak, developmentTime])
+
+  React.useEffect(() => {
+    setTimeLeft(idleFirstSeconds)
+  }, [idleFirstSeconds])
 
   React.useEffect(() => {
     let interval: NodeJS.Timeout
@@ -75,11 +107,7 @@ export function useTimer({
     return () => clearInterval(interval)
   }, [isRunning, isPaused, timeLeft])
 
-  React.useEffect(() => {
-    setTimeLeft(Math.round(developmentTime * 60))
-  }, [developmentTime])
-
-  // Shaking logic
+  // Shaking logic (development only)
   React.useEffect(() => {
     if (currentStep !== "dev" || !isRunning || isPaused) {
       setShouldShake(false)
@@ -111,17 +139,28 @@ export function useTimer({
     }
   }, [currentStep])
 
+  const getNextStep = React.useCallback((step: Step): Step | null => {
+    switch (step) {
+      case "preSoak":
+        return "dev"
+      case "dev":
+        return "stop"
+      case "stop":
+        return "fix"
+      case "fix":
+        return "wash"
+      case "wash":
+        return null
+      default:
+        return null
+    }
+  }, [])
+
   // Auto-advance steps
   React.useEffect(() => {
     if (!isRunning || timeLeft > 0) return
-    const nextStepMap: Record<Step, Step | null> = {
-      dev: "stop",
-      stop: "fix",
-      fix: "wash",
-      wash: null,
-    }
     if (currentStep) {
-      const next = nextStepMap[currentStep]
+      const next = getNextStep(currentStep)
       if (next) {
         setCurrentStep(next)
         setTimeLeft(steps[next].time)
@@ -129,7 +168,7 @@ export function useTimer({
         setIsRunning(false)
       }
     }
-  }, [isRunning, timeLeft, currentStep, steps])
+  }, [isRunning, timeLeft, currentStep, steps, getNextStep])
 
   const startTimer = (step: Step) => {
     setCurrentStep(step)

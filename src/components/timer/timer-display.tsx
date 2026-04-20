@@ -6,6 +6,7 @@ import { AgitationCue } from "./agitation-cue"
 import type { Step } from "@/types/development"
 
 const STEP_LABELS: Record<Step, string> = {
+  preSoak: "Pre soak",
   dev: "Development",
   stop: "Stop Bath",
   fix: "Fixer",

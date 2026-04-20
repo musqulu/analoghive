@@ -14,9 +14,11 @@ export interface DevelopmentOption {
   approximateNote?: string
 }
 
-export type Step = "dev" | "stop" | "fix" | "wash"
+export type Step = "preSoak" | "dev" | "stop" | "fix" | "wash"
 
 export interface ProcessTimes {
+  /** Decimal minutes; only used when pre-soak is enabled in the recipe */
+  preSoak?: number
   dev: number
   stop: number
   fix: number

@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from "react"
 import { X, RotateCcw, Vibrate } from "lucide-react"
 
+type DarkroomStep = "presoak" | "developer" | "stop" | "fixer" | "wash" | "complete"
+
 interface DevelopmentModeProps {
   isOpen: boolean
   onClose: () => void
@@ -11,6 +13,8 @@ interface DevelopmentModeProps {
   volume: string
   dilution: string
   time: number
+  /** When set and greater than 0, run this many seconds before development (matches main timer pre-soak). */
+  preSoakSeconds?: number
 }
 
 export function DevelopmentMode({
@@ -20,11 +24,16 @@ export function DevelopmentMode({
   developerName,
   volume,
   dilution,
-  time
+  time,
+  preSoakSeconds,
 }: DevelopmentModeProps) {
-  const [seconds, setSeconds] = useState(time)
+  const hasPreSoak = (preSoakSeconds ?? 0) > 0
+
+  const [seconds, setSeconds] = useState(() => (hasPreSoak ? preSoakSeconds! : time))
   const [isRunning, setIsRunning] = useState(false)
-  const [currentStep, setCurrentStep] = useState<'developer' | 'stop' | 'fixer' | 'wash' | 'complete'>('developer')
+  const [currentStep, setCurrentStep] = useState<DarkroomStep>(() =>
+    hasPreSoak ? "presoak" : "developer",
+  )
   const scrollPositionRef = useRef<number>(0)
   const [shouldShake, setShouldShake] = useState(false)
   const [initialShakePeriod, setInitialShakePeriod] = useState(true)
@@ -57,6 +66,16 @@ export function DevelopmentMode({
       document.documentElement.classList.remove('darkroom-mode-active')
     }
   }, [isOpen])
+
+  useEffect(() => {
+    if (!isOpen) return
+    const presoak = (preSoakSeconds ?? 0) > 0
+    setCurrentStep(presoak ? "presoak" : "developer")
+    setSeconds(presoak ? preSoakSeconds! : time)
+    setIsRunning(false)
+    setInitialShakePeriod(true)
+    setShouldShake(false)
+  }, [isOpen, time, preSoakSeconds])
   
   // Format time as MM:SS
   const formatTime = (timeInSeconds: number) => {
@@ -76,10 +95,11 @@ export function DevelopmentMode({
     } else if (seconds === 0 && isRunning) {
       setIsRunning(false)
       // Move to next step
-      if (currentStep === 'developer') setCurrentStep('stop')
-      else if (currentStep === 'stop') setCurrentStep('fixer')
-      else if (currentStep === 'fixer') setCurrentStep('wash')
-      else if (currentStep === 'wash') setCurrentStep('complete')
+      if (currentStep === "presoak") setCurrentStep("developer")
+      else if (currentStep === "developer") setCurrentStep("stop")
+      else if (currentStep === "stop") setCurrentStep("fixer")
+      else if (currentStep === "fixer") setCurrentStep("wash")
+      else if (currentStep === "wash") setCurrentStep("complete")
     }
     
     return () => {
@@ -89,25 +109,28 @@ export function DevelopmentMode({
   
   // Set appropriate time for each step
   useEffect(() => {
-    if (currentStep === 'developer') {
+    if (currentStep === "presoak") {
+      setSeconds(preSoakSeconds ?? 0)
+      setShouldShake(false)
+    } else if (currentStep === "developer") {
       setSeconds(time)
       setInitialShakePeriod(true) // Reset to initial shake period when we start/reset development
-    } else if (currentStep === 'stop') {
+    } else if (currentStep === "stop") {
       setSeconds(30) // 30 seconds for stop bath
       setShouldShake(false) // No shaking for other steps
-    } else if (currentStep === 'fixer') {
+    } else if (currentStep === "fixer") {
       setSeconds(300) // 5 minutes for fixer
       setShouldShake(false)
-    } else if (currentStep === 'wash') {
+    } else if (currentStep === "wash") {
       setSeconds(600) // 10 minutes for washing
       setShouldShake(false)
     }
-  }, [currentStep, time])
+  }, [currentStep, time, preSoakSeconds])
 
   // Handle shaking intervals for development step
   useEffect(() => {
     // Only apply shaking logic during the developer step and when timer is running
-    if (currentStep !== 'developer' || !isRunning) {
+    if (currentStep !== "developer" || !isRunning) {
       setShouldShake(false);
       return;
     }
@@ -143,8 +166,9 @@ export function DevelopmentMode({
   // Reset development process
   const resetDevelopment = () => {
     setIsRunning(false)
-    setCurrentStep('developer')
-    setSeconds(time)
+    const first: DarkroomStep = hasPreSoak ? "presoak" : "developer"
+    setCurrentStep(first)
+    setSeconds(first === "presoak" ? preSoakSeconds! : time)
     setInitialShakePeriod(true)
     setShouldShake(false)
   }
@@ -206,11 +230,13 @@ export function DevelopmentMode({
             {formatTime(seconds)}
           </div>
           <p className="text-xl font-semibold uppercase md:text-2xl">
-            {currentStep === 'complete' ? 'DEVELOPMENT COMPLETE' : `${currentStep.toUpperCase()} STEP`}
+            {currentStep === "complete"
+              ? "DEVELOPMENT COMPLETE"
+              : `${currentStep.toUpperCase()} STEP`}
           </p>
           
           {/* Shake indicator */}
-          {currentStep === 'developer' && isRunning && (
+          {currentStep === "developer" && isRunning && (
             <div className="mt-4">
               <div className={`flex items-center justify-center gap-2 ${shouldShake ? 'animate-pulse' : ''}`}>
                 <Vibrate 
@@ -234,7 +260,7 @@ export function DevelopmentMode({
         
         {/* Controls */}
         <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-6">
-          {currentStep !== 'complete' && (
+          {currentStep !== "complete" && (
             <button
               onClick={() => setIsRunning(!isRunning)}
               className="px-4 md:px-6 py-2 md:py-3 bg-red-900/30 text-red-600 border border-red-900 rounded-md hover:bg-red-900/50 transition-colors text-base md:text-xl"
@@ -243,13 +269,14 @@ export function DevelopmentMode({
             </button>
           )}
           
-          {!isRunning && currentStep !== 'complete' && (
+          {!isRunning && currentStep !== "complete" && (
             <button
               onClick={() => {
-                if (currentStep === 'developer') setCurrentStep('stop')
-                else if (currentStep === 'stop') setCurrentStep('fixer')
-                else if (currentStep === 'fixer') setCurrentStep('wash')
-                else if (currentStep === 'wash') setCurrentStep('complete')
+                if (currentStep === "presoak") setCurrentStep("developer")
+                else if (currentStep === "developer") setCurrentStep("stop")
+                else if (currentStep === "stop") setCurrentStep("fixer")
+                else if (currentStep === "fixer") setCurrentStep("wash")
+                else if (currentStep === "wash") setCurrentStep("complete")
               }}
               className="px-4 md:px-6 py-2 md:py-3 bg-red-900/30 text-red-600 border border-red-900 rounded-md hover:bg-red-900/50 transition-colors text-base md:text-xl"
             >
@@ -268,6 +295,13 @@ export function DevelopmentMode({
       
       {/* Process steps */}
       <div className="w-full flex justify-center gap-1 md:gap-4 px-2 overflow-x-auto py-4 border-t border-red-900/30">
+        {hasPreSoak ? (
+          <div
+            className={`p-2 md:p-4 border rounded-md text-xs md:text-base ${currentStep === "presoak" ? "border-red-600 bg-red-900/30" : "border-red-900/50 bg-transparent"}`}
+          >
+            <p className="font-semibold text-red-600">Pre soak</p>
+          </div>
+        ) : null}
         <div className={`p-2 md:p-4 border rounded-md text-xs md:text-base ${currentStep === 'developer' ? 'border-red-600 bg-red-900/30' : 'border-red-900/50 bg-transparent'}`}>
           <p className="font-semibold text-red-600">Developer</p>
         </div>

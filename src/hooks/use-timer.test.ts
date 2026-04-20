@@ -124,4 +124,63 @@ describe("useTimer", () => {
     act(() => jest.advanceTimersByTime(2000))
     expect(result.current.shouldShake).toBe(false)
   })
+
+  it("initializes idle countdown from pre-soak when preSoak minutes > 0", () => {
+    const { result } = createTimer({
+      developmentTime: 10,
+      customTimes: { ...defaultCustomTimes, preSoak: 2 },
+    })
+    expect(result.current.timeLeft).toBe(120)
+  })
+
+  it("startTimer preSoak uses pre-soak duration in seconds", () => {
+    const { result } = createTimer({
+      customTimes: { ...defaultCustomTimes, preSoak: 0.5 },
+    })
+    act(() => result.current.startTimer("preSoak"))
+    expect(result.current.currentStep).toBe("preSoak")
+    expect(result.current.timeLeft).toBe(30)
+    expect(result.current.isRunning).toBe(true)
+  })
+
+  it("auto-advances preSoak -> dev -> stop -> fix -> wash when pre-soak enabled", () => {
+    const times: ProcessTimes = {
+      preSoak: 0.05,
+      dev: 0,
+      stop: 0.05,
+      fix: 0.05,
+      wash: 0.05,
+    }
+    const { result } = createTimer({
+      developmentTime: 0.05,
+      customTimes: times,
+    })
+
+    act(() => result.current.startTimer("preSoak"))
+    expect(result.current.currentStep).toBe("preSoak")
+
+    act(() => jest.advanceTimersByTime(4000))
+    expect(result.current.currentStep).toBe("dev")
+
+    act(() => jest.advanceTimersByTime(4000))
+    expect(result.current.currentStep).toBe("stop")
+
+    act(() => jest.advanceTimersByTime(4000))
+    expect(result.current.currentStep).toBe("fix")
+
+    act(() => jest.advanceTimersByTime(4000))
+    expect(result.current.currentStep).toBe("wash")
+
+    act(() => jest.advanceTimersByTime(4000))
+    expect(result.current.isRunning).toBe(false)
+  })
+
+  it("does not shake during pre-soak", () => {
+    const { result } = createTimer({
+      customTimes: { ...defaultCustomTimes, preSoak: 1 },
+    })
+    act(() => result.current.startTimer("preSoak"))
+    act(() => jest.advanceTimersByTime(2000))
+    expect(result.current.shouldShake).toBe(false)
+  })
 })

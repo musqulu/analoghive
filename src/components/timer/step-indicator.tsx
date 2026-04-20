@@ -12,15 +12,16 @@ interface StepConfig {
 
 interface StepIndicatorProps {
   steps: Record<Step, StepConfig>
+  /** Steps to show in order (e.g. pre-soak first when enabled) */
+  stepOrder: Step[]
   currentStep: Step | null
   isRunning: boolean
   onStartStep: (step: Step) => void
   getStepTemp: (step: Step) => string
 }
 
-const STEP_ORDER: Step[] = ["dev", "stop", "fix", "wash"]
-
 const STEP_TEST_IDS: Record<Step, string> = {
+  preSoak: "pre-soak-step",
   dev: "development-step",
   stop: "stop-bath-step",
   fix: "fixer-step",
@@ -29,6 +30,7 @@ const STEP_TEST_IDS: Record<Step, string> = {
 
 export function StepIndicator({
   steps,
+  stepOrder,
   currentStep,
   isRunning,
   onStartStep,
@@ -36,7 +38,7 @@ export function StepIndicator({
 }: StepIndicatorProps) {
   return (
     <div className="space-y-3 mt-4">
-      {STEP_ORDER.map((step) => (
+      {stepOrder.map((step) => (
         <div
           key={step}
           data-testid={STEP_TEST_IDS[step]}

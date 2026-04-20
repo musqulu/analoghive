@@ -27,6 +27,11 @@ interface TimerProps {
   pushPullLine?: string
   /** e.g. "From chart" / approximate note */
   chartNote?: string
+  /** Hydrate step durations and wash method from a saved recipe */
+  initialProcessTimes?: ProcessTimes
+  initialWashingMethod?: WashingMethod
+  /** Personal notes (saved recipes), shown separately from chart reference */
+  recipeNotes?: string
 }
 
 export function Timer({
@@ -42,23 +47,47 @@ export function Timer({
   isColor = false,
   pushPullLine,
   chartNote,
+  initialProcessTimes,
+  initialWashingMethod,
+  recipeNotes,
 }: TimerProps) {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false)
   const [isDevelopmentModeOpen, setIsDevelopmentModeOpen] = React.useState(false)
-  const [washingMethod, setWashingMethod] = React.useState<WashingMethod>({
-    type: "running",
-    runningWaterTime: isColor ? 3 : 5,
-    ilfordInversions: { first: 5, second: 10, third: 20 },
-    custom: { totalTime: 5, waterChanges: 3 },
+  const [washingMethod, setWashingMethod] = React.useState<WashingMethod>(() => {
+    if (initialWashingMethod) return initialWashingMethod
+    return {
+      type: "running",
+      runningWaterTime: isColor ? 3 : 5,
+      ilfordInversions: { first: 5, second: 10, third: 20 },
+      custom: { totalTime: 5, waterChanges: 3 },
+    }
   })
-  const [customTimes, setCustomTimes] = React.useState<ProcessTimes>({
-    dev: developmentTime,
-    stop: 1,
-    fix: isColor ? 2 : 5,
-    wash: isColor ? 3 : 5,
+  const [customTimes, setCustomTimes] = React.useState<ProcessTimes>(() => {
+    if (initialProcessTimes) return initialProcessTimes
+    return {
+      dev: developmentTime,
+      stop: 1,
+      fix: isColor ? 2 : 5,
+      wash: isColor ? 3 : 5,
+    }
   })
 
+  React.useEffect(() => {
+    setCustomTimes((prev) => ({ ...prev, dev: developmentTime }))
+  }, [developmentTime])
+
   const timer = useTimer({ developmentTime, temperature, isColor, customTimes })
+
+  const stepOrder = React.useMemo((): Step[] => {
+    const order: Step[] = []
+    if ((customTimes.preSoak ?? 0) > 0) {
+      order.push("preSoak")
+    }
+    order.push("dev", "stop", "fix", "wash")
+    return order
+  }, [customTimes.preSoak])
+
+  const firstStep = stepOrder[0] ?? "dev"
   const wakeLock = useWakeLock()
 
   React.useEffect(() => {
@@ -89,8 +118,8 @@ export function Timer({
         isPaused={timer.isPaused}
         shouldShake={timer.shouldShake}
         initialShakePeriod={timer.initialShakePeriod}
-        temperatureDisplay={getStepTemp(timer.currentStep || "dev")}
-        onStart={() => timer.startTimer("dev")}
+        temperatureDisplay={getStepTemp(timer.currentStep ?? firstStep)}
+        onStart={() => timer.startTimer(firstStep)}
         onToggle={timer.toggleTimer}
         onReset={timer.resetTimer}
       />
@@ -131,10 +160,17 @@ export function Timer({
           {chartNote && (
             <p className="text-sm text-muted-foreground">{chartNote}</p>
           )}
+          {recipeNotes && (
+            <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+              <span className="font-medium text-foreground">Notes: </span>
+              {recipeNotes}
+            </p>
+          )}
         </div>
 
         <StepIndicator
           steps={timer.steps}
+          stepOrder={stepOrder}
           currentStep={timer.currentStep}
           isRunning={timer.isRunning}
           onStartStep={timer.startTimer}
@@ -171,6 +207,11 @@ export function Timer({
         volume={totalVolume.toString()}
         dilution={developerDilution || "Unknown"}
         time={developmentTime * 60}
+        preSoakSeconds={
+          (customTimes.preSoak ?? 0) > 0
+            ? Math.round((customTimes.preSoak ?? 0) * 60)
+            : undefined
+        }
       />
     </div>
   )

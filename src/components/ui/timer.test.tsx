@@ -51,6 +51,30 @@ describe('Timer Component', () => {
     expect(screen.getByTestId('washing-step')).toBeInTheDocument();
   });
 
+  test('renders pre-soak step first when initialProcessTimes includes preSoak', () => {
+    render(
+      <Timer
+        developmentTime={11}
+        temperature={20}
+        initialProcessTimes={{ preSoak: 3, dev: 11, stop: 1, fix: 5, wash: 5 }}
+      />
+    );
+    expect(screen.getByTestId('pre-soak-step')).toBeInTheDocument();
+    expect(screen.getByText('Pre soak')).toBeInTheDocument();
+  });
+
+  test('start begins at pre-soak when preSoak duration is set', () => {
+    render(
+      <Timer
+        developmentTime={11}
+        temperature={20}
+        initialProcessTimes={{ preSoak: 3, dev: 11, stop: 1, fix: 5, wash: 5 }}
+      />
+    );
+    fireEvent.click(screen.getByTestId('start-button'));
+    expect(screen.getAllByText('Pre soak').length).toBeGreaterThan(0);
+  });
+
   // Timer functionality tests
   test('starts timer when start button is clicked', () => {
     render(<Timer developmentTime={11} temperature={20} />);

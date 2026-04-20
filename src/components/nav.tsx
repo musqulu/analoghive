@@ -18,6 +18,7 @@ const toolLinks = [
 
 const STORIES_HREF = "/stories"
 const FAVORITES_HREF = "/favorites"
+const RECIPES_HREF = "/recipes"
 
 function isToolsActive(pathname: string) {
   return toolLinks.some(({ href }) => pathname === href)
@@ -50,6 +51,15 @@ function favoritesNavClass(pathname: string) {
   return cn(
     "text-sm/7 font-medium transition-colors",
     pathname === FAVORITES_HREF
+      ? "font-semibold text-foreground"
+      : "text-muted-foreground hover:text-foreground"
+  )
+}
+
+function recipesNavClass(pathname: string) {
+  return cn(
+    "text-sm/7 font-medium transition-colors",
+    pathname === RECIPES_HREF || pathname.startsWith(`${RECIPES_HREF}/`)
       ? "font-semibold text-foreground"
       : "text-muted-foreground hover:text-foreground"
   )
@@ -114,9 +124,14 @@ export function Nav() {
           </Link>
 
           {showAuthed ? (
-            <Link href={FAVORITES_HREF} className={favoritesNavClass(pathname)}>
-              Favorites
-            </Link>
+            <>
+              <Link href={RECIPES_HREF} className={recipesNavClass(pathname)}>
+                Recipes
+              </Link>
+              <Link href={FAVORITES_HREF} className={favoritesNavClass(pathname)}>
+                Favorites
+              </Link>
+            </>
           ) : null}
         </div>
 
@@ -148,7 +163,7 @@ export function Nav() {
               >
                 <Dialog.Title className="sr-only">Main navigation</Dialog.Title>
                 <Dialog.Description className="sr-only">
-                  Tools, stories, favorites, and account actions.
+                  Tools, stories, recipes, favorites, and account actions.
                 </Dialog.Description>
                 <div className="mb-4 flex shrink-0 items-center justify-between border-b border-border pb-4">
                   <span className="text-sm font-semibold text-foreground">Menu</span>
@@ -192,15 +207,26 @@ export function Nav() {
                     Stories
                   </Link>
                   {showAuthed ? (
-                    <Link
-                      href={FAVORITES_HREF}
-                      className={cn(
-                        favoritesNavClass(pathname),
-                        "rounded-md px-3 py-3 text-base/7"
-                      )}
-                    >
-                      Favorites
-                    </Link>
+                    <>
+                      <Link
+                        href={RECIPES_HREF}
+                        className={cn(
+                          recipesNavClass(pathname),
+                          "rounded-md px-3 py-3 text-base/7"
+                        )}
+                      >
+                        Recipes
+                      </Link>
+                      <Link
+                        href={FAVORITES_HREF}
+                        className={cn(
+                          favoritesNavClass(pathname),
+                          "rounded-md px-3 py-3 text-base/7"
+                        )}
+                      >
+                        Favorites
+                      </Link>
+                    </>
                   ) : null}
                 </div>
                 <div className="flex flex-col gap-3 border-t border-border pt-4">

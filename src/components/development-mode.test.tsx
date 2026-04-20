@@ -68,6 +68,12 @@ describe("DevelopmentMode", () => {
     expect(screen.getByText("STOP STEP")).toBeInTheDocument()
   })
 
+  it("starts on pre-soak when preSoakSeconds is set", () => {
+    render(<DevelopmentMode {...defaultProps} time={600} preSoakSeconds={90} />)
+    expect(screen.getByText("PRESOAK STEP")).toBeInTheDocument()
+    expect(screen.getByText("01:30")).toBeInTheDocument()
+  })
+
   it("can skip to next step manually", () => {
     render(<DevelopmentMode {...defaultProps} time={600} />)
     expect(screen.getByText("DEVELOPER STEP")).toBeInTheDocument()

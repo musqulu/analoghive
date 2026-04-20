@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { ButtonLink } from "@/components/landing/button"
@@ -40,7 +41,12 @@ export default async function FavoritesPage() {
             Favorites
           </h1>
           <p className="mb-10 text-base/7 text-muted-foreground">
-            Saved development setups from the calculator — quick access for your next roll.
+            Saved chart setups from the calculator — quick links back to the reference data. For
+            customized times and notes, create a{" "}
+            <Link href="/recipes" className="font-medium text-foreground underline-offset-4 hover:underline">
+              recipe
+            </Link>{" "}
+            instead.
           </p>
 
           {rows.length === 0 ? (
