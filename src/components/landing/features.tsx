@@ -13,6 +13,15 @@ interface Feature {
   cta: string
 }
 
+/** Responsive spans for a 5-card bento on a 3-column (lg+) / 2-column (sm–lg) grid. */
+const FEATURE_CARD_LAYOUT = [
+  "col-span-2 max-sm:col-span-1 sm:max-lg:col-span-2",
+  "col-span-1 max-sm:col-span-1",
+  "col-span-1 max-sm:col-span-1",
+  "col-span-1 max-sm:col-span-1",
+  "col-span-1 max-sm:col-span-1",
+] as const
+
 export function Features({
   eyebrow,
   headline,
@@ -33,38 +42,17 @@ export function Features({
             <Subheading className="max-w-2xl text-center">{headline}</Subheading>
           </div>
           <BentoGrid className="max-sm:grid-cols-1 sm:max-lg:grid-cols-2">
-            <BentoCard
-              className="col-span-2 max-sm:col-span-1 sm:max-lg:col-span-1"
-              Icon={features[0].icon}
-              name={features[0].title}
-              description={features[0].description}
-              href={features[0].href}
-              cta={features[0].cta}
-            />
-            <BentoCard
-              className="col-span-1"
-              Icon={features[1].icon}
-              name={features[1].title}
-              description={features[1].description}
-              href={features[1].href}
-              cta={features[1].cta}
-            />
-            <BentoCard
-              className="col-span-1"
-              Icon={features[2].icon}
-              name={features[2].title}
-              description={features[2].description}
-              href={features[2].href}
-              cta={features[2].cta}
-            />
-            <BentoCard
-              className="col-span-2 max-sm:col-span-1 sm:max-lg:col-span-1"
-              Icon={features[3].icon}
-              name={features[3].title}
-              description={features[3].description}
-              href={features[3].href}
-              cta={features[3].cta}
-            />
+            {features.map((feature, i) => (
+              <BentoCard
+                key={feature.title}
+                className={FEATURE_CARD_LAYOUT[i] ?? "col-span-1 max-sm:col-span-1"}
+                Icon={feature.icon}
+                name={feature.title}
+                description={feature.description}
+                href={feature.href}
+                cta={feature.cta}
+              />
+            ))}
           </BentoGrid>
         </div>
       </Container>
