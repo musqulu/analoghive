@@ -31,7 +31,7 @@ const features = [
     description:
       "Save your personal development setups, notes, and process steps so you can return to them anytime.",
     href: "/recipes",
-    cta: "Open recipes →",
+    cta: "Create account →",
   },
   {
     icon: <Thermometer size={20} />,

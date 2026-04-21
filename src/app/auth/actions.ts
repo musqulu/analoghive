@@ -17,6 +17,17 @@ function safeNext(next: string | null | undefined, fallback = "/workspace") {
   return next
 }
 
+function authRateLimitUserMessage(raw: string, status?: number) {
+  if (status === 429) {
+    return "Too many confirmation emails were requested. Wait at least a minute before trying again, or longer if you have been testing sign-up often (Supabase limits how many emails can be sent per hour)."
+  }
+  const lower = raw.toLowerCase()
+  if (lower.includes("rate limit")) {
+    return "Too many confirmation emails were requested. Please wait several minutes and try again."
+  }
+  return raw
+}
+
 export async function login(formData: FormData) {
   const supabase = await createClient()
   const email = String(formData.get("email") ?? "").trim()
@@ -38,14 +49,7 @@ export async function signup(formData: FormData) {
   const supabase = await createClient()
   const email = String(formData.get("email") ?? "").trim()
   const password = String(formData.get("password") ?? "")
-  const confirm = String(formData.get("confirm") ?? "")
   const next = safeNext(String(formData.get("next") ?? ""))
-
-  if (password !== confirm) {
-    redirect(
-      `/signup?error=${encodeURIComponent("Passwords do not match.")}&next=${encodeURIComponent(next)}`,
-    )
-  }
 
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -56,7 +60,9 @@ export async function signup(formData: FormData) {
   })
 
   if (error) {
-    redirect(`/signup?error=${encodeURIComponent(error.message)}&next=${encodeURIComponent(next)}`)
+    redirect(
+      `/signup?error=${encodeURIComponent(authRateLimitUserMessage(error.message, error.status))}&next=${encodeURIComponent(next)}`,
+    )
   }
 
   revalidatePath("/", "layout")
@@ -77,7 +83,7 @@ export async function signup(formData: FormData) {
   redirect(
     `/signup?error=${encodeURIComponent(
       "We could not start your session after sign-up. In Supabase: Authentication → Providers → Email — disable “Confirm email” if you want instant access, then try again or sign in.",
-    )}`,
+    )}&next=${encodeURIComponent(next)}`,
   )
 }
 
@@ -88,21 +94,27 @@ export async function resendSignupVerification(
   formData: FormData,
 ): Promise<ResendState> {
   const email = String(formData.get("email") ?? "").trim()
+  const next = safeNext(String(formData.get("next") ?? ""))
   if (!email) {
     return { ok: false, message: "Missing email." }
   }
+
+  const callbackWithNext = `${siteUrl()}/auth/callback?next=${encodeURIComponent(next)}`
 
   const supabase = await createClient()
   const { error } = await supabase.auth.resend({
     type: "signup",
     email,
     options: {
-      emailRedirectTo: `${siteUrl()}/auth/callback`,
+      emailRedirectTo: callbackWithNext,
     },
   })
 
   if (error) {
-    return { ok: false, message: error.message }
+    return {
+      ok: false,
+      message: authRateLimitUserMessage(error.message, error.status),
+    }
   }
 
   revalidatePath("/", "layout")

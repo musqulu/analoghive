@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { login } from "@/app/auth/actions"
+import { AuthMethodDivider, GoogleSignInButton } from "@/components/auth/google-sign-in-button"
 import { Button } from "@/components/landing/button"
 import { Container } from "@/components/landing/container"
 
@@ -25,14 +26,14 @@ export default async function LoginPage({
 
   return (
     <main className="min-h-[calc(100vh-4.5rem)] bg-background py-16 sm:py-24">
-      <Container className="max-w-md">
+      <Container className="max-w-full md:max-w-xl lg:max-w-xl">
         <div className="rounded-lg bg-card p-8 shadow-ds-card">
           <div className="mb-8 flex flex-col gap-2">
             <h1 className="text-[2rem] font-semibold leading-tight tracking-[-0.04em] text-foreground">
               Sign in
             </h1>
             <p className="text-base/7 text-muted-foreground">
-              Use the email and password for your Analog Hive account.
+              Sign in with Google or use the email and password for your Analog Hive account.
             </p>
           </div>
 
@@ -46,6 +47,11 @@ export default async function LoginPage({
               {params.message}
             </p>
           ) : null}
+
+          <div className="mb-6 flex flex-col gap-4">
+            <GoogleSignInButton next={next} />
+            <AuthMethodDivider />
+          </div>
 
           <form action={login} className="flex flex-col gap-6">
             <input type="hidden" name="next" value={next} />

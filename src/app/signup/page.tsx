@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { signup } from "@/app/auth/actions"
-import { Button } from "@/components/landing/button"
+import { AuthMethodDivider, GoogleSignInButton } from "@/components/auth/google-sign-in-button"
+import { SignupSubmitButton } from "@/components/auth/signup-submit-button"
 import { Container } from "@/components/landing/container"
 
 export const metadata: Metadata = {
@@ -22,14 +23,14 @@ export default async function SignupPage({
 
   return (
     <main className="min-h-[calc(100vh-4.5rem)] bg-background py-16 sm:py-24">
-      <Container className="max-w-md">
+      <Container className="max-w-full md:max-w-xl lg:max-w-xl">
         <div className="rounded-lg bg-card p-8 shadow-ds-card">
           <div className="mb-8 flex flex-col gap-2">
             <h1 className="text-[2rem] font-semibold leading-tight tracking-[-0.04em] text-foreground">
               Create account
             </h1>
             <p className="text-base/7 text-muted-foreground">
-              Sign up with email. You can add saved times and notes here later.
+              Sign up with Google or email and password. You can add saved times and notes here later.
             </p>
           </div>
 
@@ -38,6 +39,11 @@ export default async function SignupPage({
               {params.error}
             </p>
           ) : null}
+
+          <div className="mb-6 flex flex-col gap-4">
+            <GoogleSignInButton next={next} />
+            <AuthMethodDivider />
+          </div>
 
           <form action={signup} className="flex flex-col gap-6">
             <input type="hidden" name="next" value={next} />
@@ -68,23 +74,7 @@ export default async function SignupPage({
                 className="ds-input"
               />
             </div>
-            <div className="flex flex-col gap-2">
-              <label htmlFor="signup-confirm" className="text-sm/7 font-medium text-foreground">
-                Confirm password
-              </label>
-              <input
-                id="signup-confirm"
-                name="confirm"
-                type="password"
-                autoComplete="new-password"
-                required
-                minLength={6}
-                className="ds-input"
-              />
-            </div>
-            <Button type="submit" color="dark/light" className="w-full">
-              Create account
-            </Button>
+            <SignupSubmitButton />
           </form>
 
           <p className="mt-8 text-center text-sm/7 text-muted-foreground">
