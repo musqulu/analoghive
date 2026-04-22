@@ -2,18 +2,18 @@
 
 import * as React from "react"
 import { VolumeMixer } from "@/components/ui/volume-mixer"
+import { cn } from "@/lib/utils"
+import { mainGutterX, mainUnderNav, pageTitle } from "@/lib/app-page-layout"
 
 export default function VolumeMixerPage() {
   const [dilution, setDilution] = React.useState("1+1")
   const [totalVolume, setTotalVolume] = React.useState(500)
 
   return (
-    <main className="min-h-screen flex flex-col items-center p-8 pt-12">
+    <main className={cn("flex flex-col items-center", mainUnderNav, mainGutterX)}>
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-            Volume Mixer
-          </h1>
+          <h1 className={pageTitle}>Volume Mixer</h1>
           <p className="text-muted-foreground mt-1">
             Calculate developer and water volumes for any dilution ratio.
           </p>

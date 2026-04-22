@@ -3,6 +3,8 @@ import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { Container } from "@/components/landing/container"
+import { cn } from "@/lib/utils"
+import { mainUnderNav, pageTitle } from "@/lib/app-page-layout"
 import { RecipeDetailClient } from "@/components/recipes/recipe-detail-client"
 import {
   DEVELOPMENT_RECIPES_LIST_COLUMNS,
@@ -47,10 +49,10 @@ export default async function RecipeDetailPage({ params }: { params: Params }) {
   }
 
   return (
-    <main className="min-h-[calc(100vh-4.5rem)] bg-background py-16 sm:py-24">
+    <main className={mainUnderNav}>
       <Container>
         <div className="mx-auto max-w-md">
-          <div className="mb-8">
+          <div className="mb-3">
             <Link
               href="/recipes"
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -58,9 +60,7 @@ export default async function RecipeDetailPage({ params }: { params: Params }) {
               ← All recipes
             </Link>
           </div>
-          <h1 className="mb-8 text-center text-2xl font-semibold tracking-tight text-foreground">
-            {data.title}
-          </h1>
+          <h1 className={cn("mb-8 text-center", pageTitle)}>{data.title}</h1>
           <RecipeDetailClient recipeId={id} payload={payload} />
         </div>
       </Container>

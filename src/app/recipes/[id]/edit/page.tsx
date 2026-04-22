@@ -3,6 +3,7 @@ import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { Container } from "@/components/landing/container"
+import { mainUnderNav } from "@/lib/app-page-layout"
 import { RecipeEditForm } from "@/components/recipes/recipe-edit-form"
 import { DEVELOPMENT_RECIPES_LIST_COLUMNS, parseRecipePayload } from "@/types/recipe"
 
@@ -41,10 +42,10 @@ export default async function EditRecipePage({ params }: { params: Params }) {
   }
 
   return (
-    <main className="min-h-[calc(100vh-4.5rem)] bg-background py-16 sm:py-24">
+    <main className={mainUnderNav}>
       <Container>
         <div className="mx-auto max-w-md">
-          <div className="mb-8">
+          <div className="mb-3">
             <Link
               href={`/recipes/${id}`}
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"

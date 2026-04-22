@@ -15,6 +15,7 @@ import {
   recipeTitleSuggestion,
   type RecipePayloadV1,
 } from "@/types/recipe"
+import { pageTitle } from "@/lib/app-page-layout"
 
 const inputClass = "ds-input"
 const labelClass = "text-sm font-medium mb-2 block"
@@ -148,9 +149,7 @@ export function RecipeEditForm({
   return (
     <div className="mx-auto w-full max-w-md space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-          {mode === "new" ? "New recipe" : "Edit recipe"}
-        </h1>
+        <h1 className={pageTitle}>{mode === "new" ? "New recipe" : "Edit recipe"}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Adjust time, steps &amp; add notes. Save to recipes list and start a new timer with the saved
           steps.

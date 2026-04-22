@@ -3,6 +3,8 @@
 import * as React from "react"
 import { calculateCorrectedTime } from "@/data/processed-development-times"
 import { formatTime } from "@/utils/format-time"
+import { cn } from "@/lib/utils"
+import { mainGutterX, mainUnderNav, pageTitle } from "@/lib/app-page-layout"
 
 export default function TemperatureCorrectionPage() {
   const [baseTemp, setBaseTemp] = React.useState(20)
@@ -18,12 +20,10 @@ export default function TemperatureCorrectionPage() {
   const inputClass = "ds-input"
 
   return (
-    <main className="min-h-screen flex flex-col items-center p-8 pt-12">
+    <main className={cn("flex flex-col items-center", mainUnderNav, mainGutterX)}>
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-            Temperature Correction
-          </h1>
+          <h1 className={pageTitle}>Temperature Correction</h1>
           <p className="text-muted-foreground mt-1">
             Adjust development time for a different processing temperature.
           </p>

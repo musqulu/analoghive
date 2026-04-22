@@ -4,6 +4,9 @@ import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { ButtonLink } from "@/components/landing/button"
 import { Container } from "@/components/landing/container"
+import { cn } from "@/lib/utils"
+import { mainUnderNav, pageTitle } from "@/lib/app-page-layout"
+import { RecipesPageEmpty } from "@/components/recipes/recipes-page-empty"
 import { RecipesList } from "@/components/recipes/recipes-list"
 import {
   DEVELOPMENT_RECIPES_LIST_COLUMNS,
@@ -36,44 +39,35 @@ export default async function RecipesPage() {
     .map((r) => recipeRowFromDb(r as Parameters<typeof recipeRowFromDb>[0]))
     .filter((r): r is DevelopmentRecipeRow => r !== null)
 
+  const isEmpty = rows.length === 0
+
   return (
-    <main className="min-h-[calc(100vh-4.5rem)] bg-background py-16 sm:py-24">
+    <main className={mainUnderNav}>
       <Container>
         <div className="mx-auto max-w-2xl">
-          <h1 className="mb-2 text-[2rem] font-semibold leading-tight tracking-[-0.04em] text-foreground">
-            Recipes
-          </h1>
-          <p className="mb-10 text-base/7 text-muted-foreground">
-            Your personal development recipes — times, wash steps, and notes you’ve customized. For
-            quick links back to chart combinations, use{" "}
-            <Link href="/favorites" className="font-medium text-foreground underline-offset-4 hover:underline">
-              Favorites
-            </Link>
-            .
-          </p>
+          <h1 className={cn(pageTitle, isEmpty ? "mb-5" : "mb-3")}>Recipes</h1>
 
-          <div className="mb-8">
-            <ButtonLink href="/recipes/new" color="dark/light" size="md">
-              New recipe
-            </ButtonLink>
-          </div>
-
-          {rows.length === 0 ? (
-            <div className="rounded-lg bg-card p-10 shadow-ds-card-lg">
-              <h2 className="mb-3 text-xl font-semibold tracking-[-0.02em] text-foreground">
-                No recipes yet
-              </h2>
-              <p className="mb-8 max-w-md text-base/7 text-muted-foreground">
-                Create a recipe from the calculator or start from scratch on your dashboard. Recipes
-                are your editable darkroom notebook — unlike favorites, which bookmark chart
-                references.
-              </p>
-              <ButtonLink href="/recipes/new" color="dark/light" size="md">
-                New recipe
-              </ButtonLink>
-            </div>
+          {isEmpty ? (
+            <RecipesPageEmpty />
           ) : (
-            <RecipesList initialRows={rows} />
+            <>
+              <p className="mb-10 text-base/7 text-muted-foreground">
+                Your personal development recipes — times, wash steps, and notes you’ve customized.
+                For quick links back to chart combinations, use{" "}
+                <Link href="/favorites" className="font-medium text-foreground underline-offset-4 hover:underline">
+                  Favorites
+                </Link>
+                .
+              </p>
+
+              <div className="mb-8">
+                <ButtonLink href="/recipes/new" color="dark/light" size="md">
+                  New recipe
+                </ButtonLink>
+              </div>
+
+              <RecipesList initialRows={rows} />
+            </>
           )}
         </div>
       </Container>

@@ -4,6 +4,7 @@ import { login } from "@/app/auth/actions"
 import { AuthMethodDivider, GoogleSignInButton } from "@/components/auth/google-sign-in-button"
 import { Button } from "@/components/landing/button"
 import { Container } from "@/components/landing/container"
+import { mainUnderNav, pageTitle } from "@/lib/app-page-layout"
 
 export const metadata: Metadata = {
   title: "Sign in — Analog Hive",
@@ -25,13 +26,11 @@ export default async function LoginPage({
   const next = params.next?.startsWith("/") && !params.next.startsWith("//") ? params.next : "/workspace"
 
   return (
-    <main className="min-h-[calc(100vh-4.5rem)] bg-background py-16 sm:py-24">
+    <main className={mainUnderNav}>
       <Container className="max-w-full md:max-w-xl lg:max-w-xl">
-        <div className="rounded-lg bg-card p-8 shadow-ds-card">
+        <div className="rounded-lg bg-card px-8 pb-8 pt-0 shadow-ds-card">
           <div className="mb-8 flex flex-col gap-2">
-            <h1 className="text-[2rem] font-semibold leading-tight tracking-[-0.04em] text-foreground">
-              Sign in
-            </h1>
+            <h1 className={pageTitle}>Sign in</h1>
             <p className="text-base/7 text-muted-foreground">
               Sign in with Google or use the email and password for your Analog Hive account.
             </p>

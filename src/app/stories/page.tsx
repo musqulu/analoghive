@@ -1,4 +1,6 @@
 import type { Metadata } from "next"
+import { cn } from "@/lib/utils"
+import { mainGutterX, mainUnderNav, pageTitle } from "@/lib/app-page-layout"
 
 export const metadata: Metadata = {
   title: "Stories | Analog Hive",
@@ -8,11 +10,9 @@ export const metadata: Metadata = {
 
 export default function StoriesPage() {
   return (
-    <main className="min-h-screen px-8 pb-16 pt-12">
+    <main className={cn(mainUnderNav, mainGutterX)}>
       <div className="mx-auto max-w-2xl">
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-          Stories
-        </h1>
+        <h1 className={pageTitle}>Stories</h1>
         <p className="mt-2 text-muted-foreground">
           Field notes, how-tos, and longer reads on film photography and
           development. New posts will appear here.

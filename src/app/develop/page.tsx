@@ -1,9 +1,11 @@
 import { Suspense } from "react"
 import { DevelopCalculator } from "@/app/develop/develop-calculator"
+import { cn } from "@/lib/utils"
+import { mainGutterX, mainUnderNav } from "@/lib/app-page-layout"
 
 function DevelopFallback() {
   return (
-    <main className="flex min-h-screen flex-col items-center p-8 pt-12">
+    <main className={cn("flex flex-col items-center", mainUnderNav, mainGutterX)}>
       <div className="w-full max-w-md space-y-8">
         <div className="mx-auto mb-8 h-8 w-64 max-w-full rounded-md bg-muted" />
         <div className="space-y-4">

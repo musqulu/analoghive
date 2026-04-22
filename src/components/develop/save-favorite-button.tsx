@@ -60,7 +60,7 @@ export function SaveFavoriteButton({ snapshot, className }: SaveFavoriteButtonPr
           onClick={() => void save()}
           disabled={busy}
           aria-busy={busy}
-          className="flex items-center gap-1.5 rounded-md bg-muted px-3 py-2 text-sm font-medium transition-colors hover:bg-muted/80 disabled:opacity-60"
+          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Bookmark size={14} aria-hidden />
           {saved ? "Saved!" : busy ? "Saving…" : "Save to Favorites"}

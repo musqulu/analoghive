@@ -3,6 +3,8 @@
 import { useSearchParams } from "next/navigation"
 import { Timer } from "@/components/ui/timer"
 import { Suspense } from "react"
+import { cn } from "@/lib/utils"
+import { mainGutterX, mainUnderNav } from "@/lib/app-page-layout"
 
 function TimerContent() {
   const params = useSearchParams()
@@ -17,7 +19,7 @@ function TimerContent() {
   const totalVolume = parseInt(params.get("volume") || "500")
 
   return (
-    <main className="min-h-screen flex flex-col items-center p-8 pt-12">
+    <main className={cn("flex flex-col items-center", mainUnderNav, mainGutterX)}>
       <div className="max-w-md w-full">
         <Timer
           filmName={filmName}

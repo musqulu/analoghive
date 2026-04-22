@@ -2,8 +2,10 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { ButtonLink } from "@/components/landing/button"
 import { Container } from "@/components/landing/container"
+import { cn } from "@/lib/utils"
+import { mainUnderNav, pageTitle } from "@/lib/app-page-layout"
+import { FavoritesPageEmpty } from "@/components/favorites-page-empty"
 import { FavoritesList } from "@/components/favorites-list"
 import {
   DEVELOPMENT_FAVORITES_LIST_COLUMNS,
@@ -33,37 +35,29 @@ export default async function FavoritesPage() {
 
   const rows = (data ?? []) as DevelopmentFavoriteRow[]
 
+  const isEmpty = rows.length === 0
+
   return (
-    <main className="min-h-[calc(100vh-4.5rem)] bg-background py-16 sm:py-24">
+    <main className={mainUnderNav}>
       <Container>
         <div className="mx-auto max-w-2xl">
-          <h1 className="mb-2 text-[2rem] font-semibold leading-tight tracking-[-0.04em] text-foreground">
-            Favorites
-          </h1>
-          <p className="mb-10 text-base/7 text-muted-foreground">
-            Saved chart setups from the calculator — quick links back to the reference data. For
-            customized times and notes, create a{" "}
-            <Link href="/recipes" className="font-medium text-foreground underline-offset-4 hover:underline">
-              recipe
-            </Link>{" "}
-            instead.
-          </p>
+          <h1 className={cn(pageTitle, isEmpty ? "mb-5" : "mb-3")}>Favorites</h1>
 
-          {rows.length === 0 ? (
-            <div className="rounded-lg bg-card p-10 shadow-ds-card-lg">
-              <h2 className="mb-3 text-xl font-semibold tracking-[-0.02em] text-foreground">
-                No favorites yet
-              </h2>
-              <p className="mb-8 max-w-md text-base/7 text-muted-foreground">
-                When you dial in a film and developer on the calculator, save it here and open it
-                again anytime — handy when you&apos;re back in the darkroom with the same stock.
-              </p>
-              <ButtonLink href="/develop" color="dark/light" size="md">
-                Go to calculator
-              </ButtonLink>
-            </div>
+          {isEmpty ? (
+            <FavoritesPageEmpty />
           ) : (
-            <FavoritesList initialRows={rows} />
+            <>
+              <p className="mb-10 text-base/7 text-muted-foreground">
+                Saved chart setups from the calculator — quick links back to the reference data. For
+                customized times and notes, create a{" "}
+                <Link href="/recipes" className="font-medium text-foreground underline-offset-4 hover:underline">
+                  recipe
+                </Link>{" "}
+                instead.
+              </p>
+
+              <FavoritesList initialRows={rows} />
+            </>
           )}
         </div>
       </Container>

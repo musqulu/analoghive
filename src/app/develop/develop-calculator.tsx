@@ -15,6 +15,8 @@ import {
 } from "@/components/develop/save-favorite-button"
 import { CreateRecipeFromButton } from "@/components/develop/create-recipe-button"
 import { parseDevelopFavoriteSearchParams } from "@/lib/favorite-develop-query"
+import { cn } from "@/lib/utils"
+import { mainGutterX, mainUnderNav, pageTitle } from "@/lib/app-page-layout"
 
 export function DevelopCalculator() {
   const searchParams = useSearchParams()
@@ -58,11 +60,9 @@ export function DevelopCalculator() {
       : null
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-8 pt-12">
+    <main className={cn("flex flex-col items-center", mainUnderNav, mainGutterX)}>
       <div className="w-full max-w-md space-y-8">
-        <h1 className="mb-8 text-center text-2xl font-semibold tracking-tight text-foreground">
-          Film Development Calculator
-        </h1>
+        <h1 className={cn("mb-8", pageTitle)}>Develop Film</h1>
 
         <div className="space-y-8">
           <FilmDeveloperForm

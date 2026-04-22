@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { Suspense } from "react"
 import { createClient } from "@/lib/supabase/server"
 import { Container } from "@/components/landing/container"
+import { mainUnderNav } from "@/lib/app-page-layout"
 import { RecipeNewClient } from "@/components/recipes/recipe-edit-form"
 
 export const metadata: Metadata = {
@@ -46,7 +47,7 @@ export default async function NewRecipePage({ searchParams }: { searchParams: Se
   }
 
   return (
-    <main className="min-h-[calc(100vh-4.5rem)] bg-background py-16 sm:py-24">
+    <main className={mainUnderNav}>
       <Container>
         <Suspense fallback={<RecipeNewFallback />}>
           <RecipeNewClient />
