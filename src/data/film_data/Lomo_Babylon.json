@@ -1,61 +1,61 @@
 [
   {
+    "120": "",
     "Film": "Lomo Babylon",
     "Developer": "D-96",
     "Dilution": "stock",
     "ASA/ISO": "13",
     "35mm": "10",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Lomo Babylon",
     "Developer": "Fomadon Excel",
     "Dilution": "stock",
     "ASA/ISO": "13",
     "35mm": "4.25",
-    "120": "",
     "Sheet": "",
     "Temp": "25C"
   },
   {
+    "120": "",
     "Film": "Lomo Babylon",
     "Developer": "HC-110",
-    "Dilution": "B",
+    "Dilution": "B 1+31",
     "ASA/ISO": "13",
     "35mm": "8.5",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Lomo Babylon",
     "Developer": "Ilfosol 3",
     "Dilution": "1+9",
     "ASA/ISO": "13",
     "35mm": "12",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Lomo Babylon",
     "Developer": "Neofin Blue",
     "Dilution": "stock",
     "ASA/ISO": "8",
     "35mm": "10.5",
-    "120": "",
     "Sheet": "",
     "Temp": "23C"
   },
   {
+    "120": "",
     "Film": "Lomo Babylon",
     "Developer": "Rodinal",
     "Dilution": "1+50",
     "ASA/ISO": "13",
     "35mm": "9",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   }

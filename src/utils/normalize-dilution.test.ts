@@ -25,4 +25,10 @@ describe('normalizeDilutionDisplay function', () => {
     expect(normalizeDilutionDisplay('1:1:9')).toBe('1:1+9');
     expect(normalizeDilutionDisplay('HC-110:B:1:31')).toBe('HC-110:B:1+31');
   });
+
+  test('passes through HC-110 letter + explicit ratio labels', () => {
+    expect(normalizeDilutionDisplay('A 1+15')).toBe('A 1+15');
+    expect(normalizeDilutionDisplay('B 1+31')).toBe('B 1+31');
+    expect(normalizeDilutionDisplay('G 1+119')).toBe('G 1+119');
+  });
 }); 

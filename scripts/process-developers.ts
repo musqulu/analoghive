@@ -99,28 +99,52 @@ function guessManufacturer(developerName: string): string {
 // Process all film data files to extract developer information
 async function processDeveloperData() {
   const filmDataDir = path.join(__dirname, '..', 'src', 'data', 'film_data');
+  const dataDir = path.join(__dirname, '..', 'src', 'data');
   const files = fs.readdirSync(filmDataDir).filter(file => file.endsWith('.json'));
   
   const developers = new Map<string, Developer>();
   
-  // Read existing developers.ts file
-  const developersFile = fs.readFileSync(path.join(__dirname, '..', 'src', 'data', 'developers.ts'), 'utf8');
-  const developersMatch = developersFile.match(/export const developers: Developer\[\] = (\[[\s\S]*?\]);/);
-  
-  if (developersMatch) {
+  const tryPaths = [
+    path.join(dataDir, 'developers.ts'),
+    path.join(dataDir, 'processed-developers.ts'),
+  ];
+  let existingDevelopers: Developer[] | null = null;
+  for (const p of tryPaths) {
+    if (!fs.existsSync(p)) continue;
+    const text = fs.readFileSync(p, 'utf8');
+    const developersMatch = text.match(
+      /export const developers: Developer\[\] = (\[[\s\S]*?\]);/,
+    );
+    if (!developersMatch) continue;
+    const raw = developersMatch[1]
     try {
-      // Replace single quotes with double quotes for JSON parsing
-      const jsonStr = developersMatch[1].replace(/'/g, '"');
-      const existingDevelopers = JSON.parse(jsonStr);
-      
-      // Add existing developers to the map
-      for (const dev of existingDevelopers) {
-        developers.set(dev.id, dev);
+      existingDevelopers = JSON.parse(raw) as Developer[];
+      break;
+    } catch {
+      try {
+        existingDevelopers = JSON.parse(raw.replace(/'/g, '"')) as Developer[];
+        break;
+      } catch (error) {
+        console.error('Error parsing', p, error);
       }
-    } catch (error) {
-      console.error('Error parsing existing developers:', error);
-      // Continue with empty map if parsing fails
     }
+  }
+  if (existingDevelopers) {
+    for (const dev of existingDevelopers) {
+      developers.set(dev.id, dev);
+    }
+    const hc110 = developers.get('hc110');
+    if (hc110) {
+      for (const k of Object.keys(hc110.dilutions)) {
+        if (/^[A-HJ]$/.test(k)) {
+          delete hc110.dilutions[k];
+        }
+      }
+    }
+  } else {
+    console.warn(
+      'No seed developers (developers.ts / processed-developers.ts) — building from film data only.',
+    );
   }
   
   for (const file of files) {
@@ -257,4 +281,4 @@ export function getDevelopmentTime(developerId: string, dilutionKey: string, iso
 }
 
 // Run the processing function
-processDeveloperData().catch(console.error); 
+processDeveloperData().catch(console.error);

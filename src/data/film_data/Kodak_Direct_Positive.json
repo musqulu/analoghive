@@ -1,21 +1,21 @@
 [
   {
+    "120": "",
     "Film": "Kodak Direct Positive",
     "Developer": "Black/White & Green",
     "Dilution": "1+49",
     "ASA/ISO": "80",
     "35mm": "16",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Kodak Direct Positive",
     "Developer": "HC-110",
-    "Dilution": "F",
+    "Dilution": "F 1+79",
     "ASA/ISO": "50",
     "35mm": "11.5",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   }

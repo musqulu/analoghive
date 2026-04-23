@@ -56,6 +56,7 @@ export function DevelopmentSummary({
                 temperatureUnit={temperatureUnit}
                 isColor={isColor}
                 pushPullLine={pushPullLine}
+                selectedDeveloper={selectedDeveloper}
               />
             </div>
           )}

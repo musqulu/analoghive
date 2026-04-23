@@ -506,8 +506,8 @@ export const developers: Developer[] = [
     "manufacturer": "Kodak",
     "type": "B&W",
     "dilutions": {
-      "B": {
-        "ratio": "B",
+      "B 1:31": {
+        "ratio": "B 1+31",
         "temperature": 20,
         "times": {
           "2": 5,
@@ -538,8 +538,8 @@ export const developers: Developer[] = [
           "12800": 140
         }
       },
-      "H": {
-        "ratio": "H",
+      "H 1:63": {
+        "ratio": "H 1+63",
         "temperature": 20,
         "times": {
           "1": 15,
@@ -559,8 +559,8 @@ export const developers: Developer[] = [
           "3200": 38
         }
       },
-      "D": {
-        "ratio": "D",
+      "D 1:39": {
+        "ratio": "D 1+39",
         "temperature": 20,
         "times": {
           "25": 7,
@@ -571,8 +571,8 @@ export const developers: Developer[] = [
           "800": 9.5
         }
       },
-      "E": {
-        "ratio": "E",
+      "E 1:47": {
+        "ratio": "E 1+47",
         "temperature": 20,
         "times": {
           "50": 5.5,
@@ -592,8 +592,8 @@ export const developers: Developer[] = [
           "3200": 24
         }
       },
-      "G": {
-        "ratio": "G",
+      "G 1:119": {
+        "ratio": "G 1+119",
         "temperature": 20,
         "times": {
           "12": 60,
@@ -612,8 +612,8 @@ export const developers: Developer[] = [
           "1600": 25
         }
       },
-      "F": {
-        "ratio": "F",
+      "F 1:79": {
+        "ratio": "F 1+79",
         "temperature": 20,
         "times": {
           "20": 30,
@@ -673,8 +673,8 @@ export const developers: Developer[] = [
           "6": 14
         }
       },
-      "A": {
-        "ratio": "A",
+      "A 1:15": {
+        "ratio": "A 1+15",
         "temperature": 20,
         "times": {
           "3": 20,
@@ -690,8 +690,8 @@ export const developers: Developer[] = [
           "6400": 13
         }
       },
-      "J": {
-        "ratio": "J",
+      "J 1:150": {
+        "ratio": "J 1+150",
         "temperature": 20,
         "times": {
           "80": 18,
@@ -736,8 +736,8 @@ export const developers: Developer[] = [
           "100": 45
         }
       },
-      "C": {
-        "ratio": "C",
+      "C 1:19": {
+        "ratio": "C 1+19",
         "temperature": 20,
         "times": {
           "100": 5
@@ -2538,6 +2538,7 @@ export const developers: Developer[] = [
           "125": 5,
           "160": 6,
           "200": 6,
+          "250": 6.5,
           "320": 9,
           "400": 6.75,
           "600": 17,
@@ -2609,6 +2610,13 @@ export const developers: Developer[] = [
         "times": {
           "0": 8,
           "100": 6.5
+        }
+      },
+      "1:19": {
+        "ratio": "1+19",
+        "temperature": 20,
+        "times": {
+          "64": 5
         }
       }
     }
@@ -9003,9 +9011,9 @@ export const developers: Developer[] = [
     }
   },
   {
-    "id": "ilfordmultigrade",
-    "name": "Ilford Multigrade",
-    "manufacturer": "Ilford",
+    "id": "multigrade",
+    "name": "Multigrade",
+    "manufacturer": "Generic",
     "type": "B&W",
     "dilutions": {
       "1:49": {

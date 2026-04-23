@@ -1,91 +1,91 @@
 [
   {
+    "120": "",
     "Film": "Kodak Hawkeye",
     "Developer": "D-76",
     "Dilution": "stock",
     "ASA/ISO": "400",
     "35mm": "5.5",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Kodak Hawkeye",
     "Developer": "Fomadon Excel",
     "Dilution": "stock",
     "ASA/ISO": "400",
     "35mm": "5",
-    "120": "",
     "Sheet": "",
     "Temp": "24C"
   },
   {
+    "120": "",
     "Film": "Kodak Hawkeye",
     "Developer": "FX-39",
     "Dilution": "1+9",
     "ASA/ISO": "400",
     "35mm": "12",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Kodak Hawkeye",
     "Developer": "HC-110",
-    "Dilution": "B",
+    "Dilution": "B 1+31",
     "ASA/ISO": "400",
     "35mm": "2.5",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Kodak Hawkeye",
     "Developer": "ID-11",
     "Dilution": "stock",
     "ASA/ISO": "400",
     "35mm": "5.5",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Kodak Hawkeye",
     "Developer": "Rodinal",
     "Dilution": "1+50",
     "ASA/ISO": "400",
     "35mm": "13",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Kodak Hawkeye",
     "Developer": "Rodinal",
     "Dilution": "1+100",
     "ASA/ISO": "1600",
     "35mm": "90",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Kodak Hawkeye",
     "Developer": "TMax Dev",
     "Dilution": "1+4",
     "ASA/ISO": "400",
     "35mm": "4.5",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Kodak Hawkeye",
     "Developer": "TMax RS",
     "Dilution": "stock",
     "ASA/ISO": "400",
     "35mm": "2.5",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   }

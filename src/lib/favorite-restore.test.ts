@@ -43,4 +43,22 @@ describe("resolveFavoriteOptionKey", () => {
   it("returns null when developmentInfo is null", () => {
     expect(resolveFavoriteOptionKey(snapshot("1+25|20"), null)).toBeNull()
   })
+
+  it("maps legacy HC-110 single-letter optionKey to explicit dilution when present", () => {
+    const snap: DevelopmentFavoriteSnapshot = {
+      ...snapshot("B|20"),
+      developerName: "HC-110",
+    }
+    const list: DevelopmentOption[] = [
+      opt("B 1+31|20", "B 1+31"),
+    ]
+    expect(resolveFavoriteOptionKey(snap, list)).toBe("B 1+31|20")
+  })
+
+  it("does not map legacy letter key for non–HC-110 developer", () => {
+    const snap = snapshot("B|20")
+    expect(
+      resolveFavoriteOptionKey(snap, [opt("B 1+31|20", "B 1+31")]),
+    ).toBeNull()
+  })
 })

@@ -5,6 +5,17 @@ import { displayTemp } from "@/utils/temperature"
 import { formatTime } from "@/utils/format-time"
 import type { DevelopmentOption } from "@/types/development"
 
+function hc110ExperimentalGjSublabel(
+  developer: string,
+  dilution: string
+): string | null {
+  if (developer !== "HC-110") return null
+  if (dilution.startsWith("G 1+119") || dilution.startsWith("J 1+150")) {
+    return "Experimental; not an official Kodak dilution. Often used for stand development."
+  }
+  return null
+}
+
 interface DilutionPickerProps {
   developmentInfo: DevelopmentOption[] | DevelopmentOption | null
   selectedOptionKey: string
@@ -13,6 +24,8 @@ interface DilutionPickerProps {
   temperatureUnit: string
   isColor: boolean
   pushPullLine: string
+  /** Used to show HC-110 G/J stand-development context */
+  selectedDeveloper?: string
 }
 
 export function DilutionPicker({
@@ -23,6 +36,7 @@ export function DilutionPicker({
   temperatureUnit,
   isColor,
   pushPullLine,
+  selectedDeveloper = "",
 }: DilutionPickerProps) {
   if (!developmentInfo || !selectedIso) return null
 
@@ -40,7 +54,9 @@ export function DilutionPicker({
           per row when approximate.
         </span>
         <div className="grid grid-cols-1 gap-2">
-          {developmentInfo.map((info) => (
+          {developmentInfo.map((info) => {
+            const gj = hc110ExperimentalGjSublabel(selectedDeveloper, info.dilution)
+            return (
             <button
               key={info.optionKey}
               type="button"
@@ -58,6 +74,17 @@ export function DilutionPicker({
                   {displayTemp(info.temperature, temperatureUnit)}
                 </span>
               </div>
+              {gj && (
+                <span
+                  className={`text-xs font-normal ${
+                    selectedOptionKey === info.optionKey
+                      ? "text-primary-foreground/90"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  {gj}
+                </span>
+              )}
               {info.approximateNote && (
                 <span
                   className={`text-xs font-normal ${
@@ -70,7 +97,8 @@ export function DilutionPicker({
                 </span>
               )}
             </button>
-          ))}
+            )
+          })}
         </div>
       </div>
     )

@@ -1,121 +1,121 @@
 [
   {
+    "120": "",
     "Film": "Lomo Fantome",
     "Developer": "510-Pyro",
     "Dilution": "1+100",
     "ASA/ISO": "8",
     "35mm": "7.5",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Lomo Fantome",
     "Developer": "D-76",
     "Dilution": "stock",
     "ASA/ISO": "8",
     "35mm": "6",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Lomo Fantome",
     "Developer": "D-96",
     "Dilution": "stock",
     "ASA/ISO": "8",
     "35mm": "6.5",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Lomo Fantome",
     "Developer": "HC-110",
-    "Dilution": "B",
+    "Dilution": "B 1+31",
     "ASA/ISO": "8",
     "35mm": "7",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Lomo Fantome",
     "Developer": "Ilford HC",
     "Dilution": "1+31",
     "ASA/ISO": "8",
     "35mm": "8",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Lomo Fantome",
     "Developer": "Ilford Ilfosol 3",
     "Dilution": "1+9",
     "ASA/ISO": "50",
     "35mm": "18",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Lomo Fantome",
     "Developer": "Ilfosol 3",
     "Dilution": "1+9",
     "ASA/ISO": "8",
     "35mm": "10.5",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Lomo Fantome",
     "Developer": "Ilfotec HC",
     "Dilution": "1+63",
     "ASA/ISO": "8",
     "35mm": "14",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   },
   {
+    "120": "",
     "Film": "Lomo Fantome",
     "Developer": "Neofin Blue",
     "Dilution": "stock",
     "ASA/ISO": "8",
     "35mm": "9",
-    "120": "",
     "Sheet": "",
     "Temp": "23C"
   },
   {
+    "120": "",
     "Film": "Lomo Fantome",
     "Developer": "Paranol S",
     "Dilution": "1+50",
     "ASA/ISO": "#",
     "35mm": "8",
-    "120": "",
     "Sheet": "",
     "Temp": "22C"
   },
   {
+    "120": "",
     "Film": "Lomo Fantome",
     "Developer": "PMK",
     "Dilution": "1+2+100",
     "ASA/ISO": "8",
     "35mm": "15",
-    "120": "",
     "Sheet": "",
     "Temp": "22C"
   },
   {
+    "120": "",
     "Film": "Lomo Fantome",
     "Developer": "Rodinal",
     "Dilution": "1+50",
     "ASA/ISO": "8",
     "35mm": "8",
-    "120": "",
     "Sheet": "",
     "Temp": "20C"
   }
