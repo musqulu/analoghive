@@ -5,7 +5,6 @@ import { PlayCircle, Pencil } from "lucide-react"
 import { useTimer } from "@/hooks/use-timer"
 import { useWakeLock } from "@/hooks/use-wake-lock"
 import { normalizeDilutionDisplay } from "@/utils/normalize-dilution"
-import { displayTemp } from "@/utils/temperature"
 import { TimerDisplay } from "@/components/timer/timer-display"
 import { StepIndicator } from "@/components/timer/step-indicator"
 import { ProcessEditor } from "@/components/timer/process-editor"
@@ -43,7 +42,6 @@ export function Timer({
   developerName,
   developerDilution,
   totalVolume = 500,
-  temperatureUnit = "celsius",
   isColor = false,
   pushPullLine,
   chartNote,
@@ -106,9 +104,6 @@ export function Timer({
     }
   }, [timer.isRunning, wakeLock])
 
-  const getStepTemp = (step: Step) =>
-    displayTemp(timer.steps[step].temp, temperatureUnit)
-
   return (
     <div className="space-y-6" data-testid="timer-component">
       <TimerDisplay
@@ -117,8 +112,6 @@ export function Timer({
         isRunning={timer.isRunning}
         isPaused={timer.isPaused}
         shouldShake={timer.shouldShake}
-        initialShakePeriod={timer.initialShakePeriod}
-        temperatureDisplay={getStepTemp(timer.currentStep ?? firstStep)}
         onStart={() => timer.startTimer(firstStep)}
         onToggle={timer.toggleTimer}
         onReset={timer.resetTimer}
@@ -174,7 +167,6 @@ export function Timer({
           currentStep={timer.currentStep}
           isRunning={timer.isRunning}
           onStartStep={timer.startTimer}
-          getStepTemp={getStepTemp}
         />
 
         <button
@@ -212,6 +204,9 @@ export function Timer({
             ? Math.round((customTimes.preSoak ?? 0) * 60)
             : undefined
         }
+        stopSeconds={Math.round(customTimes.stop * 60)}
+        fixSeconds={Math.round(customTimes.fix * 60)}
+        washSeconds={Math.round(customTimes.wash * 60)}
       />
     </div>
   )

@@ -17,14 +17,12 @@ interface TimerProps {
 
 export function Timer({
   developmentTime,
-  temperature,
   filmName,
   filmFormat = "35mm",
   filmIso,
   developerName,
   developerDilution,
   totalVolume = 500,
-  temperatureUnit = "celsius",
 }: TimerProps) {
   const [currentStep, setCurrentStep] = React.useState<string | null>(null);
   const [isRunning, setIsRunning] = React.useState(false);
@@ -42,11 +40,6 @@ export function Timer({
     return dilution.replace(':', '+');
   };
   
-  // Get temperature display with unit
-  const getStepTemp = () => {
-    return `${temperature}°${temperatureUnit === "celsius" ? "C" : "F"}`;
-  };
-  
   // Start a specific timer step
   const startTimer = (step: string) => {
     setCurrentStep(step);
@@ -58,8 +51,7 @@ export function Timer({
       <div className="timer-display">
         <h2>{currentStep || 'Development Process'}</h2>
         <div className="time">{formatTime(developmentTime * 60)}</div>
-        <p>at {getStepTemp()}</p>
-        
+
         {!isRunning ? (
           <button 
             onClick={() => startTimer('Development')}

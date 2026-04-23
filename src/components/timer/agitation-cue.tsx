@@ -4,13 +4,11 @@ import { Vibrate } from "lucide-react"
 
 interface AgitationCueProps {
   shouldShake: boolean
-  initialShakePeriod: boolean
   variant?: "light" | "dark"
 }
 
 export function AgitationCue({
   shouldShake,
-  initialShakePeriod,
   variant = "light",
 }: AgitationCueProps) {
   const activeColor = variant === "dark" ? "text-red-500" : "text-white"
@@ -31,17 +29,19 @@ export function AgitationCue({
         <span
           className={`text-lg font-semibold ${shouldShake ? activeColor : inactiveColor}`}
         >
-          {shouldShake ? "SHAKE NOW!" : "Rest"}
+          {shouldShake ? "Agitate" : "Rest"}
         </span>
       </div>
-      {initialShakePeriod && shouldShake && (
+      {shouldShake && (
         <p className="text-sm mt-2 text-center opacity-70">
-          Continuous initial shaking
+          4 gentle inversions, or gentle rotation/twists if you are not inverting
+          the tank
         </p>
       )}
-      {!initialShakePeriod && (
+      {!shouldShake && (
         <p className="text-sm mt-2 text-center opacity-70">
-          Shake for 10 seconds every minute
+          Intermittent agitation: first 10 seconds of each minute (spiral tank /
+          Paterson-style)
         </p>
       )}
     </div>

@@ -17,7 +17,6 @@ interface StepIndicatorProps {
   currentStep: Step | null
   isRunning: boolean
   onStartStep: (step: Step) => void
-  getStepTemp: (step: Step) => string
 }
 
 const STEP_TEST_IDS: Record<Step, string> = {
@@ -34,7 +33,6 @@ export function StepIndicator({
   currentStep,
   isRunning,
   onStartStep,
-  getStepTemp,
 }: StepIndicatorProps) {
   return (
     <div className="space-y-3 mt-4">
@@ -51,7 +49,7 @@ export function StepIndicator({
           <div className="flex-1">
             <p className="font-medium">{steps[step].name}</p>
             <p className="text-sm text-muted-foreground">
-              {formatTime(steps[step].time)} at {getStepTemp(step)}
+              {formatTime(steps[step].time)}
             </p>
           </div>
         </div>

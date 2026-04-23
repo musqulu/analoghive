@@ -111,4 +111,27 @@ describe("DevelopmentMode", () => {
     fireEvent.click(closeButton)
     expect(defaultProps.onClose).toHaveBeenCalledTimes(1)
   })
+
+  it("shows agitation cue during first 10s of developer step", () => {
+    render(<DevelopmentMode {...defaultProps} time={125} />)
+    fireEvent.click(screen.getByText("Start"))
+    expect(screen.getByText("Agitate")).toBeInTheDocument()
+    act(() => jest.advanceTimersByTime(5000))
+    expect(screen.getByText("Agitate")).toBeInTheDocument()
+  })
+
+  it("shows agitation again at second minute of developer (elapsed-based)", () => {
+    render(<DevelopmentMode {...defaultProps} time={125} />)
+    fireEvent.click(screen.getByText("Start"))
+    act(() => jest.advanceTimersByTime(65000))
+    expect(screen.getByText("Agitate")).toBeInTheDocument()
+  })
+
+  it("uses stopSeconds for stop bath duration", () => {
+    render(
+      <DevelopmentMode {...defaultProps} time={60} stopSeconds={45} />,
+    )
+    fireEvent.click(screen.getByText("Next Step"))
+    expect(screen.getByText("00:45")).toBeInTheDocument()
+  })
 })

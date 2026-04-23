@@ -105,22 +105,61 @@ describe("useTimer", () => {
     expect(result.current.timeLeft).toBe(240)
   })
 
-  it("shakes during initial 30 seconds of dev step", () => {
-    const { result } = createTimer({ developmentTime: 2 })
+  it("shakes during first 10 seconds of each minute (dev)", () => {
+    const { result } = createTimer({ developmentTime: 10 })
     act(() => result.current.startTimer("dev"))
 
     act(() => jest.advanceTimersByTime(1000))
     expect(result.current.shouldShake).toBe(true)
-    expect(result.current.initialShakePeriod).toBe(true)
 
-    act(() => jest.advanceTimersByTime(29000))
+    act(() => jest.advanceTimersByTime(9000))
     expect(result.current.shouldShake).toBe(false)
-    expect(result.current.initialShakePeriod).toBe(false)
+
+    act(() => jest.advanceTimersByTime(50000))
+    expect(result.current.shouldShake).toBe(true)
   })
 
-  it("does not shake during non-dev steps", () => {
-    const { result } = createTimer()
+  it("shakes for entire short stop bath (<= 10 s)", () => {
+    const tenSeconds = 10 / 60
+    const times: ProcessTimes = {
+      ...defaultCustomTimes,
+      stop: tenSeconds,
+    }
+    const { result } = createTimer({ customTimes: times })
     act(() => result.current.startTimer("stop"))
+    act(() => jest.advanceTimersByTime(3000))
+    expect(result.current.shouldShake).toBe(true)
+  })
+
+  it("stop bath 30 s only agitates first 10 s", () => {
+    const times: ProcessTimes = { ...defaultCustomTimes, stop: 0.5 }
+    const { result } = createTimer({ customTimes: times })
+    act(() => result.current.startTimer("stop"))
+    act(() => jest.advanceTimersByTime(5000))
+    expect(result.current.shouldShake).toBe(true)
+    act(() => jest.advanceTimersByTime(10000))
+    expect(result.current.shouldShake).toBe(false)
+  })
+
+  it("stop bath 2 min uses intermittent pattern", () => {
+    const times: ProcessTimes = { ...defaultCustomTimes, stop: 2 }
+    const { result } = createTimer({ customTimes: times })
+    act(() => result.current.startTimer("stop"))
+    act(() => jest.advanceTimersByTime(61000))
+    expect(result.current.shouldShake).toBe(true)
+  })
+
+  it("fixer uses intermittent agitation", () => {
+    const times: ProcessTimes = { ...defaultCustomTimes, fix: 5 }
+    const { result } = createTimer({ customTimes: times })
+    act(() => result.current.startTimer("fix"))
+    act(() => jest.advanceTimersByTime(61000))
+    expect(result.current.shouldShake).toBe(true)
+  })
+
+  it("does not shake during wash", () => {
+    const { result } = createTimer()
+    act(() => result.current.startTimer("wash"))
     act(() => jest.advanceTimersByTime(2000))
     expect(result.current.shouldShake).toBe(false)
   })

@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { shouldShakeSpiralTank } from "@/lib/spiral-tank-agitation"
 import type { Step, ProcessTimes } from "@/types/development"
 
 interface StepConfig {
@@ -41,7 +42,6 @@ export function useTimer({
   const [isPaused, setIsPaused] = React.useState(false)
   const [currentStep, setCurrentStep] = React.useState<Step | null>(null)
   const [shouldShake, setShouldShake] = React.useState(false)
-  const [initialShakePeriod, setInitialShakePeriod] = React.useState(true)
 
   const preSoakActive = hasPreSoakDuration(customTimes)
 
@@ -63,19 +63,19 @@ export function useTimer({
       },
       stop: {
         name: "Stop Bath",
-        time: customTimes.stop * 60,
+        time: Math.round(customTimes.stop * 60),
         temp: 20,
         agitation: { initial: 30, interval: 30, duration: 5 },
       },
       fix: {
         name: "Fixer",
-        time: customTimes.fix * 60,
+        time: Math.round(customTimes.fix * 60),
         temp: 20,
         agitation: { initial: 30, interval: 60, duration: 10 },
       },
       wash: {
         name: "Washing",
-        time: customTimes.wash * 60,
+        time: Math.round(customTimes.wash * 60),
         temp: 20,
         agitation: { initial: 0, interval: 60, duration: 10 },
       },
@@ -107,37 +107,22 @@ export function useTimer({
     return () => clearInterval(interval)
   }, [isRunning, isPaused, timeLeft])
 
-  // Shaking logic (development only)
+  // Spiral tank / Paterson-style agitation cues (dev, stop, fix)
   React.useEffect(() => {
-    if (currentStep !== "dev" || !isRunning || isPaused) {
+    if (!currentStep || !isRunning) {
       setShouldShake(false)
       return
     }
-    const totalTime = developmentTime * 60
-    const elapsedSeconds = totalTime - timeLeft
-    if (elapsedSeconds < 30) {
-      setShouldShake(true)
-      setInitialShakePeriod(true)
-    } else {
-      if (initialShakePeriod) {
-        setInitialShakePeriod(false)
-        setShouldShake(false)
-      }
-      if (!initialShakePeriod && elapsedSeconds >= 60) {
-        const secondsInCurrentMinute = timeLeft % 60
-        setShouldShake(secondsInCurrentMinute >= 50)
-      }
-    }
-  }, [currentStep, isRunning, isPaused, timeLeft, developmentTime, initialShakePeriod])
-
-  React.useEffect(() => {
-    if (currentStep === "dev") {
-      setInitialShakePeriod(true)
-    } else {
+    if (currentStep !== "dev" && currentStep !== "stop" && currentStep !== "fix") {
       setShouldShake(false)
-      setInitialShakePeriod(false)
+      return
     }
-  }, [currentStep])
+    const stepTotal = steps[currentStep].time
+    const elapsedSeconds = stepTotal - timeLeft
+    setShouldShake(
+      shouldShakeSpiralTank(currentStep, elapsedSeconds, stepTotal),
+    )
+  }, [currentStep, isRunning, timeLeft, steps])
 
   const getNextStep = React.useCallback((step: Step): Step | null => {
     switch (step) {
@@ -195,7 +180,6 @@ export function useTimer({
     isPaused,
     currentStep,
     shouldShake,
-    initialShakePeriod,
     steps,
     startTimer,
     toggleTimer,

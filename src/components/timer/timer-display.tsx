@@ -19,8 +19,6 @@ interface TimerDisplayProps {
   isRunning: boolean
   isPaused: boolean
   shouldShake: boolean
-  initialShakePeriod: boolean
-  temperatureDisplay: string
   onStart: () => void
   onToggle: () => void
   onReset: () => void
@@ -32,8 +30,6 @@ export function TimerDisplay({
   isRunning,
   isPaused,
   shouldShake,
-  initialShakePeriod,
-  temperatureDisplay,
   onStart,
   onToggle,
   onReset,
@@ -44,18 +40,20 @@ export function TimerDisplay({
         <h2 className="text-xl font-medium mb-2">
           {currentStep ? STEP_LABELS[currentStep] : "Development Process"}
         </h2>
-        <div className="my-4 font-mono text-6xl font-semibold">
+        <div
+          className="my-4 font-mono text-6xl font-semibold"
+          data-testid="main-time-display"
+        >
           {formatTime(timeLeft)}
         </div>
-        <p className="text-lg mb-4">at {temperatureDisplay}</p>
 
-        {currentStep === "dev" && isRunning && !isPaused && (
-          <AgitationCue
-            shouldShake={shouldShake}
-            initialShakePeriod={initialShakePeriod}
-            variant="light"
-          />
-        )}
+        {(currentStep === "dev" ||
+          currentStep === "stop" ||
+          currentStep === "fix") &&
+          isRunning &&
+          timeLeft > 0 && (
+            <AgitationCue shouldShake={shouldShake} variant="light" />
+          )}
 
         {isRunning ? (
           <div className="flex gap-4 mt-2">

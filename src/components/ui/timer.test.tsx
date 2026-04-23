@@ -121,7 +121,7 @@ describe('Timer Component', () => {
     fireEvent.click(resetButton);
     
     // Timer should reset to initial development time
-    expect(screen.getByText('11:00')).toBeInTheDocument();
+    expect(screen.getByTestId("main-time-display")).toHaveTextContent("11:00")
   });
 
   // Test timer countdown
@@ -133,15 +133,15 @@ describe('Timer Component', () => {
     fireEvent.click(startButton);
     
     // Initial time should be 1:00
-    expect(screen.getByText('1:00')).toBeInTheDocument();
-    
+    expect(screen.getByTestId("main-time-display")).toHaveTextContent("1:00")
+
     // Advance timer by 10 seconds
     act(() => {
       jest.advanceTimersByTime(10 * 1000);
-    });
-    
+    })
+
     // Time should be 0:50
-    expect(screen.getByText('0:50')).toBeInTheDocument();
+    expect(screen.getByTestId("main-time-display")).toHaveTextContent("0:50")
   });
 
   // Test different process steps
@@ -165,21 +165,17 @@ describe('Timer Component', () => {
     expect(screen.getAllByText("Washing").length).toBeGreaterThan(0)
   });
 
-  // Test temperature display
-  test('displays correct temperature format', () => {
-    const { unmount } = render(
-      <Timer developmentTime={11} temperature={20} temperatureUnit="celsius" />
-    );
-
-    expect(screen.getAllByText(/at 20°C/).length).toBeGreaterThan(0);
-    unmount();
-
+  test("does not show temperature line under main countdown", () => {
     render(
-      <Timer developmentTime={11} temperature={20} temperatureUnit="fahrenheit" />
-    );
-
-    expect(screen.getAllByText(/at 68\.0°F/).length).toBeGreaterThan(0);
-  });
+      <Timer
+        developmentTime={11}
+        temperature={20}
+        temperatureUnit="celsius"
+      />,
+    )
+    fireEvent.click(screen.getByTestId("start-button"))
+    expect(screen.queryByText(/^at /)).not.toBeInTheDocument()
+  })
 
   // Test different development times based on color/bw film
   test('uses different default times for color and b&w film', () => {
