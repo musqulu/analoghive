@@ -6,15 +6,16 @@ export type TimeSource = "exact" | "nearest" | "interpolated" | "extrapolated" |
 const FALLBACK_PUSH_PER_STOP = 1.25
 const FALLBACK_PULL_PER_STOP = 0.88
 
-function dedupeByIsoPreferShorterTime(rows: DevelopmentTime[]): DevelopmentTime[] {
-  const byIso = new Map<number, DevelopmentTime>()
-  const sorted = [...rows].sort((a, b) => (a.iso! as number) - (b.iso! as number))
+function dedupeByIsoPreferShorterTime(
+  rows: (DevelopmentTime & { iso: number })[]
+): (DevelopmentTime & { iso: number })[] {
+  const byIso = new Map<number, DevelopmentTime & { iso: number }>()
+  const sorted = [...rows].sort((a, b) => a.iso - b.iso)
   for (const r of sorted) {
-    const iso = r.iso as number
-    const prev = byIso.get(iso)
-    if (!prev || r.time < prev.time) byIso.set(iso, r)
+    const prev = byIso.get(r.iso)
+    if (!prev || r.time < prev.time) byIso.set(r.iso, r)
   }
-  return [...byIso.values()].sort((a, b) => (a.iso! as number) - (b.iso! as number))
+  return [...byIso.values()].sort((a, b) => a.iso - b.iso)
 }
 
 export function lerp(a: number, b: number, t: number): number {
@@ -59,7 +60,7 @@ export function resolveTimeFromRows(
   rows: DevelopmentTime[],
   targetIso: number
 ): ResolvedTime {
-  const valid = rows.filter((r) => r.iso !== null)
+  const valid = rows.filter((r): r is DevelopmentTime & { iso: number } => r.iso !== null)
   if (valid.length === 0) {
     return { time: 10, temperature: 20, source: "fallback" }
   }
@@ -74,7 +75,7 @@ export function resolveTimeFromRows(
     }
   }
 
-  const isos = uniq.map((r) => r.iso as number)
+  const isos = uniq.map((r) => r.iso)
   const minIso = isos[0]
   const maxIso = isos[isos.length - 1]
 
@@ -85,9 +86,9 @@ export function resolveTimeFromRows(
       return {
         time: round2(extrapolateTime(
           targetIso,
-          a.iso as number,
+          a.iso,
           a.time,
-          b.iso as number,
+          b.iso,
           b.time
         )),
         temperature: preferStandardTemp(a, b),
@@ -112,9 +113,9 @@ export function resolveTimeFromRows(
       return {
         time: round2(extrapolateTime(
           targetIso,
-          a.iso as number,
+          a.iso,
           a.time,
-          b.iso as number,
+          b.iso,
           b.time
         )),
         temperature: preferStandardTemp(b, a),
@@ -132,14 +133,14 @@ export function resolveTimeFromRows(
     }
   }
 
-  const le = uniq.filter((r) => (r.iso as number) <= targetIso)
-  const ge = uniq.filter((r) => (r.iso as number) >= targetIso)
+  const le = uniq.filter((r) => r.iso <= targetIso)
+  const ge = uniq.filter((r) => r.iso >= targetIso)
   const lower = le.length ? le[le.length - 1] : undefined
   const upper = ge.length ? ge[0] : undefined
 
   if (lower && upper && lower.iso !== upper.iso) {
-    const x0 = lower.iso as number
-    const x1 = upper.iso as number
+    const x0 = lower.iso
+    const x1 = upper.iso
     const t = (targetIso - x0) / (x1 - x0)
     return {
       time: round2(lerp(lower.time, upper.time, t)),
