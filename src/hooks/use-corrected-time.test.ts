@@ -54,6 +54,17 @@ describe("useCorrectedTime", () => {
     expect(result.current.correctedTime).toBe(8)
   })
 
+  it("clears corrected time when modifiedTemperature is cleared", () => {
+    const { result } = renderHook(() => useCorrectedTime(baseInfo))
+    expect(result.current.correctedTime).not.toBeNull()
+    mockCalculateCorrectedTime.mockClear()
+
+    act(() => result.current.setModifiedTemperature(null))
+    expect(mockCalculateCorrectedTime).not.toHaveBeenCalled()
+    expect(result.current.correctedTime).toBeNull()
+    expect(result.current.modifiedTemperature).toBeNull()
+  })
+
   it("recalculates when constantAgitation changes", () => {
     const { result } = renderHook(() => useCorrectedTime(baseInfo))
     mockCalculateCorrectedTime.mockReturnValue(7)

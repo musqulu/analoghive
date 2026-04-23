@@ -13,7 +13,9 @@ export function useCorrectedTime(
   const [temperatureUnit, setTemperatureUnit] = React.useState<
     "celsius" | "fahrenheit"
   >(() => (initialHydration?.temperatureUnit === "fahrenheit" ? "fahrenheit" : "celsius"))
-  const [modifiedTemperature, setModifiedTemperature] = React.useState(() => {
+  const [modifiedTemperature, setModifiedTemperature] = React.useState<
+    number | null
+  >(() => {
     if (initialHydration) return initialHydration.modifiedTemperature
     return 20
   })
@@ -68,7 +70,7 @@ export function useCorrectedTime(
   }, [selectedInfo, temperatureUnit])
 
   React.useEffect(() => {
-    if (selectedInfo) {
+    if (selectedInfo && modifiedTemperature !== null) {
       const newTime = calculateCorrectedTime(
         selectedInfo.temperature,
         selectedInfo.time,
@@ -83,14 +85,15 @@ export function useCorrectedTime(
 
   const handleTemperatureUnitChange = (value: string) => {
     if (value !== "celsius" && value !== "fahrenheit") return
+    const base = modifiedTemperature ?? selectedInfo?.temperature ?? 20
     setTemperatureUnit(value)
     if (value === "fahrenheit") {
       setModifiedTemperature(
-        Number(celsiusToFahrenheit(modifiedTemperature).toFixed(1))
+        Number(celsiusToFahrenheit(base).toFixed(1))
       )
     } else {
       setModifiedTemperature(
-        Number(fahrenheitToCelsius(modifiedTemperature).toFixed(1))
+        Number(fahrenheitToCelsius(base).toFixed(1))
       )
     }
   }

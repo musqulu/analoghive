@@ -40,7 +40,8 @@ export function DevelopCalculator() {
     selection.developmentInfo &&
     selection.selectedIso &&
     selection.selectedDilution &&
-    selection.selectedInfo
+    selection.selectedInfo &&
+    correction.modifiedTemperature !== null
       ? buildFavoriteSnapshotFromCalculator({
           filmName: selection.selectedFilm,
           filmFormat: selection.selectedFormat,
@@ -152,7 +153,11 @@ export function DevelopCalculator() {
                         ? correction.correctedTime
                         : selection.selectedInfo?.time || 0
                     }
-                    temperature={correction.modifiedTemperature}
+                    temperature={
+                      correction.modifiedTemperature ??
+                      selection.selectedInfo?.temperature ??
+                      20
+                    }
                     totalVolume={totalVolume}
                     pushPullLine={selection.pushPullLine}
                     chartNote={selection.selectedInfo?.approximateNote}

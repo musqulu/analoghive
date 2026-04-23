@@ -1,14 +1,16 @@
 "use client"
 
+import * as React from "react"
 import { displayTemp } from "@/utils/temperature"
 import { formatTime } from "@/utils/format-time"
+import { cn } from "@/lib/utils"
 import type { DevelopmentOption, FilmFormat } from "@/types/development"
 
 interface TemperatureCorrectionProps {
   selectedInfo: DevelopmentOption | undefined | null
   temperatureUnit: string
-  modifiedTemperature: number
-  onModifiedTemperatureChange: (value: number) => void
+  modifiedTemperature: number | null
+  onModifiedTemperatureChange: (value: number | null) => void
   constantAgitation: boolean
   onConstantAgitationChange: (value: boolean) => void
   correctedTime: number | null
@@ -18,6 +20,21 @@ interface TemperatureCorrectionProps {
   selectedDeveloper: string
   selectedDilution: string
   pushPullLine: string
+}
+
+function parseTemperatureInput(raw: string): number | null {
+  const t = raw.trim().replace(",", ".")
+  if (
+    t === "" ||
+    t === "-" ||
+    t === "." ||
+    t === "-." ||
+    t === "+"
+  ) {
+    return null
+  }
+  const n = Number.parseFloat(t)
+  return Number.isFinite(n) ? n : null
 }
 
 export function TemperatureCorrection({
@@ -35,6 +52,34 @@ export function TemperatureCorrection({
   selectedDilution,
   pushPullLine,
 }: TemperatureCorrectionProps) {
+  const focusedRef = React.useRef(false)
+  const optionKey = selectedInfo?.optionKey
+
+  const [text, setText] = React.useState(() =>
+    modifiedTemperature === null ? "" : String(modifiedTemperature),
+  )
+
+  const syncFromProp = React.useCallback(() => {
+    setText(modifiedTemperature === null ? "" : String(modifiedTemperature))
+  }, [modifiedTemperature])
+
+  React.useEffect(() => {
+    syncFromProp()
+  }, [optionKey, temperatureUnit])
+
+  React.useEffect(() => {
+    if (focusedRef.current) return
+    syncFromProp()
+  }, [modifiedTemperature, syncFromProp])
+
+  const trimmed = text.trim()
+  const showError = parseTemperatureInput(trimmed) === null
+
+  const errorMessage =
+    trimmed === ""
+      ? "Temperature is required."
+      : "Enter a valid temperature."
+
   return (
     <div className="rounded-lg bg-card p-6 ds-card">
       <h3 className="mb-4 text-lg font-medium">Temperature Correction</h3>
@@ -60,16 +105,48 @@ export function TemperatureCorrection({
           </div>
         </div>
         <div>
-          <label className="text-sm font-medium mb-2 block">
+          <label
+            htmlFor="modified-temperature"
+            className="text-sm font-medium mb-2 block"
+          >
             Modified Temperature
           </label>
           <input
-            type="number"
-            value={modifiedTemperature}
-            onChange={(e) => onModifiedTemperatureChange(Number(e.target.value))}
-            step="0.1"
-            className="ds-input"
+            id="modified-temperature"
+            type="text"
+            inputMode="decimal"
+            autoComplete="off"
+            enterKeyHint="done"
+            value={text}
+            aria-invalid={showError}
+            aria-describedby={showError ? "modified-temperature-error" : undefined}
+            onFocus={() => {
+              focusedRef.current = true
+            }}
+            onBlur={() => {
+              focusedRef.current = false
+              syncFromProp()
+            }}
+            onChange={(e) => {
+              const next = e.target.value
+              setText(next)
+              onModifiedTemperatureChange(parseTemperatureInput(next))
+            }}
+            className={cn(
+              "ds-input tabular-nums",
+              showError &&
+                "border border-destructive ring-2 ring-destructive/25 focus-visible:ring-destructive",
+            )}
           />
+          {showError ? (
+            <p
+              id="modified-temperature-error"
+              className="mt-1.5 text-xs text-destructive"
+              role="alert"
+            >
+              {errorMessage}
+            </p>
+          ) : null}
         </div>
         <div className="mt-4">
           <div className="flex items-center space-x-2">
