@@ -72,6 +72,10 @@ export function PushPullSelector({
           )
         })}
       </div>
+      <p className="text-[11px] leading-snug text-muted-foreground">
+        Experimental: values are calculated from charts, not guaranteed to be
+        exact.
+      </p>
       {pushPullStops !== 0 && (
         <div className="text-sm">
           <span className="font-medium">Target EI {targetEI}</span>

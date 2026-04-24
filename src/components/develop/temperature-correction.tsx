@@ -4,7 +4,7 @@ import * as React from "react"
 import { displayTemp } from "@/utils/temperature"
 import { formatTime } from "@/utils/format-time"
 import { cn } from "@/lib/utils"
-import type { DevelopmentOption, FilmFormat } from "@/types/development"
+import type { DevelopmentOption } from "@/types/development"
 
 interface TemperatureCorrectionProps {
   selectedInfo: DevelopmentOption | undefined | null
@@ -14,11 +14,6 @@ interface TemperatureCorrectionProps {
   constantAgitation: boolean
   onConstantAgitationChange: (value: boolean) => void
   correctedTime: number | null
-  selectedFilm: string
-  selectedFormat: FilmFormat
-  selectedIso: string
-  selectedDeveloper: string
-  selectedDilution: string
   pushPullLine: string
 }
 
@@ -45,11 +40,6 @@ export function TemperatureCorrection({
   constantAgitation,
   onConstantAgitationChange,
   correctedTime,
-  selectedFilm,
-  selectedFormat,
-  selectedIso,
-  selectedDeveloper,
-  selectedDilution,
   pushPullLine,
 }: TemperatureCorrectionProps) {
   const focusedRef = React.useRef(false)
@@ -80,6 +70,11 @@ export function TemperatureCorrection({
       ? "Temperature is required."
       : "Enter a valid temperature."
 
+  const chartTemperature = selectedInfo?.temperature ?? 20
+  const temperatureWasModified =
+    modifiedTemperature !== null &&
+    Math.abs(modifiedTemperature - chartTemperature) > 0.001
+
   return (
     <div className="rounded-lg bg-card p-6 ds-card">
       <h3 className="mb-4 text-lg font-medium">Temperature Correction</h3>
@@ -107,10 +102,17 @@ export function TemperatureCorrection({
         <div>
           <label
             htmlFor="modified-temperature"
-            className="text-sm font-medium mb-2 block"
+            className="block text-sm font-medium"
           >
             Modified Temperature
           </label>
+          <p
+            id="modified-temperature-hint"
+            className="mt-1 mb-2 text-xs text-muted-foreground"
+          >
+            Changing this value recalculates development time and affects how
+            your negatives develop.
+          </p>
           <input
             id="modified-temperature"
             type="text"
@@ -119,7 +121,12 @@ export function TemperatureCorrection({
             enterKeyHint="done"
             value={text}
             aria-invalid={showError}
-            aria-describedby={showError ? "modified-temperature-error" : undefined}
+            aria-describedby={[
+              "modified-temperature-hint",
+              showError ? "modified-temperature-error" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
             onFocus={() => {
               focusedRef.current = true
             }}
@@ -148,47 +155,45 @@ export function TemperatureCorrection({
             </p>
           ) : null}
         </div>
-        <div className="mt-4">
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="constant-agitation"
-              checked={constantAgitation}
-              onChange={(e) => onConstantAgitationChange(e.target.checked)}
-              className="h-4 w-4 rounded border-input text-primary focus:ring-ring"
-            />
-            <label htmlFor="constant-agitation" className="text-sm font-medium">
-              Constant Agitation
-            </label>
-          </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            Enable this if you plan to use constant agitation instead of
-            intermittent agitation
-          </p>
-        </div>
+        <label className="mt-4 flex cursor-pointer items-center gap-3">
+          <input
+            type="checkbox"
+            id="constant-agitation"
+            checked={constantAgitation}
+            onChange={(e) => onConstantAgitationChange(e.target.checked)}
+            className="h-4 w-4 shrink-0 rounded border-input text-primary focus:ring-ring"
+          />
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-medium">Constant Agitation</span>
+            <span className="mt-1 block text-xs text-muted-foreground">
+              Enable this if you plan to use constant agitation instead of
+              intermittent agitation
+            </span>
+          </span>
+        </label>
         {correctedTime !== null && (
-          <div className="mt-4 p-3 bg-muted rounded-md">
-            <p className="text-sm font-medium">
-              Adjusted development time:{" "}
+          <div className="mt-4 rounded-md border border-border bg-muted/50 p-4">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Adjusted development time
+            </p>
+            <p className="mt-1 font-mono text-3xl font-semibold tabular-nums tracking-tight">
               {formatTime(correctedTime * 60)}
             </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              For {selectedFilm} ({selectedFormat}) at {selectedIso} ISO in{" "}
-              {selectedDeveloper} {selectedDilution}
-            </p>
-            {selectedInfo?.approximateNote && (
-              <p className="text-xs text-muted-foreground mt-1">
-                Base time: {selectedInfo.approximateNote}
-              </p>
-            )}
-            {pushPullLine && (
-              <p className="text-xs text-muted-foreground mt-1">{pushPullLine}</p>
-            )}
-            {constantAgitation && (
-              <p className="text-xs text-muted-foreground mt-1">
-                Time adjusted for constant agitation
-              </p>
-            )}
+            {(temperatureWasModified && modifiedTemperature !== null) ||
+            constantAgitation ? (
+              <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+                {temperatureWasModified && modifiedTemperature !== null ? (
+                  <p>
+                    Using modified temperature{" "}
+                    {displayTemp(modifiedTemperature, temperatureUnit)} (chart:{" "}
+                    {displayTemp(chartTemperature, temperatureUnit)}).
+                  </p>
+                ) : null}
+                {constantAgitation ? (
+                  <p>Time adjusted for constant agitation</p>
+                ) : null}
+              </div>
+            ) : null}
           </div>
         )}
       </div>

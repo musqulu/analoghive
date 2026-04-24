@@ -68,7 +68,7 @@ export function Timer({
       </div>
       
       <div className="process-steps">
-        <h3>Development Process</h3>
+        <h3>Development calculator</h3>
         
         {/* Film and Developer Info */}
         {filmName && <p>Film: {filmName} ({filmFormat}) @ ISO {filmIso}</p>}

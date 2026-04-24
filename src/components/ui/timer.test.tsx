@@ -16,7 +16,7 @@ describe('Timer Component', () => {
     
     // Check if the main timer elements are rendered
     expect(screen.getByTestId("timer-component")).toBeInTheDocument()
-    expect(screen.getAllByText("Development Process").length).toBeGreaterThan(0)
+    expect(screen.getAllByText("Development calculator").length).toBeGreaterThan(0)
     expect(screen.getAllByText("11:00").length).toBeGreaterThan(0)
   });
 

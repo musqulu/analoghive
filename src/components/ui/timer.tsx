@@ -22,10 +22,6 @@ interface TimerProps {
   totalVolume?: number
   temperatureUnit?: string
   isColor?: boolean
-  /** e.g. "Pushed +2 (EI 1600)" */
-  pushPullLine?: string
-  /** e.g. "From chart" / approximate note */
-  chartNote?: string
   /** Hydrate step durations and wash method from a saved recipe */
   initialProcessTimes?: ProcessTimes
   initialWashingMethod?: WashingMethod
@@ -43,8 +39,6 @@ export function Timer({
   developerDilution,
   totalVolume = 500,
   isColor = false,
-  pushPullLine,
-  chartNote,
   initialProcessTimes,
   initialWashingMethod,
   recipeNotes,
@@ -127,34 +121,31 @@ export function Timer({
       </div>
 
       <div className="rounded-lg bg-card p-6 ds-card">
-        <h3 className="mb-4 text-lg font-medium">Development Process</h3>
-        <div className="space-y-2 mb-4">
+        <h3 className="mb-3 text-lg font-medium">Development calculator</h3>
+        <div className="mb-4 space-y-1 text-sm text-muted-foreground">
           {filmName && (
             <p>
-              <span className="font-medium">Film:</span> {filmName}{" "}
-              {filmFormat && `(${filmFormat})`} {filmIso && `@ ISO ${filmIso}`}
+              <span className="font-medium text-foreground">Film:</span>{" "}
+              {filmName} {filmFormat && `(${filmFormat})`}{" "}
+              {filmIso && `@ ISO ${filmIso}`}
             </p>
           )}
           {developerName && (
             <p>
-              <span className="font-medium">Developer:</span> {developerName}{" "}
+              <span className="font-medium text-foreground">Developer:</span>{" "}
+              {developerName}{" "}
               {developerDilution &&
                 `(${normalizeDilutionDisplay(developerDilution)})`}
             </p>
           )}
-          {totalVolume && (
+          {totalVolume ? (
             <p>
-              <span className="font-medium">Volume:</span> {totalVolume}ml
+              <span className="font-medium text-foreground">Volume:</span>{" "}
+              {totalVolume}ml
             </p>
-          )}
-          {pushPullLine && (
-            <p className="text-sm text-muted-foreground">{pushPullLine}</p>
-          )}
-          {chartNote && (
-            <p className="text-sm text-muted-foreground">{chartNote}</p>
-          )}
+          ) : null}
           {recipeNotes && (
-            <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+            <p className="whitespace-pre-wrap pt-1">
               <span className="font-medium text-foreground">Notes: </span>
               {recipeNotes}
             </p>

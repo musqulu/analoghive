@@ -12,7 +12,6 @@ interface DevelopmentSummaryProps {
   selectedOptionKey: string
   onOptionChange: (value: string) => void
   temperatureUnit: string
-  pushPullLine: string
 }
 
 export function DevelopmentSummary({
@@ -24,44 +23,43 @@ export function DevelopmentSummary({
   selectedOptionKey,
   onOptionChange,
   temperatureUnit,
-  pushPullLine,
 }: DevelopmentSummaryProps) {
   if (!selectedFilm && !selectedDeveloper && !developmentInfo) return null
 
+  const showPicker =
+    Boolean(selectedDeveloper && developmentInfo && selectedIso)
+
   return (
     <div className="space-y-4 rounded-lg bg-card p-4 ds-card">
-      {selectedFilm && (
-        <div>
-          <p className="text-lg font-medium">Film: {selectedFilm}</p>
-          {selectedIso && (
-            <p className="text-sm text-muted-foreground">ISO: {selectedIso}</p>
-          )}
-          {isColor && (
-            <p className="text-sm bg-muted text-muted-foreground px-2 py-1 rounded-md inline-block mt-1">
-              Color Film
-            </p>
-          )}
+      <div className="space-y-1.5">
+        <h2 className="text-base font-semibold">Select dilution</h2>
+        <p className="text-sm text-muted-foreground leading-snug">
+          Dilution ratio and developing temperature both affect development
+          time—choose the row that matches how you mix and heat your chemistry.
+        </p>
+      </div>
+
+      {(selectedFilm || selectedDeveloper) && (
+        <div className="space-y-0.5 text-xs text-muted-foreground">
+          {selectedFilm ? <p>Film: {selectedFilm}</p> : null}
+          {selectedDeveloper ? <p>Developer: {selectedDeveloper}</p> : null}
+          {isColor ? (
+            <p className="text-[11px] pt-0.5">Color film</p>
+          ) : null}
         </div>
       )}
-      {selectedDeveloper && (
-        <div>
-          <p className="text-lg font-medium">Developer: {selectedDeveloper}</p>
-          {developmentInfo && selectedIso && (
-            <div className="mt-2 space-y-2">
-              <DilutionPicker
-                developmentInfo={developmentInfo}
-                selectedOptionKey={selectedOptionKey}
-                onOptionChange={onOptionChange}
-                selectedIso={selectedIso}
-                temperatureUnit={temperatureUnit}
-                isColor={isColor}
-                pushPullLine={pushPullLine}
-                selectedDeveloper={selectedDeveloper}
-              />
-            </div>
-          )}
-        </div>
-      )}
+
+      {showPicker ? (
+        <DilutionPicker
+          developmentInfo={developmentInfo}
+          selectedOptionKey={selectedOptionKey}
+          onOptionChange={onOptionChange}
+          selectedIso={selectedIso}
+          temperatureUnit={temperatureUnit}
+          isColor={isColor}
+          selectedDeveloper={selectedDeveloper}
+        />
+      ) : null}
     </div>
   )
 }

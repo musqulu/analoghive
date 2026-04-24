@@ -202,7 +202,5 @@ export function recipePayloadToTimerProps(payload: RecipePayloadV1) {
     totalVolume: payload.totalVolume,
     temperatureUnit: payload.temperatureUnit,
     isColor: payload.isColor,
-    pushPullLine: payload.pushPullLine?.trim() || undefined,
-    chartNote: payload.chartReferenceNote?.trim() || undefined,
   }
 }

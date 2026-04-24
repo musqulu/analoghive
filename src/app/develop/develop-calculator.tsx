@@ -97,7 +97,6 @@ export function DevelopCalculator() {
             selectedOptionKey={selection.selectedOptionKey}
             onOptionChange={selection.setSelectedOptionKey}
             temperatureUnit={correction.temperatureUnit}
-            pushPullLine={selection.pushPullLine}
           />
 
           {favoriteSnapshot ? (
@@ -133,11 +132,6 @@ export function DevelopCalculator() {
                   constantAgitation={correction.constantAgitation}
                   onConstantAgitationChange={correction.setConstantAgitation}
                   correctedTime={correction.correctedTime}
-                  selectedFilm={selection.selectedFilm}
-                  selectedFormat={selection.selectedFormat}
-                  selectedIso={selection.selectedIso}
-                  selectedDeveloper={selection.selectedDeveloper}
-                  selectedDilution={selection.selectedDilution}
                   pushPullLine={selection.pushPullLine}
                 />
 
@@ -159,8 +153,6 @@ export function DevelopCalculator() {
                       20
                     }
                     totalVolume={totalVolume}
-                    pushPullLine={selection.pushPullLine}
-                    chartNote={selection.selectedInfo?.approximateNote}
                   />
                 </div>
               </>
