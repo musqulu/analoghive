@@ -32,6 +32,11 @@ function agitationStepDuration(
   return fixSeconds
 }
 
+function durationSeconds(value: number | undefined): number {
+  if (typeof value !== "number" || !Number.isFinite(value)) return 0
+  return Math.max(0, Math.round(value))
+}
+
 interface DevelopmentModeProps {
   isOpen: boolean
   onClose: () => void
@@ -63,9 +68,14 @@ export function DevelopmentMode({
   fixSeconds = 300,
   washSeconds = 600,
 }: DevelopmentModeProps) {
-  const hasPreSoak = (preSoakSeconds ?? 0) > 0
+  const devDuration = durationSeconds(time)
+  const preSoakDuration = durationSeconds(preSoakSeconds)
+  const stopDuration = durationSeconds(stopSeconds)
+  const fixDuration = durationSeconds(fixSeconds)
+  const washDuration = durationSeconds(washSeconds)
+  const hasPreSoak = preSoakDuration > 0
 
-  const [seconds, setSeconds] = useState(() => (hasPreSoak ? preSoakSeconds! : time))
+  const [seconds, setSeconds] = useState(() => (hasPreSoak ? preSoakDuration : devDuration))
   const [isRunning, setIsRunning] = useState(false)
   const [currentStep, setCurrentStep] = useState<DarkroomStep>(() =>
     hasPreSoak ? "presoak" : "developer",
@@ -104,17 +114,18 @@ export function DevelopmentMode({
 
   useEffect(() => {
     if (!isOpen) return
-    const presoak = (preSoakSeconds ?? 0) > 0
+    const presoak = preSoakDuration > 0
     setCurrentStep(presoak ? "presoak" : "developer")
-    setSeconds(presoak ? preSoakSeconds! : time)
+    setSeconds(presoak ? preSoakDuration : devDuration)
     setIsRunning(false)
     setShouldShake(false)
-  }, [isOpen, time, preSoakSeconds, stopSeconds, fixSeconds, washSeconds])
+  }, [isOpen, devDuration, preSoakDuration, stopDuration, fixDuration, washDuration])
 
   // Format time as MM:SS
   const formatTime = (timeInSeconds: number) => {
-    const minutes = Math.floor(timeInSeconds / 60)
-    const sec = Math.floor(timeInSeconds % 60)
+    const safeSeconds = durationSeconds(timeInSeconds)
+    const minutes = Math.floor(safeSeconds / 60)
+    const sec = safeSeconds % 60
     return `${minutes.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`
   }
 
@@ -124,7 +135,7 @@ export function DevelopmentMode({
 
     if (isRunning && seconds > 0) {
       interval = setInterval(() => {
-        setSeconds((prev) => prev - 1)
+        setSeconds((prev) => Math.max(0, prev - 1))
       }, 1000)
     } else if (seconds === 0 && isRunning) {
       setIsRunning(false)
@@ -144,21 +155,21 @@ export function DevelopmentMode({
   // Set appropriate time for each step
   useEffect(() => {
     if (currentStep === "presoak") {
-      setSeconds(preSoakSeconds ?? 0)
+      setSeconds(preSoakDuration)
       setShouldShake(false)
     } else if (currentStep === "developer") {
-      setSeconds(time)
+      setSeconds(devDuration)
     } else if (currentStep === "stop") {
-      setSeconds(stopSeconds)
+      setSeconds(stopDuration)
       setShouldShake(false)
     } else if (currentStep === "fixer") {
-      setSeconds(fixSeconds)
+      setSeconds(fixDuration)
       setShouldShake(false)
     } else if (currentStep === "wash") {
-      setSeconds(washSeconds)
+      setSeconds(washDuration)
       setShouldShake(false)
     }
-  }, [currentStep, time, preSoakSeconds, stopSeconds, fixSeconds, washSeconds])
+  }, [currentStep, devDuration, preSoakDuration, stopDuration, fixDuration, washDuration])
 
   // Spiral tank / Paterson-style agitation (developer, stop, fixer)
   useEffect(() => {
@@ -167,17 +178,17 @@ export function DevelopmentMode({
       setShouldShake(false)
       return
     }
-    const stepTotal = agitationStepDuration(agStep, time, stopSeconds, fixSeconds)
+    const stepTotal = agitationStepDuration(agStep, devDuration, stopDuration, fixDuration)
     const elapsedSeconds = stepTotal - seconds
     setShouldShake(shouldShakeSpiralTank(agStep, elapsedSeconds, stepTotal))
-  }, [currentStep, isRunning, seconds, time, stopSeconds, fixSeconds])
+  }, [currentStep, isRunning, seconds, devDuration, stopDuration, fixDuration])
 
   // Reset development process
   const resetDevelopment = () => {
     setIsRunning(false)
     const first: DarkroomStep = hasPreSoak ? "presoak" : "developer"
     setCurrentStep(first)
-    setSeconds(first === "presoak" ? preSoakSeconds! : time)
+    setSeconds(first === "presoak" ? preSoakDuration : devDuration)
     setShouldShake(false)
   }
 
@@ -199,7 +210,7 @@ export function DevelopmentMode({
       {/* Header with info and close button */}
       <div className="w-full flex justify-between items-center bg-black border-b border-red-900/30">
         <div className="text-red-600 text-sm md:text-base p-2">
-          {dilution} @ {formatTime(time)}
+          {dilution} @ {formatTime(devDuration)}
         </div>
         <button
           onClick={handleClose}

@@ -68,6 +68,16 @@ describe("DevelopmentMode", () => {
     expect(screen.getByText("STOP STEP")).toBeInTheDocument()
   })
 
+  it("rounds fractional seconds so corrected times still advance", () => {
+    render(<DevelopmentMode {...defaultProps} time={3.4} />)
+    expect(screen.getByText("00:03")).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+
+    expect(screen.getByText("STOP STEP")).toBeInTheDocument()
+  })
+
   it("starts on pre-soak when preSoakSeconds is set", () => {
     render(<DevelopmentMode {...defaultProps} time={600} preSoakSeconds={90} />)
     expect(screen.getByText("PRESOAK STEP")).toBeInTheDocument()
