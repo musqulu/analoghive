@@ -28,7 +28,7 @@ export default async function LoginPage({
   return (
     <main className={mainUnderNav}>
       <Container className="max-w-full md:max-w-xl lg:max-w-xl">
-        <div className="rounded-lg bg-card px-8 pb-8 pt-0 shadow-ds-card">
+        <div className="rounded-lg bg-card px-8 py-8 shadow-ds-card">
           <div className="mb-8 flex flex-col gap-2">
             <h1 className={pageTitle}>Sign in</h1>
             <p className="text-base/7 text-muted-foreground">

@@ -2,14 +2,8 @@
 
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import { serverSiteUrl } from "@/lib/site-url"
 import { createClient } from "@/lib/supabase/server"
-
-function siteUrl() {
-  const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "")
-  if (fromEnv) return fromEnv
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`
-  return "http://localhost:3000"
-}
 
 function safeNext(next: string | null | undefined, fallback = "/workspace") {
   if (!next || typeof next !== "string") return fallback
@@ -55,7 +49,7 @@ export async function signup(formData: FormData) {
     email,
     password,
     options: {
-      emailRedirectTo: `${siteUrl()}/auth/callback`,
+      emailRedirectTo: `${serverSiteUrl()}/auth/callback`,
     },
   })
 
@@ -99,7 +93,7 @@ export async function resendSignupVerification(
     return { ok: false, message: "Missing email." }
   }
 
-  const callbackWithNext = `${siteUrl()}/auth/callback?next=${encodeURIComponent(next)}`
+  const callbackWithNext = `${serverSiteUrl()}/auth/callback?next=${encodeURIComponent(next)}`
 
   const supabase = await createClient()
   const { error } = await supabase.auth.resend({

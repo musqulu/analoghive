@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/landing/button"
 import { createClient } from "@/lib/supabase/client"
+import { oauthRedirectOrigin } from "@/lib/site-url"
 import { cn } from "@/lib/utils"
 
 function GoogleMark({ className }: { className?: string }) {
@@ -61,10 +62,11 @@ export function GoogleSignInButton({ next }: { next: string }) {
     setLoading(true)
     try {
       const supabase = createClient()
+      const origin = oauthRedirectOrigin() || window.location.origin
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(target)}`,
+          redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(target)}`,
         },
       })
       if (oauthError) {
