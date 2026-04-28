@@ -312,11 +312,12 @@ export function useDevelopmentSelection(
     const snap = hydrationSnapshotRef.current
     if (!snap || !favoriteRestorePendingRef.current) return
     if (!developmentInfo) return
-    if (!resolveFavoriteOptionKey(snap, developmentInfo)) {
+    const resolved = resolveFavoriteOptionKey(snap, developmentInfo)
+    if (!resolved) {
       favoriteRestorePendingRef.current = false
       return
     }
-    if (selectedOptionKey === snap.optionKey) {
+    if (selectedOptionKey === resolved) {
       favoriteRestorePendingRef.current = false
     }
   }, [selectedOptionKey, developmentInfo])
