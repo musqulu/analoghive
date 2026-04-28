@@ -6,6 +6,7 @@ import { Footer } from "@/components/landing/footer"
 import { SpinningText } from "@/components/magicui/spinning-text"
 import { Eyebrow } from "@/components/landing/eyebrow"
 import { ButtonLink, PlainButtonLink, SoftButtonLink } from "@/components/landing/button"
+import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 
 const features = [
@@ -51,7 +52,33 @@ const features = [
   },
 ]
 
-export default async function Home() {
+type SearchParams = Promise<Record<string, string | string[] | undefined>>
+
+function firstParam(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] : value
+}
+
+function authCallbackQuery(params: Record<string, string | string[] | undefined>) {
+  const query = new URLSearchParams()
+  for (const key of ["code", "next"]) {
+    const value = firstParam(params[key])
+    if (value) query.set(key, value)
+  }
+  return query.toString()
+}
+
+export default async function Home({ searchParams }: { searchParams: SearchParams }) {
+  const params = await searchParams
+  const code = firstParam(params.code)
+  if (code) {
+    redirect(`/auth/callback?${authCallbackQuery(params)}`)
+  }
+
+  const authError = firstParam(params.error_description) ?? firstParam(params.error)
+  if (authError) {
+    redirect(`/login?error=${encodeURIComponent(authError)}`)
+  }
+
   const supabase = await createClient()
   const {
     data: { user },
