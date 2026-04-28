@@ -19,6 +19,12 @@ export async function GET(request: Request) {
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`)
     }
+    console.error("Supabase auth callback failed", {
+      message: error.message,
+      status: error.status,
+      code: error.code,
+      next,
+    })
   }
 
   return NextResponse.redirect(
