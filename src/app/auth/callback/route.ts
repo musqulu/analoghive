@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { requestOrigin } from "@/lib/site-url"
 import { createClient } from "@/lib/supabase/server"
 
 function safeNext(next: string | null, fallback = "/workspace") {
@@ -7,7 +8,8 @@ function safeNext(next: string | null, fallback = "/workspace") {
 }
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
+  const origin = requestOrigin(request)
+  const { searchParams } = new URL(request.url)
   const code = searchParams.get("code")
   const next = safeNext(searchParams.get("next"))
 
