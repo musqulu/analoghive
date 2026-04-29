@@ -39,6 +39,17 @@ function safeNext(path: string, fallback = "/workspace") {
   return path
 }
 
+const AUTH_NEXT_COOKIE = "auth_next"
+
+function rememberNext(target: string) {
+  const isHttps =
+    typeof window !== "undefined" && window.location.protocol === "https:"
+  const secure = isHttps ? "; Secure" : ""
+  document.cookie = `${AUTH_NEXT_COOKIE}=${encodeURIComponent(
+    target,
+  )}; Path=/; Max-Age=600; SameSite=Lax${secure}`
+}
+
 export function AuthMethodDivider() {
   return (
     <div className="relative py-2" role="separator" aria-label="Or continue with email">
@@ -63,10 +74,11 @@ export function GoogleSignInButton({ next }: { next: string }) {
     try {
       const supabase = createClient()
       const origin = oauthRedirectOrigin() || window.location.origin
+      rememberNext(target)
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(target)}`,
+          redirectTo: `${origin}/auth/callback`,
         },
       })
       if (oauthError) {
