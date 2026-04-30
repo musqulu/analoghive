@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { Container } from "@/components/landing/container"
@@ -48,12 +47,7 @@ export default async function FavoritesPage() {
           ) : (
             <>
               <p className="mb-10 text-base/7 text-muted-foreground">
-                Saved chart setups from the calculator — quick links back to the reference data. For
-                customized times and notes, create a{" "}
-                <Link href="/recipes" className="font-medium text-foreground underline-offset-4 hover:underline">
-                  recipe
-                </Link>{" "}
-                instead.
+                Saved film and developer combinations from the calculator.
               </p>
 
               <FavoritesList initialRows={rows} />

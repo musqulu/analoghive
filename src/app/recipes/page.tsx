@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { redirect } from "next/navigation"
-import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { ButtonLink } from "@/components/landing/button"
 import { Container } from "@/components/landing/container"
@@ -45,27 +44,22 @@ export default async function RecipesPage() {
     <main className={mainUnderNav}>
       <Container>
         <div className="mx-auto max-w-2xl">
-          <h1 className={cn(pageTitle, isEmpty ? "mb-5" : "mb-3")}>Recipes</h1>
-
           {isEmpty ? (
-            <RecipesPageEmpty />
+            <>
+              <h1 className={cn(pageTitle, "mb-5")}>Recipes</h1>
+              <RecipesPageEmpty />
+            </>
           ) : (
             <>
-              <p className="mb-10 text-base/7 text-muted-foreground">
-                Your personal development recipes — times, wash steps, and notes you’ve customized.
-                For quick links back to chart combinations, use{" "}
-                <Link href="/favorites" className="font-medium text-foreground underline-offset-4 hover:underline">
-                  Favorites
-                </Link>
-                .
-              </p>
-
-              <div className="mb-8">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+                <h1 className={pageTitle}>Recipes</h1>
                 <ButtonLink href="/recipes/new" color="dark/light" size="md">
                   New recipe
                 </ButtonLink>
               </div>
-
+              <p className="mb-10 text-base/7 text-muted-foreground">
+                Fully customised development recipes.
+              </p>
               <RecipesList initialRows={rows} />
             </>
           )}

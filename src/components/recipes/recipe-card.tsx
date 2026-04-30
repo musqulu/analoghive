@@ -1,32 +1,244 @@
 "use client"
 
+import * as React from "react"
+import * as Dialog from "@radix-ui/react-dialog"
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 import Link from "next/link"
+import { MoreHorizontal, Pencil, Trash2 } from "lucide-react"
+import { FilmFormatIcon } from "@/components/film-format-icon"
+import { createClient } from "@/lib/supabase/client"
 import type { DevelopmentRecipeRow } from "@/types/recipe"
+import {
+  LISTING_CARD_DIVIDER,
+  LISTING_CARD_ICON_WRAP,
+  LISTING_CARD_OPEN_LINK,
+  LISTING_CARD_PILL,
+  LISTING_CARD_ROOT,
+} from "@/constants/listing-card-classes"
+import { normalizeDilutionDisplay } from "@/utils/normalize-dilution"
+import { formatTime } from "@/utils/format-time"
+import { Button } from "@/components/landing/button"
 
-export function RecipeCard({ row }: { row: DevelopmentRecipeRow }) {
+const RECIPE_TITLE_MAX = 120
+
+interface RecipeCardProps {
+  row: DevelopmentRecipeRow
+  onDeleted: (id: string) => void
+  onRestore: (row: DevelopmentRecipeRow) => void
+  onRenamed: (id: string, next: DevelopmentRecipeRow) => void
+}
+
+export function RecipeCard({ row, onDeleted, onRestore, onRenamed }: RecipeCardProps) {
+  const [busy, setBusy] = React.useState(false)
+  const [renameOpen, setRenameOpen] = React.useState(false)
+  const [renameValue, setRenameValue] = React.useState("")
+  const [renameError, setRenameError] = React.useState<string | null>(null)
+  const [renameBusy, setRenameBusy] = React.useState(false)
+
   const p = row.payload
-  const sub = [p.identity.filmName, p.identity.developerName].filter(Boolean).join(" · ")
+  const id = p.identity
+  const dilutionRaw = id.optionKey.split("|")[0] ?? ""
+  const dilutionDisplay =
+    (p.developerDilution && p.developerDilution.trim()) || normalizeDilutionDisplay(dilutionRaw)
+
+  const timeDisplay = formatTime(Number(p.developmentTimeMinutes) * 60)
+  const tempSuffix = p.temperatureUnit === "celsius" ? "°C" : "°F"
+  const updatedLabel = new Date(row.updated_at).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  })
+
+  const filmLabel = id.filmName.trim() || "—"
+
+  const pills: string[] = []
+  if (id.filmFormat) pills.push(id.filmFormat)
+  const isoTrim = id.filmIso.trim()
+  if (isoTrim) pills.push(`ISO ${isoTrim}`)
+  pills.push(`${p.modifiedTemperature}${tempSuffix}`, `${p.totalVolume} ml`)
+  if (dilutionDisplay.trim()) pills.push(dilutionDisplay)
+  pills.push(p.isColor ? "Color" : "BW")
+
+  React.useEffect(() => {
+    if (renameOpen) {
+      setRenameValue(row.title.trim())
+      setRenameError(null)
+    }
+  }, [renameOpen, row.title])
+
+  const remove = async () => {
+    setBusy(true)
+    onDeleted(row.id)
+    const supabase = createClient()
+    const { error } = await supabase.from("development_recipes").delete().eq("id", row.id)
+    setBusy(false)
+    if (error) {
+      onRestore(row)
+    }
+  }
+
+  const saveRename = async () => {
+    const trimmed = renameValue.trim()
+    if (!trimmed) {
+      setRenameError("Add a recipe title.")
+      return
+    }
+    if (trimmed.length > RECIPE_TITLE_MAX) {
+      setRenameError(`Use at most ${RECIPE_TITLE_MAX} characters.`)
+      return
+    }
+    if (trimmed === row.title.trim()) {
+      setRenameOpen(false)
+      return
+    }
+    setRenameError(null)
+    const nextUpdated = new Date().toISOString()
+    setRenameBusy(true)
+    const supabase = createClient()
+    const { error } = await supabase
+      .from("development_recipes")
+      .update({ title: trimmed, updated_at: nextUpdated })
+      .eq("id", row.id)
+    setRenameBusy(false)
+    if (error) {
+      setRenameError(error.message)
+      return
+    }
+    onRenamed(row.id, { ...row, title: trimmed, updated_at: nextUpdated })
+    setRenameOpen(false)
+  }
+
+  const menuTriggerClass =
+    "inline-flex h-10 shrink-0 items-center justify-center rounded-lg border border-border bg-background px-3 text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:opacity-50"
 
   return (
-    <div className="flex min-w-0 items-start justify-between rounded-lg bg-card p-4 ds-card">
-      <div className="min-w-0 flex-1 space-y-1">
-        <p className="truncate font-medium">{row.title}</p>
-        {sub ? <p className="text-sm text-muted-foreground">{sub}</p> : null}
-        <p className="text-xs text-muted-foreground">
-          Updated{" "}
-          {new Date(row.updated_at).toLocaleDateString(undefined, {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })}
-        </p>
+    <div className={LISTING_CARD_ROOT}>
+      <div className="flex items-start justify-between gap-3">
+        <div className={LISTING_CARD_ICON_WRAP} aria-hidden>
+          <FilmFormatIcon format={id.filmFormat} className="h-5 w-5" />
+        </div>
+        <DropdownMenu.Root modal={false}>
+          <DropdownMenu.Trigger
+            type="button"
+            disabled={busy}
+            className={menuTriggerClass}
+            aria-label="Recipe actions"
+          >
+            <MoreHorizontal className="h-5 w-5" aria-hidden />
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              className="z-50 min-w-[10rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-ds-card"
+              align="end"
+              sideOffset={6}
+            >
+              <DropdownMenu.Item
+                className="flex cursor-pointer items-center gap-2 rounded-sm px-2 py-2 text-sm outline-none data-[highlighted]:bg-muted data-[highlighted]:text-foreground"
+                onSelect={() => setRenameOpen(true)}
+              >
+                <Pencil className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
+                Rename
+              </DropdownMenu.Item>
+              <DropdownMenu.Item
+                className="flex cursor-pointer items-center gap-2 rounded-sm px-2 py-2 text-sm text-destructive outline-none data-[highlighted]:bg-muted data-[highlighted]:text-destructive"
+                disabled={busy}
+                onSelect={() => void remove()}
+              >
+                <Trash2 className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
+                Delete
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
       </div>
-      <Link
-        href={`/recipes/${row.id}`}
-        className="ml-4 shrink-0 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-      >
-        Open
-      </Link>
+
+      <div className="mt-5 flex min-w-0 flex-col gap-3">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+          <p className="font-semibold text-foreground">{filmLabel}</p>
+          <p className="text-sm tabular-nums text-muted-foreground">{timeDisplay}</p>
+        </div>
+        <p className="break-words text-xl font-semibold leading-snug tracking-tight text-foreground">
+          {row.title}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {pills.map((label, index) => (
+            <span key={`${row.id}-${index}`} className={LISTING_CARD_PILL}>
+              {label}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className={LISTING_CARD_DIVIDER} />
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
+        <div className="min-w-0 flex-1 space-y-1">
+          <p className="text-base font-semibold text-foreground">
+            {id.developerName.trim() || "—"}
+          </p>
+          <p className="text-sm leading-snug text-muted-foreground">
+            {filmLabel} ({id.filmFormat || "—"}) · {dilutionDisplay || "—"} · Updated {updatedLabel}
+          </p>
+        </div>
+        <Link href={`/recipes/${row.id}`} className={LISTING_CARD_OPEN_LINK}>
+          Open
+        </Link>
+      </div>
+
+      <Dialog.Root open={renameOpen} onOpenChange={setRenameOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-[50] bg-black/40 data-[state=closed]:pointer-events-none data-[state=open]:pointer-events-auto data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+          <Dialog.Content className="fixed left-1/2 top-1/2 z-[50] w-[min(100%,22rem)] -translate-x-1/2 -translate-y-1/2 rounded-lg border border-border bg-background p-6 shadow-ds-card outline-none data-[state=closed]:pointer-events-none data-[state=open]:pointer-events-auto data-[state=open]:animate-in data-[state=closed]:animate-out">
+            <Dialog.Title className="text-lg font-semibold tracking-tight text-foreground">
+              Rename recipe
+            </Dialog.Title>
+            <Dialog.Description className="mt-1 text-sm text-muted-foreground">
+              This is the title shown in your recipe list.
+            </Dialog.Description>
+            <div className="mt-4">
+              <label htmlFor={`recipe-rename-${row.id}`} className="sr-only">
+                Recipe title
+              </label>
+              <input
+                id={`recipe-rename-${row.id}`}
+                type="text"
+                value={renameValue}
+                onChange={(e) => setRenameValue(e.target.value)}
+                maxLength={RECIPE_TITLE_MAX}
+                className="ds-input w-full"
+                placeholder="Recipe title"
+                autoComplete="off"
+              />
+            </div>
+            {renameError ? (
+              <p className="mt-2 text-sm text-destructive" role="alert">
+                {renameError}
+              </p>
+            ) : null}
+            <div className="mt-6 flex justify-end gap-3">
+              <Dialog.Close asChild>
+                <Button type="button" color="light" size="md">
+                  Cancel
+                </Button>
+              </Dialog.Close>
+              <Button
+                type="button"
+                color="dark/light"
+                size="md"
+                disabled={
+                  renameBusy ||
+                  !renameValue.trim() ||
+                  renameValue.trim().length > RECIPE_TITLE_MAX ||
+                  renameValue.trim() === row.title.trim()
+                }
+                onClick={() => void saveRename()}
+              >
+                {renameBusy ? "Saving…" : "Save"}
+              </Button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   )
 }

@@ -2,8 +2,10 @@
 
 import * as React from "react"
 import * as Dialog from "@radix-ui/react-dialog"
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 import Link from "next/link"
-import { Pencil, Trash2 } from "lucide-react"
+import { MoreHorizontal, Pencil, Trash2 } from "lucide-react"
+import { FilmFormatIcon } from "@/components/film-format-icon"
 import { createClient } from "@/lib/supabase/client"
 import { buildDevelopFavoriteHref } from "@/lib/favorite-develop-query"
 import {
@@ -14,6 +16,13 @@ import {
 import { normalizeDilutionDisplay } from "@/utils/normalize-dilution"
 import { formatTime } from "@/utils/format-time"
 import { Button } from "@/components/landing/button"
+import {
+  LISTING_CARD_DIVIDER,
+  LISTING_CARD_ICON_WRAP,
+  LISTING_CARD_OPEN_LINK,
+  LISTING_CARD_PILL,
+  LISTING_CARD_ROOT,
+} from "@/constants/listing-card-classes"
 
 const DISPLAY_NAME_MAX = 120
 
@@ -39,6 +48,7 @@ export function FavoriteCard({ row, onDeleted, onRestore, onRenamed }: FavoriteC
   const href = buildDevelopFavoriteHref(snapshot)
 
   const title = favoriteListTitle(row)
+  const tempSuffix = row.temperature_unit === "celsius" ? "°C" : "°F"
 
   React.useEffect(() => {
     if (renameOpen) {
@@ -81,52 +91,94 @@ export function FavoriteCard({ row, onDeleted, onRestore, onRenamed }: FavoriteC
     setRenameOpen(false)
   }
 
+  const dilutionDisplay = normalizeDilutionDisplay(dilution)
+  const pills = [
+    row.film_format,
+    `ISO ${row.film_iso}`,
+    `${row.modified_temperature}${tempSuffix}`,
+    `${row.total_volume} ml`,
+    dilutionDisplay,
+  ]
+
   return (
-    <div className="flex min-w-0 items-start justify-between rounded-lg bg-card p-4 ds-card">
-      <div className="min-w-0 flex-1 space-y-1">
-        <p className="truncate font-medium">{title}</p>
-        <p className="text-sm text-foreground">
-          {row.film_name} ({row.film_format}) · ISO {row.film_iso}
-        </p>
-        <p className="text-sm text-muted-foreground">
-          {row.developer_name} ({normalizeDilutionDisplay(dilution)}) · {timeDisplay}
-        </p>
-        <p className="text-xs text-muted-foreground">
-          {row.total_volume}ml · {row.modified_temperature}
-          {row.temperature_unit === "celsius" ? "°C" : "°F"}
-        </p>
+    <div className={LISTING_CARD_ROOT}>
+      <div className="flex items-start justify-between gap-3">
+        <div className={LISTING_CARD_ICON_WRAP} aria-hidden>
+          <FilmFormatIcon format={row.film_format} className="h-5 w-5" />
+        </div>
+        <DropdownMenu.Root modal={false}>
+          <DropdownMenu.Trigger
+            type="button"
+            disabled={busy}
+            className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg border border-border bg-background px-3 text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:opacity-50"
+            aria-label="Favorite actions"
+          >
+            <MoreHorizontal className="h-5 w-5" aria-hidden />
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              className="z-50 min-w-[10rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-ds-card"
+              align="end"
+              sideOffset={6}
+            >
+              <DropdownMenu.Item
+                className="flex cursor-pointer items-center gap-2 rounded-sm px-2 py-2 text-sm outline-none data-[highlighted]:bg-muted data-[highlighted]:text-foreground"
+                onSelect={() => setRenameOpen(true)}
+              >
+                <Pencil className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
+                Rename
+              </DropdownMenu.Item>
+              <DropdownMenu.Item
+                className="flex cursor-pointer items-center gap-2 rounded-sm px-2 py-2 text-sm text-destructive outline-none data-[highlighted]:bg-muted data-[highlighted]:text-destructive"
+                disabled={busy}
+                onSelect={() => void remove()}
+              >
+                <Trash2 className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
+                Delete
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
       </div>
-      <div className="ml-4 flex shrink-0 items-center gap-1">
-        <Link
-          href={href}
-          className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-        >
+
+      <div className="mt-5 flex min-w-0 flex-col gap-3">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+          <p className="font-semibold text-foreground">{row.film_name}</p>
+          <p className="text-sm tabular-nums text-muted-foreground">{timeDisplay}</p>
+        </div>
+        <p className="break-words text-xl font-semibold leading-snug tracking-tight text-foreground">
+          {title}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {pills.map((label, index) => (
+            <span
+              key={`${row.id}-${index}`}
+              className={LISTING_CARD_PILL}
+            >
+              {label}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className={LISTING_CARD_DIVIDER} />
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
+        <div className="min-w-0 flex-1 space-y-1">
+          <p className="text-base font-semibold text-foreground">{row.developer_name}</p>
+          <p className="text-sm leading-snug text-muted-foreground">
+            {row.film_name} ({row.film_format}) · {dilutionDisplay}
+          </p>
+        </div>
+        <Link href={href} className={LISTING_CARD_OPEN_LINK}>
           Open
         </Link>
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() => setRenameOpen(true)}
-          className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
-          aria-label="Rename favorite"
-        >
-          <Pencil size={14} aria-hidden />
-        </button>
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() => void remove()}
-          className="rounded-md p-1.5 text-destructive transition-colors hover:bg-muted disabled:opacity-50"
-          aria-label="Remove favorite"
-        >
-          <Trash2 size={14} aria-hidden />
-        </button>
       </div>
 
       <Dialog.Root open={renameOpen} onOpenChange={setRenameOpen}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-[50] bg-black/40 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-          <Dialog.Content className="fixed left-1/2 top-1/2 z-[50] w-[min(100%,22rem)] -translate-x-1/2 -translate-y-1/2 rounded-lg border border-border bg-background p-6 shadow-ds-card outline-none data-[state=open]:animate-in data-[state=closed]:animate-out">
+          <Dialog.Overlay className="fixed inset-0 z-[50] bg-black/40 data-[state=closed]:pointer-events-none data-[state=open]:pointer-events-auto data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+          <Dialog.Content className="fixed left-1/2 top-1/2 z-[50] w-[min(100%,22rem)] -translate-x-1/2 -translate-y-1/2 rounded-lg border border-border bg-background p-6 shadow-ds-card outline-none data-[state=closed]:pointer-events-none data-[state=open]:pointer-events-auto data-[state=open]:animate-in data-[state=closed]:animate-out">
             <Dialog.Title className="text-lg font-semibold tracking-tight text-foreground">
               Rename favorite
             </Dialog.Title>
