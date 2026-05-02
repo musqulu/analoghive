@@ -27,6 +27,8 @@ interface TimerProps {
   initialWashingMethod?: WashingMethod
   /** Personal notes (saved recipes), shown separately from chart reference */
   recipeNotes?: string
+  /** Fires once each time the dev step countdown completes. */
+  onDevComplete?: () => void
 }
 
 export function Timer({
@@ -42,6 +44,7 @@ export function Timer({
   initialProcessTimes,
   initialWashingMethod,
   recipeNotes,
+  onDevComplete,
 }: TimerProps) {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false)
   const [isDevelopmentModeOpen, setIsDevelopmentModeOpen] = React.useState(false)
@@ -68,7 +71,13 @@ export function Timer({
     setCustomTimes((prev) => ({ ...prev, dev: developmentTime }))
   }, [developmentTime])
 
-  const timer = useTimer({ developmentTime, temperature, isColor, customTimes })
+  const timer = useTimer({
+    developmentTime,
+    temperature,
+    isColor,
+    customTimes,
+    onDevComplete,
+  })
 
   const stepOrder = React.useMemo((): Step[] => {
     const order: Step[] = []

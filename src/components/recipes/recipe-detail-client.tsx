@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client"
 import { Timer } from "@/components/ui/timer"
 import { Button } from "@/components/landing/button"
 import { recipePayloadToTimerProps, type RecipePayloadV1 } from "@/types/recipe"
+import { logDevelopmentRun } from "@/lib/log-development-run"
 
 export function RecipeDetailClient({
   recipeId,
@@ -25,6 +26,29 @@ export function RecipeDetailClient({
       .filter(Boolean)
       .join("\n\n")
       .trim() || undefined
+
+  // Auto-log a darkroom entry the first time the dev step finishes for this
+  // recipe in this page-load. The hook re-arms internally on each startTimer
+  // ("dev"), but we cap to one persisted entry per page-load so retries don't
+  // multiply rolls.
+  const loggedRef = React.useRef(false)
+  const handleDevComplete = React.useCallback(() => {
+    if (loggedRef.current) return
+    loggedRef.current = true
+    void logDevelopmentRun({
+      film_name: payload.identity.filmName,
+      film_format: payload.identity.filmFormat,
+      film_iso: payload.identity.filmIso,
+      developer_name: payload.identity.developerName,
+      option_key: payload.identity.optionKey,
+      total_volume: payload.totalVolume,
+      temperature_unit: payload.temperatureUnit,
+      modified_temperature: payload.modifiedTemperature,
+      push_pull_stops: payload.identity.pushPullStops,
+      recipe_id: recipeId,
+      favorite_id: null,
+    })
+  }, [recipeId, payload])
 
   const remove = async () => {
     setDeleting(true)
@@ -62,6 +86,7 @@ export function RecipeDetailClient({
         initialProcessTimes={payload.processTimes}
         initialWashingMethod={payload.washingMethod}
         recipeNotes={combinedNotes}
+        onDevComplete={handleDevComplete}
       />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">

@@ -43,7 +43,10 @@ export function RecipeCard({ row, onDeleted, onRestore, onRenamed }: RecipeCardP
 
   const timeDisplay = formatTime(Number(p.developmentTimeMinutes) * 60)
   const tempSuffix = p.temperatureUnit === "celsius" ? "°C" : "°F"
-  const updatedLabel = new Date(row.updated_at).toLocaleDateString(undefined, {
+  // Pinned to en-US so the server-rendered HTML matches what hydrates in the
+  // browser regardless of the user's system locale (avoids a React hydration
+  // mismatch when the dashboard / recipes list are SSR'd).
+  const updatedLabel = new Date(row.updated_at).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",

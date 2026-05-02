@@ -15,6 +15,7 @@ import {
 } from "@/components/develop/save-favorite-button"
 import { CreateRecipeFromButton } from "@/components/develop/create-recipe-button"
 import { parseDevelopFavoriteSearchParams } from "@/lib/favorite-develop-query"
+import { logDevelopmentRun } from "@/lib/log-development-run"
 import { cn } from "@/lib/utils"
 import { mainGutterX, mainUnderNav, pageTitle } from "@/lib/app-page-layout"
 
@@ -59,6 +60,35 @@ export function DevelopCalculator() {
               : selection.selectedInfo.time,
         })
       : null
+
+  // Mirror the latest snapshot into a ref so the auto-log callback (called from
+  // useTimer's effect) always logs the values the user actually developed at,
+  // not whatever was selected when the callback was first wired.
+  const snapshotRef = React.useRef(favoriteSnapshot)
+  React.useEffect(() => {
+    snapshotRef.current = favoriteSnapshot
+  }, [favoriteSnapshot])
+
+  const loggedRef = React.useRef(false)
+  const handleDevComplete = React.useCallback(() => {
+    if (loggedRef.current) return
+    const snap = snapshotRef.current
+    if (!snap) return
+    loggedRef.current = true
+    void logDevelopmentRun({
+      film_name: snap.filmName,
+      film_format: snap.filmFormat,
+      film_iso: snap.filmIso,
+      developer_name: snap.developerName,
+      option_key: snap.optionKey,
+      total_volume: snap.totalVolume,
+      temperature_unit: snap.temperatureUnit,
+      modified_temperature: snap.modifiedTemperature,
+      push_pull_stops: snap.pushPullStops,
+      recipe_id: null,
+      favorite_id: null,
+    })
+  }, [])
 
   return (
     <main className={cn("flex flex-col items-center", mainUnderNav, mainGutterX)}>
@@ -153,6 +183,7 @@ export function DevelopCalculator() {
                       20
                     }
                     totalVolume={totalVolume}
+                    onDevComplete={handleDevComplete}
                   />
                 </div>
               </>

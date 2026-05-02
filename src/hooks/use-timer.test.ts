@@ -222,4 +222,97 @@ describe("useTimer", () => {
     act(() => jest.advanceTimersByTime(2000))
     expect(result.current.shouldShake).toBe(false)
   })
+
+  describe("onDevComplete", () => {
+    it("fires once when dev countdown hits zero", () => {
+      const onDevComplete = jest.fn()
+      const times: ProcessTimes = { dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }
+      const { result } = renderHook(() =>
+        useTimer({
+          developmentTime: 0.05,
+          temperature: 20,
+          customTimes: times,
+          onDevComplete,
+        }),
+      )
+
+      act(() => result.current.startTimer("dev"))
+      expect(onDevComplete).not.toHaveBeenCalled()
+
+      act(() => jest.advanceTimersByTime(4000))
+      expect(onDevComplete).toHaveBeenCalledTimes(1)
+      expect(result.current.currentStep).toBe("stop")
+
+      act(() => jest.advanceTimersByTime(20000))
+      expect(onDevComplete).toHaveBeenCalledTimes(1)
+    })
+
+    it("re-arms when startTimer enters dev again after a previous run", () => {
+      const onDevComplete = jest.fn()
+      const times: ProcessTimes = { dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }
+      const { result } = renderHook(() =>
+        useTimer({
+          developmentTime: 0.05,
+          temperature: 20,
+          customTimes: times,
+          onDevComplete,
+        }),
+      )
+
+      act(() => result.current.startTimer("dev"))
+      act(() => jest.advanceTimersByTime(4000))
+      expect(onDevComplete).toHaveBeenCalledTimes(1)
+
+      act(() => result.current.startTimer("dev"))
+      act(() => jest.advanceTimersByTime(4000))
+      expect(onDevComplete).toHaveBeenCalledTimes(2)
+    })
+
+    it("does not fire when stop/fix/wash steps complete on their own", () => {
+      const onDevComplete = jest.fn()
+      const times: ProcessTimes = { dev: 1, stop: 0.05, fix: 0.05, wash: 0.05 }
+      const { result } = renderHook(() =>
+        useTimer({
+          developmentTime: 1,
+          temperature: 20,
+          customTimes: times,
+          onDevComplete,
+        }),
+      )
+
+      act(() => result.current.startTimer("stop"))
+      act(() => jest.advanceTimersByTime(4000))
+      expect(onDevComplete).not.toHaveBeenCalled()
+    })
+
+    it("fires once when auto-advancing from preSoak through dev to stop", () => {
+      const onDevComplete = jest.fn()
+      const times: ProcessTimes = {
+        preSoak: 0.05,
+        dev: 0.05,
+        stop: 0.05,
+        fix: 0.05,
+        wash: 0.05,
+      }
+      const { result } = renderHook(() =>
+        useTimer({
+          developmentTime: 0.05,
+          temperature: 20,
+          customTimes: times,
+          onDevComplete,
+        }),
+      )
+
+      act(() => result.current.startTimer("preSoak"))
+      expect(onDevComplete).not.toHaveBeenCalled()
+
+      act(() => jest.advanceTimersByTime(4000))
+      expect(result.current.currentStep).toBe("dev")
+      expect(onDevComplete).not.toHaveBeenCalled()
+
+      act(() => jest.advanceTimersByTime(4000))
+      expect(result.current.currentStep).toBe("stop")
+      expect(onDevComplete).toHaveBeenCalledTimes(1)
+    })
+  })
 })
