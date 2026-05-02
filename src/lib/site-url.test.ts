@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 import { requestOrigin, serverSiteUrl } from "@/lib/site-url"
 
 const originalEnv = process.env
