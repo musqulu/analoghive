@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
+import { ButtonLink } from "@/components/landing/button"
 import { Container } from "@/components/landing/container"
 import { cn } from "@/lib/utils"
 import { mainUnderNav, pageTitle } from "@/lib/app-page-layout"
@@ -40,12 +41,19 @@ export default async function FavoritesPage() {
     <main className={mainUnderNav}>
       <Container>
         <div className="mx-auto max-w-2xl">
-          <h1 className={cn(pageTitle, isEmpty ? "mb-5" : "mb-3")}>Favorites</h1>
-
           {isEmpty ? (
-            <FavoritesPageEmpty />
+            <>
+              <h1 className={cn(pageTitle, "mb-5")}>Favorites</h1>
+              <FavoritesPageEmpty />
+            </>
           ) : (
             <>
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+                <h1 className={pageTitle}>Favorites</h1>
+                <ButtonLink href="/develop" color="dark/light" size="md">
+                  Develop Film
+                </ButtonLink>
+              </div>
               <p className="mb-10 text-base/7 text-muted-foreground">
                 Saved film and developer combinations from the calculator.
               </p>

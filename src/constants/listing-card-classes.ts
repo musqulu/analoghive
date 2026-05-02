@@ -12,4 +12,4 @@ export const LISTING_CARD_PILL =
 export const LISTING_CARD_DIVIDER = "my-5 border-t border-border"
 
 export const LISTING_CARD_OPEN_LINK =
-  "inline-flex w-full shrink-0 items-center justify-center rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 sm:w-auto"
+  "inline-flex w-full shrink-0 items-center justify-center rounded-lg border border-border bg-background px-6 py-2.5 text-sm font-semibold text-foreground outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card sm:w-auto"

@@ -6,6 +6,8 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/lib/**/*.{js,ts,jsx,tsx,mdx}",
+    // Shared class strings (e.g. listing cards) — Tailwind only sees literals in scanned files.
+    "./src/constants/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
