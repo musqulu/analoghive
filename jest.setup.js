@@ -2,4 +2,6 @@
 require("@testing-library/jest-dom")
 
 // jsdom does not implement scrollTo (used by darkroom mode cleanup)
-window.scrollTo = jest.fn()
+if (typeof window !== "undefined") {
+  window.scrollTo = jest.fn()
+}
