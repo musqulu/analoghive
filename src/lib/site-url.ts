@@ -6,6 +6,25 @@ function hostnameIsLocalhost(hostname: string): boolean {
   return hostname === "localhost" || hostname === "127.0.0.1"
 }
 
+function firstForwardedValue(value: string | null): string {
+  return value?.split(",")[0]?.trim() ?? ""
+}
+
+function parseOrigin(value: string): URL | null {
+  try {
+    const url = new URL(value)
+    if (url.protocol !== "http:" && url.protocol !== "https:") return null
+    return url
+  } catch {
+    return null
+  }
+}
+
+function addTrustedHost(hosts: Set<string>, origin: string) {
+  const url = parseOrigin(origin)
+  if (url) hosts.add(url.host)
+}
+
 /**
  * Server-side canonical URL (email redirects, etc.).
  * On Vercel, localhost mistakenly copied into NEXT_PUBLIC_SITE_URL must not win over VERCEL_URL.
@@ -43,13 +62,21 @@ export function oauthRedirectOrigin(): string {
   return liveOrigin || fromEnv
 }
 
-/** Origin for redirects after OAuth callback (prefer forwarded headers behind proxies). */
+/** Origin for redirects after OAuth callback. */
 export function requestOrigin(request: Request): string {
-  const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim()
-  const forwardedProto =
-    request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim() || "https"
-  if (forwardedHost) {
-    return `${forwardedProto}://${forwardedHost}`
-  }
-  return new URL(request.url).origin
+  const requestUrl = new URL(request.url)
+  const forwardedHost = firstForwardedValue(request.headers.get("x-forwarded-host"))
+  if (!forwardedHost) return requestUrl.origin
+
+  const forwardedProto = firstForwardedValue(request.headers.get("x-forwarded-proto")) || "https"
+  if (forwardedProto !== "http" && forwardedProto !== "https") return requestUrl.origin
+
+  const forwardedUrl = parseOrigin(`${forwardedProto}://${forwardedHost}`)
+  if (!forwardedUrl) return requestUrl.origin
+
+  const trustedHosts = new Set<string>([requestUrl.host])
+  addTrustedHost(trustedHosts, serverSiteUrl())
+  if (process.env.VERCEL_URL) addTrustedHost(trustedHosts, `https://${process.env.VERCEL_URL}`)
+
+  return trustedHosts.has(forwardedUrl.host) ? forwardedUrl.origin : requestUrl.origin
 }
