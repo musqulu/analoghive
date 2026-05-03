@@ -207,6 +207,7 @@ export function Timer({
         stopSeconds={Math.round(customTimes.stop * 60)}
         fixSeconds={Math.round(customTimes.fix * 60)}
         washSeconds={Math.round(customTimes.wash * 60)}
+        onDevComplete={onDevComplete}
       />
     </div>
   )

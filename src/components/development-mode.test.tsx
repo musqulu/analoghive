@@ -78,6 +78,16 @@ describe("DevelopmentMode", () => {
     expect(screen.getByText("STOP STEP")).toBeInTheDocument()
   })
 
+  it("does not call onDevComplete when manually skipping the developer step", () => {
+    const onDevComplete = jest.fn()
+    render(<DevelopmentMode {...defaultProps} onDevComplete={onDevComplete} />)
+
+    fireEvent.click(screen.getByText("Next Step"))
+
+    expect(onDevComplete).not.toHaveBeenCalled()
+    expect(screen.getByText("STOP STEP")).toBeInTheDocument()
+  })
+
   it("starts on pre-soak when preSoakSeconds is set", () => {
     render(<DevelopmentMode {...defaultProps} time={600} preSoakSeconds={90} />)
     expect(screen.getByText("PRESOAK STEP")).toBeInTheDocument()
@@ -143,5 +153,49 @@ describe("DevelopmentMode", () => {
     )
     fireEvent.click(screen.getByText("Next Step"))
     expect(screen.getByText("00:45")).toBeInTheDocument()
+  })
+
+  it("calls onDevComplete once when the developer countdown finishes", () => {
+    const onDevComplete = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        onDevComplete={onDevComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+    expect(screen.getByText("STOP STEP")).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 31; i++) act(() => jest.advanceTimersByTime(1000))
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+  })
+
+  it("calls onDevComplete after pre-soak auto-advances through developer", () => {
+    const onDevComplete = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        preSoakSeconds={2}
+        onDevComplete={onDevComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 3; i++) act(() => jest.advanceTimersByTime(1000))
+    expect(screen.getByText("DEVELOPER STEP")).toBeInTheDocument()
+    expect(onDevComplete).not.toHaveBeenCalled()
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+    expect(screen.getByText("STOP STEP")).toBeInTheDocument()
   })
 })
