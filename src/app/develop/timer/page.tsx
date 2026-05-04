@@ -38,19 +38,22 @@ function TimerContent() {
     const temperatureUnit =
       tempUnitParam === "fahrenheit" ? "fahrenheit" : tempUnitParam === "celsius" ? "celsius" : null
     const pushPullStops = pushPullParam !== null ? Number(pushPullParam) : null
-    void logDevelopmentRun({
-      film_name: filmName,
-      film_format: filmFormat,
-      film_iso: filmIso,
-      developer_name: developerName,
-      option_key: optionKey,
-      total_volume: Number.isFinite(totalVolume) ? totalVolume : null,
-      temperature_unit: temperatureUnit,
-      modified_temperature: Number.isFinite(temperature) ? temperature : null,
-      push_pull_stops: Number.isFinite(pushPullStops as number) ? pushPullStops : null,
-      recipe_id: recipeId,
-      favorite_id: favoriteId,
-    })
+    void (async () => {
+      const logged = await logDevelopmentRun({
+        film_name: filmName,
+        film_format: filmFormat,
+        film_iso: filmIso,
+        developer_name: developerName,
+        option_key: optionKey,
+        total_volume: Number.isFinite(totalVolume) ? totalVolume : null,
+        temperature_unit: temperatureUnit,
+        modified_temperature: Number.isFinite(temperature) ? temperature : null,
+        push_pull_stops: Number.isFinite(pushPullStops as number) ? pushPullStops : null,
+        recipe_id: recipeId,
+        favorite_id: favoriteId,
+      })
+      if (!logged) loggedRef.current = false
+    })()
   }, [
     filmName,
     filmFormat,
