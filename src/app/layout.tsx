@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
+import { AiChatFab } from "@/components/ai-chat/ai-chat-fab"
 import { AuthSessionProvider } from "@/components/auth-session-provider"
 import { EmailVerificationBanner } from "@/components/email-verification-banner"
 import { Nav } from "@/components/nav"
@@ -45,6 +46,7 @@ export default async function RootLayout({
             <EmailVerificationBanner email={unverifiedEmail} graceDays={graceDays} />
           ) : null}
           {children}
+          <AiChatFab />
         </AuthSessionProvider>
       </body>
     </html>
