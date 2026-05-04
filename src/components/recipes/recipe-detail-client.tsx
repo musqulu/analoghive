@@ -47,6 +47,8 @@ export function RecipeDetailClient({
       push_pull_stops: payload.identity.pushPullStops,
       recipe_id: recipeId,
       favorite_id: null,
+    }).then((logged) => {
+      if (!logged) loggedRef.current = false
     })
   }, [recipeId, payload])
 

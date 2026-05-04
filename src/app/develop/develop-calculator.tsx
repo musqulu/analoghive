@@ -70,11 +70,12 @@ export function DevelopCalculator() {
   }, [favoriteSnapshot])
 
   const loggedRef = React.useRef(false)
+  const loggingRef = React.useRef(false)
   const handleDevComplete = React.useCallback(() => {
-    if (loggedRef.current) return
+    if (loggedRef.current || loggingRef.current) return
     const snap = snapshotRef.current
     if (!snap) return
-    loggedRef.current = true
+    loggingRef.current = true
     void logDevelopmentRun({
       film_name: snap.filmName,
       film_format: snap.filmFormat,
@@ -87,6 +88,9 @@ export function DevelopCalculator() {
       push_pull_stops: snap.pushPullStops,
       recipe_id: null,
       favorite_id: null,
+    }).then((logged) => {
+      loggingRef.current = false
+      loggedRef.current = logged
     })
   }, [])
 
