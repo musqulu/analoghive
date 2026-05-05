@@ -34,6 +34,15 @@ function postRequest(body: unknown) {
   })
 }
 
+function rawPostRequest(body: BodyInit, headers?: HeadersInit) {
+  return new Request("http://localhost/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...headers },
+    body,
+    duplex: "half",
+  } as RequestInit)
+}
+
 async function readBodyToString(res: Response): Promise<string> {
   if (!res.body) return ""
   const reader = res.body.getReader()
@@ -107,6 +116,39 @@ describe("POST /api/chat", () => {
     const { POST } = await import("@/app/api/chat/route")
     const res = await POST(postRequest({ content: " \n\t " }))
     expect(res.status).toBe(400)
+  })
+
+  it("returns 413 before reading an oversized content-length body", async () => {
+    const { POST } = await import("@/app/api/chat/route")
+    const res = await POST(
+      rawPostRequest("{}", { "Content-Length": `${17 * 1024}` }),
+    )
+    expect(res.status).toBe(413)
+    expect(mockCreateNdjson).not.toHaveBeenCalled()
+  })
+
+  it("returns 413 when a streamed body exceeds the byte limit", async () => {
+    const encoder = new TextEncoder()
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(encoder.encode('{"content":"'))
+        controller.enqueue(encoder.encode("x".repeat(17 * 1024)))
+        controller.enqueue(encoder.encode('"}'))
+        controller.close()
+      },
+    })
+
+    const { POST } = await import("@/app/api/chat/route")
+    const res = await POST(rawPostRequest(body))
+    expect(res.status).toBe(413)
+    expect(mockCreateNdjson).not.toHaveBeenCalled()
+  })
+
+  it("returns 413 when the chat content exceeds the prompt limit", async () => {
+    const { POST } = await import("@/app/api/chat/route")
+    const res = await POST(postRequest({ content: "x".repeat(4001) }))
+    expect(res.status).toBe(413)
+    expect(mockCreateNdjson).not.toHaveBeenCalled()
   })
 
   it("returns 404 when conversationId is unknown", async () => {

@@ -11,6 +11,53 @@ type ChatPostBody = {
   content: string
 }
 
+const MAX_CHAT_BODY_BYTES = 16 * 1024
+const MAX_CHAT_CONTENT_CHARS = 4000
+
+type JsonBodyResult =
+  | { ok: true; body: unknown }
+  | { ok: false; status: number; error: string }
+
+async function readLimitedJsonBody(request: Request): Promise<JsonBodyResult> {
+  const contentLength = request.headers.get("content-length")
+  if (contentLength) {
+    const bytes = Number(contentLength)
+    if (Number.isFinite(bytes) && bytes > MAX_CHAT_BODY_BYTES) {
+      return { ok: false, status: 413, error: "Chat message is too large." }
+    }
+  }
+
+  if (!request.body) return { ok: false, status: 400, error: "Invalid JSON body." }
+
+  const reader = request.body.getReader()
+  const chunks: Uint8Array[] = []
+  let received = 0
+
+  for (;;) {
+    const { done, value } = await reader.read()
+    if (done) break
+    received += value.byteLength
+    if (received > MAX_CHAT_BODY_BYTES) {
+      await reader.cancel()
+      return { ok: false, status: 413, error: "Chat message is too large." }
+    }
+    chunks.push(value)
+  }
+
+  try {
+    const payload = new Uint8Array(received)
+    let offset = 0
+    for (const chunk of chunks) {
+      payload.set(chunk, offset)
+      offset += chunk.byteLength
+    }
+    const raw = new TextDecoder().decode(payload)
+    return { ok: true, body: JSON.parse(raw) as unknown }
+  } catch {
+    return { ok: false, status: 400, error: "Invalid JSON body." }
+  }
+}
+
 function parseBody(body: unknown): ChatPostBody | null {
   if (!body || typeof body !== "object") return null
   const b = body as Record<string, unknown>
@@ -52,19 +99,27 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Sign in to chat with the assistant." }, { status: 401 })
   }
 
-  let body: unknown
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 })
+  const bodyResult = await readLimitedJsonBody(request)
+  if (!bodyResult.ok) {
+    return NextResponse.json(
+      { error: bodyResult.error },
+      { status: bodyResult.status },
+    )
   }
-  const parsed = parseBody(body)
+
+  const parsed = parseBody(bodyResult.body)
   if (!parsed || !parsed.content.trim()) {
     return NextResponse.json(
       {
         error: "Body requires `content` string and optionally `conversationId` (UUID string).",
       },
       { status: 400 },
+    )
+  }
+  if (parsed.content.length > MAX_CHAT_CONTENT_CHARS) {
+    return NextResponse.json(
+      { error: "Chat message must be 4000 characters or fewer." },
+      { status: 413 },
     )
   }
 
