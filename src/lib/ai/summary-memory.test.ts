@@ -4,6 +4,7 @@ import {
   buildCompressedChatPrompt,
   foldMessagesToAnthropicPrompt,
   rollupSummaryUserPrompt,
+  titleGenerationPrompt,
   truncatePreview,
 } from "@/lib/ai/summary-memory"
 
@@ -54,6 +55,17 @@ describe("summary-memory", () => {
     expect(t).toContain("Previous summary:")
     expect(t).toContain("Old.")
     expect(t).toContain("new")
+  })
+
+  it("titleGenerationPrompt includes user and assistant snippets", () => {
+    const p = titleGenerationPrompt({
+      userMessage: "Best ISO for HP5?",
+      assistantMessage: "Try EI 800 in Rodinal.",
+    })
+    expect(p).toContain("User:")
+    expect(p).toContain("Best ISO for HP5?")
+    expect(p).toContain("Assistant:")
+    expect(p).toContain("Try EI 800 in Rodinal.")
   })
 
   it("exports window constants used by route", () => {

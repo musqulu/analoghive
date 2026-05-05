@@ -15,6 +15,8 @@ function stubChat(patch: Partial<UseAiChatResult>): UseAiChatResult {
     messages: [],
     steps: [],
     streaming: false,
+    listLoading: false,
+    messagesLoading: false,
     error: null,
     goToList: jest.fn(),
     openThread: jest.fn(),
@@ -51,6 +53,30 @@ describe("<AiChatPanel />", () => {
     expect(screen.queryByRole("button", { name: /^new chat$/i })).not.toBeInTheDocument()
     expect(screen.getByRole("button", { name: /delete conversation/i })).toBeInTheDocument()
     expect(screen.queryByRole("button", { name: /^clear$/i })).not.toBeInTheDocument()
+  })
+
+  it("shows loading chats status while listLoading", () => {
+    mockUseAiChat.mockReturnValue(stubChat({ listLoading: true }))
+
+    render(<AiChatPanel />)
+    expect(screen.getByRole("status")).toBeInTheDocument()
+    expect(screen.getByText("Loading chats…")).toBeInTheDocument()
+    expect(screen.queryByText(/no chats yet/i)).not.toBeInTheDocument()
+  })
+
+  it("shows loading messages status while messagesLoading in thread", () => {
+    mockUseAiChat.mockReturnValue(
+      stubChat({
+        view: "thread",
+        activeConversationId: "c1",
+        activeTitle: "Rodinal basics",
+        messagesLoading: true,
+      }),
+    )
+
+    render(<AiChatPanel />)
+    expect(screen.getByRole("status")).toBeInTheDocument()
+    expect(screen.getByText("Loading messages…")).toBeInTheDocument()
   })
 
   it("shows back navigation in thread mode", () => {

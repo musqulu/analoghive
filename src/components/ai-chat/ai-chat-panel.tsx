@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, MessageCircleQuestion, Send, Trash2 } from "lucide-react"
+import { ArrowLeft, Loader2, MessageCircleQuestion, Send, Trash2 } from "lucide-react"
 import {
   type FormEvent,
   type KeyboardEvent,
@@ -62,7 +62,16 @@ function AiChatList({ chat }: { chat: ReturnType<typeof useAiChat> }) {
         </div>
       </header>
       <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
-        {chat.conversations.length === 0 ? (
+        {chat.listLoading ? (
+          <div
+            role="status"
+            aria-live="polite"
+            className="flex flex-col items-center justify-center px-6 py-16 text-center"
+          >
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" aria-hidden />
+            <p className="mt-4 text-sm text-muted-foreground">Loading chats…</p>
+          </div>
+        ) : chat.conversations.length === 0 ? (
           <EmptyInboxOnNewPrompt onNew={() => void chat.newConversation()} />
         ) : (
           <>
@@ -148,6 +157,8 @@ function AiChatThread({ chat }: { chat: ReturnType<typeof useAiChat> }) {
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
+  const composerLocked = chat.streaming || chat.messagesLoading
+
   const orderedSteps = useMemo(() => {
     const order = ["recipes", "chart", "compose"]
     const primary = order
@@ -166,7 +177,7 @@ function AiChatThread({ chat }: { chat: ReturnType<typeof useAiChat> }) {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const content = draft.trim()
-    if (!content || chat.streaming) return
+    if (!content || composerLocked) return
     setDraft("")
     await chat.send(content)
     textareaRef.current?.focus()
@@ -180,7 +191,7 @@ function AiChatThread({ chat }: { chat: ReturnType<typeof useAiChat> }) {
   }
 
   const handleStarter = async (prompt: string) => {
-    if (chat.streaming) return
+    if (composerLocked) return
     await chat.send(prompt)
   }
 
@@ -207,39 +218,52 @@ function AiChatThread({ chat }: { chat: ReturnType<typeof useAiChat> }) {
         ref={scrollRef}
         className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-4 sm:px-5"
       >
-        {orderedSteps.length > 0 ? (
-          <div className="mb-4">
-            <ChainOfThought open={chat.streaming}>
-              <ChainOfThoughtHeader>Working</ChainOfThoughtHeader>
-              <ChainOfThoughtContent className="space-y-1 pb-3">
-                {orderedSteps.map((s) => (
-                  <ChainOfThoughtStep
-                    key={s.id}
-                    label={s.label}
-                    description={s.description}
-                    status={s.status}
-                  />
-                ))}
-              </ChainOfThoughtContent>
-            </ChainOfThought>
+        {chat.messagesLoading ? (
+          <div
+            role="status"
+            aria-live="polite"
+            className="flex flex-col items-center justify-center py-16 text-center"
+          >
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" aria-hidden />
+            <p className="mt-4 text-sm text-muted-foreground">Loading messages…</p>
           </div>
-        ) : null}
-
-        {isEmpty ? (
-          <EmptyThread onPick={handleStarter} disabled={chat.streaming} />
         ) : (
-          <ul className="flex flex-col gap-3">
-            {chat.messages.map((m) => (
-              <MessageBubble key={m.id} message={m} streaming={chat.streaming} />
-            ))}
-            {chat.streaming &&
-            chat.messages[chat.messages.length - 1]?.role === "assistant" &&
-            chat.messages[chat.messages.length - 1]?.content === "" ? (
-              <li className="self-start">
-                <TypingDots />
-              </li>
+          <>
+            {orderedSteps.length > 0 ? (
+              <div className="mb-4">
+                <ChainOfThought open={chat.streaming}>
+                  <ChainOfThoughtHeader>Working</ChainOfThoughtHeader>
+                  <ChainOfThoughtContent className="space-y-1 pb-3">
+                    {orderedSteps.map((s) => (
+                      <ChainOfThoughtStep
+                        key={s.id}
+                        label={s.label}
+                        description={s.description}
+                        status={s.status}
+                      />
+                    ))}
+                  </ChainOfThoughtContent>
+                </ChainOfThought>
+              </div>
             ) : null}
-          </ul>
+
+            {isEmpty ? (
+              <EmptyThread onPick={handleStarter} disabled={composerLocked} />
+            ) : (
+              <ul className="flex flex-col gap-3">
+                {chat.messages.map((m) => (
+                  <MessageBubble key={m.id} message={m} streaming={chat.streaming} />
+                ))}
+                {chat.streaming &&
+                chat.messages[chat.messages.length - 1]?.role === "assistant" &&
+                chat.messages[chat.messages.length - 1]?.content === "" ? (
+                  <li className="self-start">
+                    <TypingDots />
+                  </li>
+                ) : null}
+              </ul>
+            )}
+          </>
         )}
         {chat.error ? (
           <p
@@ -263,13 +287,13 @@ function AiChatThread({ chat }: { chat: ReturnType<typeof useAiChat> }) {
             onKeyDown={handleKeyDown}
             rows={1}
             placeholder="Ask about a film, developer, or technique…"
-            disabled={chat.streaming}
+            disabled={composerLocked}
             className="min-h-[24px] max-h-32 flex-1 resize-none bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground disabled:opacity-60"
             aria-label="Message"
           />
           <button
             type="submit"
-            disabled={chat.streaming || draft.trim().length === 0}
+            disabled={composerLocked || draft.trim().length === 0}
             className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-40"
             aria-label="Send message"
           >

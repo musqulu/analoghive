@@ -76,8 +76,41 @@ describe("useAiChat", () => {
     await waitFor(() =>
       expect(fetchMock.mock.calls[0]?.[0]).toBe(CONVERSATIONS_ENDPOINT),
     )
+    await waitFor(() => expect(result.current.listLoading).toBe(false))
     return result
   }
+
+  it("starts with listLoading until the first inbox fetch completes", async () => {
+    fetchMock.mockResolvedValueOnce(jsonFakeResponse({ conversations: [] }))
+    const { result } = renderHook(() => useAiChat())
+    expect(result.current.listLoading).toBe(true)
+    await waitFor(() => expect(result.current.listLoading).toBe(false))
+  })
+
+  it("sets messagesLoading until openThread finishes fetching messages", async () => {
+    const resultRef = await settleInitialHydrate([])
+    fetchMock.mockResolvedValueOnce(jsonFakeResponse({ conversations: [convRow("c99")] }))
+    let release!: (value: FakeResponse) => void
+    const barrier = new Promise<FakeResponse>((res) => {
+      release = res
+    })
+    fetchMock.mockImplementationOnce(() => barrier)
+
+    let done!: Promise<void>
+    await act(() => {
+      done = resultRef.current.openThread("c99")
+    })
+
+    await waitFor(() => expect(resultRef.current.messagesLoading).toBe(true))
+
+    await act(async () => {
+      release(jsonFakeResponse({ messages: [{ id: "m1", role: "user", content: "hi" }] }))
+      await done
+    })
+
+    expect(resultRef.current.messagesLoading).toBe(false)
+    expect(resultRef.current.messages).toHaveLength(1)
+  })
 
   it("refreshes the inbox on mount without opening a stale thread", async () => {
     await settleInitialHydrate([])

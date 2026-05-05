@@ -117,6 +117,8 @@ export interface UseAiChatResult {
   messages: ChatMessage[]
   steps: CotStepUi[]
   streaming: boolean
+  listLoading: boolean
+  messagesLoading: boolean
   error: string | null
   goToList: () => void
   openThread: (conversationId: string) => Promise<void>
@@ -134,6 +136,8 @@ export function useAiChat(): UseAiChatResult {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [steps, setSteps] = useState<CotStepUi[]>([])
   const [streaming, setStreaming] = useState(false)
+  const [listLoading, setListLoading] = useState(true)
+  const [messagesLoading, setMessagesLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [hydrated, setHydrated] = useState(false)
 
@@ -162,46 +166,55 @@ export function useAiChat(): UseAiChatResult {
   }, [])
 
   const openThread = useCallback(async (conversationId: string) => {
-    setError(null)
-    setActiveConversationId(conversationId)
-    persistActiveConversation(conversationId)
-    setView("thread")
+    setMessagesLoading(true)
+    try {
+      setError(null)
+      setActiveConversationId(conversationId)
+      persistActiveConversation(conversationId)
+      setView("thread")
 
-    const listRes = await fetchJson<{ conversations: ConversationListItem[] }>(
-      CONVERSATIONS_ENDPOINT,
-    )
-    const rowMeta = listRes.json?.conversations?.find((c) => c.id === conversationId)
-    if (rowMeta) setActiveTitle(rowMeta.title)
+      const listRes = await fetchJson<{ conversations: ConversationListItem[] }>(
+        CONVERSATIONS_ENDPOINT,
+      )
+      const rowMeta = listRes.json?.conversations?.find((c) => c.id === conversationId)
+      if (rowMeta) setActiveTitle(rowMeta.title)
 
-    const msgRes = await fetch(`${CHAT_MESSAGES_PREFIX}/${conversationId}/messages`)
-    if (!msgRes.ok) {
-      if (msgRes.status === 404) persistActiveConversation(null)
-      setMessages([])
-      setError("Could not load messages.")
-      return
+      const msgRes = await fetch(`${CHAT_MESSAGES_PREFIX}/${conversationId}/messages`)
+      if (!msgRes.ok) {
+        if (msgRes.status === 404) persistActiveConversation(null)
+        setMessages([])
+        setError("Could not load messages.")
+        return
+      }
+      const json = (await msgRes.json()) as {
+        messages?: Array<{ id: string; role: "user" | "assistant"; content: string }>
+      }
+      if (!json?.messages) {
+        setMessages([])
+        setError("Could not load messages.")
+        return
+      }
+      setMessages(
+        json.messages.map((m) => ({
+          id: m.id,
+          role: m.role,
+          content: m.content,
+        })),
+      )
+    } finally {
+      setMessagesLoading(false)
     }
-    const json = (await msgRes.json()) as {
-      messages?: Array<{ id: string; role: "user" | "assistant"; content: string }>
-    }
-    if (!json?.messages) {
-      setMessages([])
-      setError("Could not load messages.")
-      return
-    }
-    setMessages(
-      json.messages.map((m) => ({
-        id: m.id,
-        role: m.role,
-        content: m.content,
-      })),
-    )
   }, [])
 
   useEffect(() => {
     if (hydrated) return
     setHydrated(true)
     void (async () => {
-      await refreshList()
+      try {
+        await refreshList()
+      } finally {
+        setListLoading(false)
+      }
       const storedId = readStoredActiveConversation()
       if (storedId) await openThread(storedId)
     })()
@@ -260,7 +273,7 @@ export function useAiChat(): UseAiChatResult {
   const send = useCallback(
     async (content: string) => {
       const trimmed = content.trim()
-      if (!trimmed || streaming) return
+      if (!trimmed || streaming || messagesLoading) return
 
       let cid = activeConversationId
       if (!cid) {
@@ -370,7 +383,7 @@ export function useAiChat(): UseAiChatResult {
         abortRef.current = null
       }
     },
-    [activeConversationId, mergeStep, streaming, refreshList],
+    [activeConversationId, mergeStep, streaming, messagesLoading, refreshList],
   )
 
   useEffect(() => {
@@ -387,6 +400,8 @@ export function useAiChat(): UseAiChatResult {
     messages,
     steps,
     streaming,
+    listLoading,
+    messagesLoading,
     error,
     goToList,
     openThread,

@@ -72,22 +72,26 @@ describe("createNdjsonChatStream", () => {
       updated_at: "2026-05-04T00:00:00.000Z",
     })
     jest.mocked(conversationStore.appendMessage).mockResolvedValue({ id: "m1" })
-    let countCalls = 0
-    jest.mocked(conversationStore.countMessages).mockImplementation(async () => {
-      countCalls += 1
-      return countCalls === 1 ? 1 : 2
-    })
+    jest.mocked(conversationStore.countMessages).mockResolvedValue(2)
     jest.mocked(conversationStore.getRecentMessagesForPrompt).mockResolvedValue([
       { role: "user", content: "Tell me about HC-110 dilution B." },
     ])
     jest.mocked(conversationStore.updateConversationMeta).mockResolvedValue()
 
-    async function* gen() {
-      yield { event: "output" as const, data: "Hel" }
-      yield { event: "output" as const, data: "lo" }
-      yield { event: "done" as const }
-    }
-    mockStream.mockReturnValue(gen())
+    mockStream.mockImplementation((_model: typeof MODEL, opts: { input: { prompt: string } }) => {
+      async function* chatGen() {
+        yield { event: "output" as const, data: "Hel" }
+        yield { event: "output" as const, data: "lo" }
+        yield { event: "done" as const }
+      }
+      async function* titleGen() {
+        yield { event: "output" as const, data: "HC-110 dilution basics" }
+        yield { event: "done" as const }
+      }
+      const prompt = opts?.input?.prompt ?? ""
+      if (prompt.includes("Reply with only the title")) return titleGen()
+      return chatGen()
+    })
 
     ;(Replicate as unknown as jest.Mock).mockImplementation(() => ({
       stream: mockStream,
@@ -119,8 +123,29 @@ describe("createNdjsonChatStream", () => {
     const doneLine = lines.find((l) => l.type === "done")
     expect(doneLine?.type === "done" && doneLine.conversationId.length > 0).toBe(true)
 
-    expect(mockStream).toHaveBeenCalledTimes(1)
-    const [model, opts] = mockStream.mock.calls[0] as [
+    expect(mockStream).toHaveBeenCalledTimes(2)
+    const titleStreamCall = mockStream.mock.calls.find(
+      ([, o]) =>
+        typeof o.input.prompt === "string" && o.input.prompt.includes("Reply with only the title"),
+    )
+    expect(titleStreamCall).toBeDefined()
+    const [, titleOpts] = titleStreamCall as [typeof MODEL, { input: { prompt: string } }]
+    expect(titleOpts.input.prompt).toContain("User:")
+    expect(titleOpts.input.prompt).toContain("Tell me about HC-110 dilution B.")
+    expect(titleOpts.input.prompt).toContain("Assistant:")
+    expect(titleOpts.input.prompt).toContain("Hello")
+
+    const metaCalls = jest.mocked(conversationStore.updateConversationMeta).mock.calls
+    expect(metaCalls.some(([, , , patch]) => patch && "title" in patch && patch.title === "HC-110 dilution basics")).toBe(
+      true,
+    )
+
+    const chatStreamCall = mockStream.mock.calls.find(
+      ([, o]) =>
+        typeof o.input.prompt === "string" && o.input.prompt.includes("Most recent messages (verbatim):"),
+    )
+    expect(chatStreamCall).toBeDefined()
+    const [model, opts] = chatStreamCall as [
       typeof MODEL,
       { input: { prompt: string; system_prompt: string } },
     ]

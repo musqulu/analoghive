@@ -13,6 +13,7 @@ export const Plus = () => <div data-testid="plus-icon" />;
 export const Send = () => <div data-testid="send-icon" />;
 export const Trash2 = () => <div data-testid="trash-icon" />;
 export const MessageCircleQuestion = () => <div data-testid="message-circle-question-icon" />;
+export const Loader2 = () => <div data-testid="loader-icon" />;
 export const Circle = () => <div data-testid="circle-icon" />;
 export const ChevronDown = () => <div data-testid="chevron-down-icon" />;
 export const ChevronsUpDown = () => <div data-testid="chevrons-up-down-icon" />;

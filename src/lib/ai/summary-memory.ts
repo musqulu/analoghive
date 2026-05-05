@@ -76,10 +76,14 @@ export function rollupSummaryUserPrompt(args: {
   )
 }
 
-export function titleGenerationPrompt(firstUserMessage: string): string {
+export function titleGenerationPrompt(args: {
+  userMessage: string
+  assistantMessage: string
+}): string {
+  const user = args.userMessage.trim().slice(0, 400)
+  const assistant = args.assistantMessage.trim().slice(0, 400)
   return (
-    'Create a very short chat title (max 6 words, no quotes) for a darkroom/film photography conversation that starts with:\n\n"' +
-    firstUserMessage.trim().slice(0, 500) +
-    '"\n\nReply with only the title, nothing else.'
+    "Write a very short chat title (maximum 6 words, sentence case, no quotation marks) for this analog photography / darkroom exchange.\n\n" +
+    `User: ${user}\n\nAssistant: ${assistant}\n\nReply with only the title, nothing else.`
   )
 }

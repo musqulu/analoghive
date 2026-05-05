@@ -90,36 +90,32 @@ async function maybeSetTitle(params: {
   supabase: SupabaseClient
   userId: string
   conversationId: string
+  userMessage: string
+  assistantMessage: string
 }) {
-  const { replicate, supabase, userId, conversationId } = params
+  const { replicate, supabase, userId, conversationId, userMessage, assistantMessage } = params
 
   try {
     const conv = await getConversation(supabase, userId, conversationId)
     if (!conv || conv.title !== NEW_CHAT_TITLE) return
 
-    const { data, error } = await supabase
-      .from("chat_messages")
-      .select("content")
-      .eq("conversation_id", conversationId)
-      .eq("user_id", userId)
-      .eq("role", "user")
-      .order("created_at", { ascending: true })
-      .limit(1)
-      .maybeSingle()
-
-    if (error || !data || typeof (data as { content?: unknown }).content !== "string") return
-
-    const firstMsg = (data as { content: string }).content
-    const out = await replicate.run(MODEL, {
+    let titleAccumulator = ""
+    for await (const event of replicate.stream(MODEL, {
       input: {
-        prompt: titleGenerationPrompt(firstMsg),
+        prompt: titleGenerationPrompt({ userMessage, assistantMessage }),
         system_prompt: "Output only the title string. No quotes around it.",
         max_tokens: TITLE_MODEL_MAX_TOKENS,
         temperature: 0.4,
       },
-    })
+    })) {
+      if (event.event === "error") throw new Error(String(event.data ?? "title stream error"))
+      if (event.event === "done") break
+      if (event.event === "output" && typeof event.data === "string" && event.data.length > 0) {
+        titleAccumulator += event.data
+      }
+    }
 
-    const title = coerceReplicateTextOutput(out)
+    const title = titleAccumulator
       .trim()
       .replace(/^["']+|["']+$/g, "")
       .slice(0, 80)
@@ -169,17 +165,11 @@ export function createNdjsonChatStream(params: {
           last_message_preview: truncatePreview(trimmedContent),
         })
 
-        const msgCountAfterUser = await countMessages(supabase, userId, cid)
-
         const ctx = await loadUserContext(supabase, userId)
         const refreshed = await getConversation(supabase, userId, cid)
         if (!refreshed) {
           controller.error(new Error("Conversation missing"))
           return
-        }
-
-        if (refreshed.title === NEW_CHAT_TITLE && msgCountAfterUser === 1) {
-          void maybeSetTitle({ replicate, supabase, userId, conversationId: cid })
         }
 
         const developerRows = findRelevantDeveloperRows(trimmedContent, ctx.recipes)
@@ -247,6 +237,18 @@ export function createNdjsonChatStream(params: {
         await updateConversationMeta(supabase, userId, cid, {
           last_message_preview: truncatePreview(reply || "(empty reply)"),
         })
+
+        const afterReply = await getConversation(supabase, userId, cid)
+        if (afterReply?.title === NEW_CHAT_TITLE) {
+          await maybeSetTitle({
+            replicate,
+            supabase,
+            userId,
+            conversationId: cid,
+            userMessage: trimmedContent,
+            assistantMessage: reply || "(empty reply)",
+          })
+        }
 
         pushLine(encoder, controller, {
           type: "step",
