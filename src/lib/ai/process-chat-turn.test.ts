@@ -47,6 +47,18 @@ async function readAllNdjson(stream: ReadableStream<Uint8Array>): Promise<string
   return out
 }
 
+function wait(ms = 0): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+async function waitForCondition(predicate: () => boolean): Promise<void> {
+  for (let i = 0; i < 20; i += 1) {
+    if (predicate()) return
+    await wait()
+  }
+  expect(predicate()).toBe(true)
+}
+
 describe("createNdjsonChatStream", () => {
   const supabase = {} as never
   const mockStream = jest.fn()
@@ -123,6 +135,7 @@ describe("createNdjsonChatStream", () => {
     const doneLine = lines.find((l) => l.type === "done")
     expect(doneLine?.type === "done" && doneLine.conversationId.length > 0).toBe(true)
 
+    await waitForCondition(() => mockStream.mock.calls.length >= 2)
     expect(mockStream).toHaveBeenCalledTimes(2)
     const titleStreamCall = mockStream.mock.calls.find(
       ([, o]) =>
@@ -135,6 +148,11 @@ describe("createNdjsonChatStream", () => {
     expect(titleOpts.input.prompt).toContain("Assistant:")
     expect(titleOpts.input.prompt).toContain("Hello")
 
+    await waitForCondition(() =>
+      jest.mocked(conversationStore.updateConversationMeta).mock.calls.some(
+        ([, , , patch]) => patch && "title" in patch,
+      ),
+    )
     const metaCalls = jest.mocked(conversationStore.updateConversationMeta).mock.calls
     expect(metaCalls.some(([, , , patch]) => patch && "title" in patch && patch.title === "HC-110 dilution basics")).toBe(
       true,
@@ -154,6 +172,85 @@ describe("createNdjsonChatStream", () => {
     expect(opts.input.prompt).toContain("Human: Tell me about HC-110 dilution B.")
     expect(opts.input.system_prompt).toBe("<<SYS>>")
     expect(opts.input.prompt).not.toContain("Earlier in this thread")
+  })
+
+  it("closes the response before background title generation finishes", async () => {
+    let releaseTitle!: () => void
+    const titleGate = new Promise<void>((resolve) => {
+      releaseTitle = resolve
+    })
+
+    mockStream.mockImplementation((_model: typeof MODEL, opts: { input: { prompt: string } }) => {
+      async function* chatGen() {
+        yield { event: "output" as const, data: "Ready" }
+        yield { event: "done" as const }
+      }
+      async function* titleGen() {
+        await titleGate
+        yield { event: "output" as const, data: "Delayed title" }
+        yield { event: "done" as const }
+      }
+      const prompt = opts?.input?.prompt ?? ""
+      if (prompt.includes("Reply with only the title")) return titleGen()
+      return chatGen()
+    })
+
+    const stream = createNdjsonChatStream({
+      supabase,
+      userId: "user-1",
+      replicateToken: "tok",
+      conversationId: undefined,
+      content: "Tell me about Rodinal.",
+    })
+    const bodyPromise = readAllNdjson(stream)
+    const bodyOrTimeout = await Promise.race([
+      bodyPromise,
+      wait(50).then(() => "__timeout__"),
+    ])
+
+    releaseTitle()
+    if (bodyOrTimeout === "__timeout__") {
+      await bodyPromise
+      throw new Error("stream waited for title generation before closing")
+    }
+
+    const lines = parseNdjsonLines(bodyOrTimeout)
+    expect(lines.filter((l) => l.type === "token").map((l) => l.text).join("")).toBe("Ready")
+    expect(lines.some((l) => l.type === "done")).toBe(true)
+
+    await waitForCondition(() =>
+      jest.mocked(conversationStore.updateConversationMeta).mock.calls.some(
+        ([, , , patch]) => patch && patch.title === "Delayed title",
+      ),
+    )
+  })
+
+  it("does not advance the summary cursor when rollup returns an empty summary", async () => {
+    const mockRun = jest.fn().mockResolvedValue("")
+    ;(Replicate as unknown as jest.Mock).mockImplementation(() => ({
+      stream: mockStream,
+      run: mockRun,
+    }))
+    jest.mocked(conversationStore.countMessages).mockResolvedValue(8)
+    jest.mocked(conversationStore.getMessagesAfterCount).mockResolvedValue([
+      { role: "user", content: "Previous detail that must stay unsummarized." },
+      { role: "assistant", content: "Assistant reply." },
+    ])
+
+    const stream = createNdjsonChatStream({
+      supabase,
+      userId: "user-1",
+      replicateToken: "tok",
+      conversationId: undefined,
+      content: "Keep this context.",
+    })
+    await readAllNdjson(stream)
+
+    await waitForCondition(() => mockRun.mock.calls.length > 0)
+    const metaCalls = jest.mocked(conversationStore.updateConversationMeta).mock.calls
+    expect(
+      metaCalls.some(([, , , patch]) => patch && "summary_message_count" in patch),
+    ).toBe(false)
   })
 
   it("does not create a conversation when conversationId is provided", async () => {
