@@ -64,9 +64,11 @@ async function waitForAssertion(assertion: () => void) {
 describe("createNdjsonChatStream", () => {
   const supabase = {} as never
   const mockStream = jest.fn()
+  const mockRun = jest.fn()
 
   beforeEach(() => {
     jest.clearAllMocks()
+    mockRun.mockResolvedValue("")
     jest.mocked(contextLoader.loadUserContext).mockResolvedValue({
       recipes: [],
       favorites: [],
@@ -109,7 +111,7 @@ describe("createNdjsonChatStream", () => {
 
     ;(Replicate as unknown as jest.Mock).mockImplementation(() => ({
       stream: mockStream,
-      run: jest.fn().mockResolvedValue(""),
+      run: mockRun,
     }))
   })
 
@@ -226,6 +228,49 @@ describe("createNdjsonChatStream", () => {
         ),
       ).toBe(true)
     })
+  })
+
+  it("does not advance the summary cursor when rollup returns empty text", async () => {
+    jest.mocked(conversationStore.getConversation).mockResolvedValue({
+      id: "conv-new",
+      user_id: "user-1",
+      title: "Existing title",
+      summary: "Prior summary",
+      summary_message_count: 0,
+      last_message_preview: null,
+      updated_at: "2026-05-04T00:00:00.000Z",
+    })
+    jest.mocked(conversationStore.countMessages).mockResolvedValue(8)
+    jest.mocked(conversationStore.getMessagesAfterCount).mockResolvedValue([
+      { role: "user", content: "m1" },
+      { role: "assistant", content: "m2" },
+      { role: "user", content: "m3" },
+      { role: "assistant", content: "m4" },
+      { role: "user", content: "m5" },
+      { role: "assistant", content: "m6" },
+      { role: "user", content: "m7" },
+      { role: "assistant", content: "m8" },
+    ])
+    mockRun.mockResolvedValue("   ")
+
+    const stream = createNdjsonChatStream({
+      supabase,
+      userId: "user-1",
+      replicateToken: "tok",
+      conversationId: undefined,
+      content: "Keep this context.",
+    })
+    await readAllNdjson(stream)
+
+    await waitForAssertion(() => {
+      expect(mockRun).toHaveBeenCalled()
+    })
+
+    expect(
+      jest.mocked(conversationStore.updateConversationMeta).mock.calls.some(
+        ([, , , patch]) => patch && "summary_message_count" in patch,
+      ),
+    ).toBe(false)
   })
 
   it("does not create a conversation when conversationId is provided", async () => {

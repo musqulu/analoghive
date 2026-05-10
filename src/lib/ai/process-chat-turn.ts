@@ -76,8 +76,10 @@ async function rollupIfNeeded(params: {
     })
 
     const nextSummary = coerceReplicateTextOutput(out).trim()
+    if (nextSummary.length === 0) return
+
     await updateConversationMeta(supabase, userId, conversationId, {
-      summary: nextSummary.length > 0 ? nextSummary : (conv.summary ?? ""),
+      summary: nextSummary,
       summary_message_count: total,
     })
   } catch {
