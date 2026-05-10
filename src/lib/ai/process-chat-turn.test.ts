@@ -47,6 +47,20 @@ async function readAllNdjson(stream: ReadableStream<Uint8Array>): Promise<string
   return out
 }
 
+async function waitForAssertion(assertion: () => void) {
+  let lastError: unknown
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    try {
+      assertion()
+      return
+    } catch (err) {
+      lastError = err
+      await new Promise((resolve) => setTimeout(resolve, 0))
+    }
+  }
+  throw lastError
+}
+
 describe("createNdjsonChatStream", () => {
   const supabase = {} as never
   const mockStream = jest.fn()
@@ -135,10 +149,12 @@ describe("createNdjsonChatStream", () => {
     expect(titleOpts.input.prompt).toContain("Assistant:")
     expect(titleOpts.input.prompt).toContain("Hello")
 
-    const metaCalls = jest.mocked(conversationStore.updateConversationMeta).mock.calls
-    expect(metaCalls.some(([, , , patch]) => patch && "title" in patch && patch.title === "HC-110 dilution basics")).toBe(
-      true,
-    )
+    await waitForAssertion(() => {
+      const metaCalls = jest.mocked(conversationStore.updateConversationMeta).mock.calls
+      expect(
+        metaCalls.some(([, , , patch]) => patch && "title" in patch && patch.title === "HC-110 dilution basics"),
+      ).toBe(true)
+    })
 
     const chatStreamCall = mockStream.mock.calls.find(
       ([, o]) =>
@@ -154,6 +170,62 @@ describe("createNdjsonChatStream", () => {
     expect(opts.input.prompt).toContain("Human: Tell me about HC-110 dilution B.")
     expect(opts.input.system_prompt).toBe("<<SYS>>")
     expect(opts.input.prompt).not.toContain("Earlier in this thread")
+  })
+
+  it("closes the response stream without waiting for title generation", async () => {
+    let releaseTitle!: () => void
+    const titleGate = new Promise<void>((resolve) => {
+      releaseTitle = resolve
+    })
+
+    mockStream.mockImplementation((_model: typeof MODEL, opts: { input: { prompt: string } }) => {
+      async function* chatGen() {
+        yield { event: "output" as const, data: "Reply" }
+        yield { event: "done" as const }
+      }
+      async function* titleGen() {
+        await titleGate
+        yield { event: "output" as const, data: "Delayed title" }
+        yield { event: "done" as const }
+      }
+      const prompt = opts?.input?.prompt ?? ""
+      if (prompt.includes("Reply with only the title")) return titleGen()
+      return chatGen()
+    })
+
+    const stream = createNdjsonChatStream({
+      supabase,
+      userId: "user-1",
+      replicateToken: "tok",
+      conversationId: undefined,
+      content: "Tell me about Rodinal.",
+    })
+    const bodyPromise = readAllNdjson(stream)
+
+    const result = await Promise.race([
+      bodyPromise.then((body) => ({ status: "completed" as const, body })),
+      new Promise<{ status: "blocked"; body: string }>((resolve) =>
+        setTimeout(() => resolve({ status: "blocked", body: "" }), 50),
+      ),
+    ])
+
+    expect(result.status).toBe("completed")
+    expect(parseNdjsonLines(result.body).some((line) => line.type === "done")).toBe(true)
+    expect(
+      jest.mocked(conversationStore.updateConversationMeta).mock.calls.some(
+        ([, , , patch]) => patch && "title" in patch && patch.title === "Delayed title",
+      ),
+    ).toBe(false)
+
+    releaseTitle()
+    await bodyPromise
+    await waitForAssertion(() => {
+      expect(
+        jest.mocked(conversationStore.updateConversationMeta).mock.calls.some(
+          ([, , , patch]) => patch && "title" in patch && patch.title === "Delayed title",
+        ),
+      ).toBe(true)
+    })
   })
 
   it("does not create a conversation when conversationId is provided", async () => {

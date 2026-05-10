@@ -240,7 +240,7 @@ export function createNdjsonChatStream(params: {
 
         const afterReply = await getConversation(supabase, userId, cid)
         if (afterReply?.title === NEW_CHAT_TITLE) {
-          await maybeSetTitle({
+          void maybeSetTitle({
             replicate,
             supabase,
             userId,
