@@ -76,8 +76,10 @@ async function rollupIfNeeded(params: {
     })
 
     const nextSummary = coerceReplicateTextOutput(out).trim()
+    if (nextSummary.length === 0) return
+
     await updateConversationMeta(supabase, userId, conversationId, {
-      summary: nextSummary.length > 0 ? nextSummary : (conv.summary ?? ""),
+      summary: nextSummary,
       summary_message_count: total,
     })
   } catch {
@@ -238,18 +240,6 @@ export function createNdjsonChatStream(params: {
           last_message_preview: truncatePreview(reply || "(empty reply)"),
         })
 
-        const afterReply = await getConversation(supabase, userId, cid)
-        if (afterReply?.title === NEW_CHAT_TITLE) {
-          await maybeSetTitle({
-            replicate,
-            supabase,
-            userId,
-            conversationId: cid,
-            userMessage: trimmedContent,
-            assistantMessage: reply || "(empty reply)",
-          })
-        }
-
         pushLine(encoder, controller, {
           type: "step",
           id: "compose",
@@ -260,6 +250,14 @@ export function createNdjsonChatStream(params: {
 
         controller.close()
 
+        void maybeSetTitle({
+          replicate,
+          supabase,
+          userId,
+          conversationId: cid,
+          userMessage: trimmedContent,
+          assistantMessage: reply || "(empty reply)",
+        })
         void rollupIfNeeded({ replicate, supabase, userId, conversationId: cid })
       } catch (err) {
         controller.error(err)
