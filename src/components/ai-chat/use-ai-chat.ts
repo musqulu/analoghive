@@ -143,6 +143,7 @@ export function useAiChat(): UseAiChatResult {
 
   const ndjsonBufferRef = useRef("")
   const abortRef = useRef<AbortController | null>(null)
+  const threadLoadSeqRef = useRef(0)
 
   const mergeStep = useCallback((line: Extract<NdJsonLine, { type: "step" }>) => {
     setSteps((prev) => {
@@ -166,6 +167,9 @@ export function useAiChat(): UseAiChatResult {
   }, [])
 
   const openThread = useCallback(async (conversationId: string) => {
+    const loadSeq = ++threadLoadSeqRef.current
+    const isCurrentLoad = () => threadLoadSeqRef.current === loadSeq
+
     setMessagesLoading(true)
     try {
       setError(null)
@@ -176,10 +180,12 @@ export function useAiChat(): UseAiChatResult {
       const listRes = await fetchJson<{ conversations: ConversationListItem[] }>(
         CONVERSATIONS_ENDPOINT,
       )
+      if (!isCurrentLoad()) return
       const rowMeta = listRes.json?.conversations?.find((c) => c.id === conversationId)
       if (rowMeta) setActiveTitle(rowMeta.title)
 
       const msgRes = await fetch(`${CHAT_MESSAGES_PREFIX}/${conversationId}/messages`)
+      if (!isCurrentLoad()) return
       if (!msgRes.ok) {
         if (msgRes.status === 404) persistActiveConversation(null)
         setMessages([])
@@ -189,6 +195,7 @@ export function useAiChat(): UseAiChatResult {
       const json = (await msgRes.json()) as {
         messages?: Array<{ id: string; role: "user" | "assistant"; content: string }>
       }
+      if (!isCurrentLoad()) return
       if (!json?.messages) {
         setMessages([])
         setError("Could not load messages.")
@@ -201,8 +208,12 @@ export function useAiChat(): UseAiChatResult {
           content: m.content,
         })),
       )
+    } catch {
+      if (!isCurrentLoad()) return
+      setMessages([])
+      setError("Could not load messages.")
     } finally {
-      setMessagesLoading(false)
+      if (isCurrentLoad()) setMessagesLoading(false)
     }
   }, [])
 
@@ -222,16 +233,20 @@ export function useAiChat(): UseAiChatResult {
   }, [])
 
   const goToList = useCallback(() => {
+    threadLoadSeqRef.current += 1
     setView("list")
     persistActiveConversation(null)
     setActiveConversationId(null)
     setActiveTitle("")
     setMessages([])
     setSteps([])
+    setMessagesLoading(false)
     void refreshList()
   }, [refreshList])
 
   const newConversation = useCallback(async () => {
+    threadLoadSeqRef.current += 1
+    setMessagesLoading(false)
     setError(null)
     const { ok, json } = await fetchJson<{ id: string; title: string }>(
       CONVERSATIONS_ENDPOINT,
@@ -259,10 +274,12 @@ export function useAiChat(): UseAiChatResult {
         return
       }
       if (activeConversationId === id) {
+        threadLoadSeqRef.current += 1
         persistActiveConversation(null)
         setActiveConversationId(null)
         setActiveTitle("")
         setMessages([])
+        setMessagesLoading(false)
         setView("list")
       }
       await refreshList()

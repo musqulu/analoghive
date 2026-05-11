@@ -62,9 +62,9 @@ describe("useAiChat", () => {
     })
   })
 
-  const convRow = (id: string) => ({
+  const convRow = (id: string, title = "New chat") => ({
     id,
-    title: "New chat",
+    title,
     lastMessagePreview: null,
     updatedAt: "2026-05-04T12:34:56.789Z",
   })
@@ -250,5 +250,62 @@ describe("useAiChat", () => {
     expect(fetchMock.mock.calls.some(([url]) => url.toString().includes(`${CHAT_MESSAGES_PREFIX}/c99/messages`)))
       .toBe(true)
     expect(window.localStorage.getItem(ACTIVE_CONV_STORAGE_KEY)).toBe("c99")
+  })
+
+  it("ignores stale thread loads when a newer thread opens first", async () => {
+    const slow = convRow("slow", "Slow chat")
+    const fast = convRow("fast", "Fast chat")
+    const resultRef = await settleInitialHydrate([slow, fast])
+
+    let releaseSlowMessages!: (value: FakeResponse) => void
+    const slowMessages = new Promise<FakeResponse>((resolve) => {
+      releaseSlowMessages = resolve
+    })
+
+    fetchMock.mockResolvedValueOnce(jsonFakeResponse({ conversations: [slow, fast] }))
+    fetchMock.mockImplementationOnce(() => slowMessages)
+    fetchMock.mockResolvedValueOnce(jsonFakeResponse({ conversations: [slow, fast] }))
+    fetchMock.mockResolvedValueOnce(
+      jsonFakeResponse({
+        messages: [{ id: "fast-m1", role: "user", content: "fast thread" }],
+      }),
+    )
+
+    let slowDone!: Promise<void>
+    await act(() => {
+      slowDone = resultRef.current.openThread("slow")
+    })
+
+    await waitFor(() =>
+      expect(
+        fetchMock.mock.calls.some(([url]) => url.toString().includes(`${CHAT_MESSAGES_PREFIX}/slow/messages`)),
+      ).toBe(true),
+    )
+
+    await act(async () => {
+      await resultRef.current.openThread("fast")
+    })
+
+    expect(resultRef.current.activeConversationId).toBe("fast")
+    expect(resultRef.current.activeTitle).toBe("Fast chat")
+    expect(resultRef.current.messages).toEqual([
+      { id: "fast-m1", role: "user", content: "fast thread" },
+    ])
+
+    await act(async () => {
+      releaseSlowMessages(
+        jsonFakeResponse({
+          messages: [{ id: "slow-m1", role: "user", content: "slow thread" }],
+        }),
+      )
+      await slowDone
+    })
+
+    expect(resultRef.current.activeConversationId).toBe("fast")
+    expect(resultRef.current.activeTitle).toBe("Fast chat")
+    expect(resultRef.current.messages).toEqual([
+      { id: "fast-m1", role: "user", content: "fast thread" },
+    ])
+    expect(window.localStorage.getItem(ACTIVE_CONV_STORAGE_KEY)).toBe("fast")
   })
 })
