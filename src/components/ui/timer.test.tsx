@@ -196,6 +196,24 @@ describe('Timer Component', () => {
   });
 
   // Test edit functionality
+  test('keeps diary-replay wash minutes when Ilford would otherwise shorten wash', () => {
+    render(
+      <Timer
+        developmentTime={11}
+        temperature={20}
+        initialProcessTimes={{ dev: 11, stop: 1, fix: 5, wash: 12 }}
+        initialWashingMethod={{
+          type: 'ilford',
+          runningWaterTime: 5,
+          ilfordInversions: { first: 5, second: 10, third: 20 },
+          custom: { totalTime: 5, waterChanges: 3 },
+        }}
+      />,
+    );
+    fireEvent.click(screen.getByTestId('washing-step'));
+    expect(screen.getByTestId('main-time-display')).toHaveTextContent('12:00');
+  });
+
   test('opens edit modal when edit button is clicked', () => {
     render(<Timer developmentTime={11} temperature={20} />);
     

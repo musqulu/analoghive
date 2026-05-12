@@ -16,12 +16,12 @@ function utf8BytesToBinaryString(bytes: Uint8Array): string {
 export function encodeSnapshotForReplayUrl(snapshot: DevelopmentProcessSnapshot): string {
   const json = JSON.stringify(snapshot)
   const bytes = new TextEncoder().encode(json)
-  let b64 = btoa(utf8BytesToBinaryString(bytes))
+  const b64 = btoa(utf8BytesToBinaryString(bytes))
   return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/u, "")
 }
 
 function base64UrlToBase64(s: string): string {
-  let b64 = s.replace(/-/gu, "+").replace(/_/gu, "/")
+  const b64 = s.replace(/-/gu, "+").replace(/_/gu, "/")
   const pad = b64.length % 4 === 2 ? "==" : b64.length % 4 === 3 ? "=" : ""
   return b64 + pad
 }

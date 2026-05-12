@@ -10,6 +10,7 @@ import {
   decodeDiaryReplayParam,
   DIARY_TIMER_REPLAY_PARAM,
 } from "@/lib/diary-timer-replay"
+import { buildTimerHydrationFromQueryAndReplay } from "@/lib/timer-route-hydration"
 import type { FilmFormat } from "@/types/development"
 
 function TimerContent() {
@@ -19,16 +20,28 @@ function TimerContent() {
   const filmFormat = (params.get("format") || "35mm") as FilmFormat
   const filmIso = params.get("iso") || ""
   const developerName = params.get("developer") || "Unknown Developer"
-  const developerDilution = params.get("dilution") || ""
-  const developmentTime = parseFloat(params.get("time") || "10")
-  const temperature = parseFloat(params.get("temp") || "20")
-  const totalVolume = parseInt(params.get("volume") || "500")
   const recipeId = params.get("recipeId") || null
   const favoriteId = params.get("favoriteId") || null
   const optionKeyParam = params.get("optionKey")
-  const tempUnitParam = params.get("tempUnit")
   const pushPullParam = params.get("pushPull")
   const replaySnapshot = decodeDiaryReplayParam(params.get(DIARY_TIMER_REPLAY_PARAM))
+
+  const {
+    developmentTimeMinutes,
+    temperature,
+    totalVolume,
+    developerDilution,
+    tempUnitParam,
+  } = buildTimerHydrationFromQueryAndReplay(
+    {
+      time: params.get("time"),
+      temp: params.get("temp"),
+      volume: params.get("volume"),
+      dilution: params.get("dilution"),
+      tempUnit: params.get("tempUnit"),
+    },
+    replaySnapshot,
+  )
 
   return (
     <main className={cn("flex flex-col items-center", mainUnderNav, mainGutterX)}>
@@ -39,7 +52,7 @@ function TimerContent() {
           filmIso={filmIso}
           developerName={developerName}
           developerDilution={developerDilution}
-          developmentTime={developmentTime}
+          developmentTime={developmentTimeMinutes}
           temperature={temperature}
           totalVolume={totalVolume}
           recipeId={recipeId}

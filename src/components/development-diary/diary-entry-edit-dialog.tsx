@@ -96,7 +96,7 @@ export function DiaryEntryEditDialog({
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-[100] bg-black/40 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-[101] max-h-[min(90vh,32rem)] w-[min(calc(100%-2rem),24rem)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg border border-border bg-background p-6 shadow-ds-card outline-none">
+        <Dialog.Content className="fixed left-1/2 top-1/2 z-[101] max-h-[min(94vh,52rem)] w-[min(calc(100%-2rem),24rem)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg border border-border bg-background p-6 shadow-ds-card outline-none">
           <Dialog.Title className="text-lg font-semibold tracking-tight text-foreground">
             Edit diary entry
           </Dialog.Title>

@@ -77,6 +77,11 @@ export function Timer({
     setCustomTimes((prev) => ({ ...prev, dev: developmentTime }))
   }, [developmentTime])
 
+  /** Diary/replay hydrate `wash` via `initialProcessTimes`; skip first derive-from-method pass so wash is not overwritten. */
+  const skipInitialWashDeriveRef = React.useRef(
+    initialProcessTimes != null && initialWashingMethod != null,
+  )
+
   const snapshotInputRef = React.useRef({
     developmentTime,
     developerDilution,
@@ -145,6 +150,10 @@ export function Timer({
   const wakeLock = useWakeLock()
 
   React.useEffect(() => {
+    if (skipInitialWashDeriveRef.current) {
+      skipInitialWashDeriveRef.current = false
+      return
+    }
     let washTime = 5
     if (washingMethod.type === "running") washTime = washingMethod.runningWaterTime
     else if (washingMethod.type === "ilford") washTime = 3

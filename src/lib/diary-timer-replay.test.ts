@@ -64,24 +64,33 @@ describe("decodeDiaryReplayParam", () => {
 })
 
 describe("buildDiaryTimerReplayHref", () => {
-  it("omits replay when there is no valid snapshot", () => {
-    const href = buildDiaryTimerReplayHref(baseEntry())
-    expect(href).toContain("/develop/timer?")
-    expect(href).not.toContain("replay=")
-    expect(href).toContain("time=10")
-    expect(href).toContain("temp=20")
-    expect(href).toContain("volume=500")
-    expect(href).toContain("recipeId=r1")
+  it("returns null without a valid snapshot (legacy diary rows)", () => {
+    expect(buildDiaryTimerReplayHref(baseEntry())).toBeNull()
+    expect(buildDiaryTimerReplayHref(baseEntry({ process_snapshot: { v: 2 } as never }))).toBeNull()
+  })
+
+  it("omits volume from the URL when snapshot has null totalVolume", () => {
+    const snap: DevelopmentProcessSnapshot = {
+      ...sampleSnapshot,
+      totalVolume: null,
+    }
+    const href = buildDiaryTimerReplayHref(baseEntry({ process_snapshot: snap }))
+    expect(href).not.toBeNull()
+    const u = new URL(href!, "https://example.com")
+    expect(u.searchParams.has("volume")).toBe(false)
   })
 
   it("includes replay and snapshot-derived scalars when snapshot exists", () => {
     const href = buildDiaryTimerReplayHref(baseEntry({ process_snapshot: sampleSnapshot }))
+    expect(href).not.toBeNull()
     expect(href).toContain("replay=")
     expect(href).toContain("time=11")
     expect(href).toContain("temp=21")
     expect(href).toContain("volume=575")
-    const u = new URL(href, "https://example.com")
+    const u = new URL(href!, "https://example.com")
     expect(decodeDiaryReplayParam(u.searchParams.get("replay"))).toEqual(sampleSnapshot)
+    expect(u.searchParams.get("dilution")).toBe(sampleSnapshot.developerDilution)
+    expect(u.searchParams.get("tempUnit")).toBe("celsius")
   })
 })
 

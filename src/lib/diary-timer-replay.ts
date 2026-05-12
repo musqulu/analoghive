@@ -33,8 +33,12 @@ export function modifiedTemperatureNumeric(entry: DevelopmentLogEntryRow): numbe
   return Number.isFinite(n) ? n : null
 }
 
-export function buildDiaryTimerReplayHref(entry: DevelopmentLogEntryRow): string {
+/**
+ * Diary “Run again”: only navigable when a valid `process_snapshot` exists — no heuristic URL fallbacks.
+ */
+export function buildDiaryTimerReplayHref(entry: DevelopmentLogEntryRow): string | null {
   const snap = parseDevelopmentProcessSnapshot(entry.process_snapshot)
+  if (!snap) return null
 
   const qs = new URLSearchParams()
   qs.set("film", entry.film_name)
@@ -43,36 +47,21 @@ export function buildDiaryTimerReplayHref(entry: DevelopmentLogEntryRow): string
   qs.set("developer", entry.developer_name)
 
   let dilution = dilutionSegmentFromOptionKey(entry.option_key)
-  let developmentTimeMinutes = 10
-  let temperature = 20
-  let totalVolume = 500
-
-  if (snap) {
-    developmentTimeMinutes = snap.developmentTimeMinutes
-    temperature = snap.temperatures.dev
-    if (snap.totalVolume != null && Number.isFinite(snap.totalVolume)) {
-      totalVolume = Math.round(snap.totalVolume)
-    }
-    const dd = snap.developerDilution?.trim()
-    if (dd) dilution = dd
-  } else {
-    const mod = modifiedTemperatureNumeric(entry)
-    if (mod !== null) temperature = mod
-    if (
-      entry.total_volume != null &&
-      Number.isFinite(entry.total_volume) &&
-      entry.total_volume > 0
-    ) {
-      totalVolume = Math.round(entry.total_volume)
-    }
-  }
+  const dd = snap.developerDilution?.trim()
+  if (dd) dilution = dd
 
   qs.set("dilution", dilution)
-  qs.set("time", String(developmentTimeMinutes))
-  qs.set("temp", String(temperature))
-  qs.set("volume", String(totalVolume))
+  qs.set("time", String(snap.developmentTimeMinutes))
+  qs.set("temp", String(snap.temperatures.dev))
 
-  const tempUnit = snap?.temperatureUnit ?? entry.temperature_unit ?? null
+  if (snap.totalVolume != null && Number.isFinite(snap.totalVolume)) {
+    qs.set("volume", String(Math.round(snap.totalVolume)))
+  }
+
+  const tempUnit =
+    snap.temperatureUnit === "celsius" || snap.temperatureUnit === "fahrenheit"
+      ? snap.temperatureUnit
+      : entry.temperature_unit
   if (tempUnit === "celsius" || tempUnit === "fahrenheit") {
     qs.set("tempUnit", tempUnit)
   }
@@ -84,7 +73,7 @@ export function buildDiaryTimerReplayHref(entry: DevelopmentLogEntryRow): string
     qs.set("pushPull", String(entry.push_pull_stops))
   }
 
-  if (snap) qs.set(DIARY_TIMER_REPLAY_PARAM, encodeSnapshotForReplayUrl(snap))
+  qs.set(DIARY_TIMER_REPLAY_PARAM, encodeSnapshotForReplayUrl(snap))
 
   return `/develop/timer?${qs.toString()}`
 }

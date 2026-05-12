@@ -120,6 +120,7 @@ export function DiaryList({ entries }: { entries: DevelopmentLogEntryRow[] }) {
       {entries.map((entry) => {
         const preview = notesPreview(entry.notes)
         const snap = parseDevelopmentProcessSnapshot(entry.process_snapshot)
+        const replayHref = buildDiaryTimerReplayHref(entry)
         const filmLabel = entry.film_name.trim() || "—"
         const loggedShort = diaryLoggedDateShort(entry.created_at)
         const devTimeSeconds =
@@ -178,13 +179,15 @@ export function DiaryList({ entries }: { entries: DevelopmentLogEntryRow[] }) {
                   {dilutionFromOptionKey(entry.option_key) || "—"} · Logged {loggedShort} (UTC)
                 </p>
               </div>
-              <Link
-                href={buildDiaryTimerReplayHref(entry)}
-                className={LISTING_CARD_OPEN_LINK}
-                aria-label={`Run development timer again for ${entry.film_name}`}
-              >
-                Run again
-              </Link>
+              {replayHref ? (
+                <Link
+                  href={replayHref}
+                  className={LISTING_CARD_OPEN_LINK}
+                  aria-label={`Run development timer again for ${entry.film_name}`}
+                >
+                  Run again
+                </Link>
+              ) : null}
             </div>
           </li>
         )
