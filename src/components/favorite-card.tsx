@@ -19,6 +19,7 @@ import { Button } from "@/components/landing/button"
 import {
   LISTING_CARD_DIVIDER,
   LISTING_CARD_ICON_WRAP,
+  LISTING_CARD_MENU_TRIGGER,
   LISTING_CARD_OPEN_LINK,
   LISTING_CARD_PILL,
   LISTING_CARD_ROOT,
@@ -110,7 +111,7 @@ export function FavoriteCard({ row, onDeleted, onRestore, onRenamed }: FavoriteC
           <DropdownMenu.Trigger
             type="button"
             disabled={busy}
-            className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg border border-border bg-background px-3 text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:opacity-50"
+            className={LISTING_CARD_MENU_TRIGGER}
             aria-label="Favorite actions"
           >
             <MoreHorizontal className="h-5 w-5" aria-hidden />

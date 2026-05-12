@@ -11,6 +11,7 @@ import type { DevelopmentRecipeRow } from "@/types/recipe"
 import {
   LISTING_CARD_DIVIDER,
   LISTING_CARD_ICON_WRAP,
+  LISTING_CARD_MENU_TRIGGER,
   LISTING_CARD_OPEN_LINK,
   LISTING_CARD_PILL,
   LISTING_CARD_ROOT,
@@ -111,9 +112,6 @@ export function RecipeCard({ row, onDeleted, onRestore, onRenamed }: RecipeCardP
     setRenameOpen(false)
   }
 
-  const menuTriggerClass =
-    "inline-flex h-10 shrink-0 items-center justify-center rounded-lg border border-border bg-background px-3 text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:opacity-50"
-
   return (
     <div className={LISTING_CARD_ROOT}>
       <div className="flex items-start justify-between gap-3">
@@ -124,7 +122,7 @@ export function RecipeCard({ row, onDeleted, onRestore, onRenamed }: RecipeCardP
           <DropdownMenu.Trigger
             type="button"
             disabled={busy}
-            className={menuTriggerClass}
+            className={LISTING_CARD_MENU_TRIGGER}
             aria-label="Recipe actions"
           >
             <MoreHorizontal className="h-5 w-5" aria-hidden />

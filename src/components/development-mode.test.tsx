@@ -198,4 +198,51 @@ describe("DevelopmentMode", () => {
     expect(onDevComplete).toHaveBeenCalledTimes(1)
     expect(screen.getByText("STOP STEP")).toBeInTheDocument()
   })
+
+  it("calls onProcessComplete once when wash completes by countdown only", () => {
+    const onProcessComplete = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        stopSeconds={3}
+        fixSeconds={3}
+        washSeconds={3}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    expect(screen.getByText("WASH STEP")).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
+    expect(screen.getByText("DEVELOPMENT COMPLETE")).toBeInTheDocument()
+  })
+
+  it("does not call onProcessComplete when skipping wash via Next Step", () => {
+    const onProcessComplete = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        stopSeconds={3}
+        fixSeconds={3}
+        washSeconds={600}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+
+    expect(onProcessComplete).not.toHaveBeenCalled()
+    expect(screen.getByText("DEVELOPMENT COMPLETE")).toBeInTheDocument()
+  })
 })

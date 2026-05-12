@@ -16,8 +16,13 @@ import {
 import { CreateRecipeFromButton } from "@/components/develop/create-recipe-button"
 import { parseDevelopFavoriteSearchParams } from "@/lib/favorite-develop-query"
 import { logDevelopmentRun } from "@/lib/log-development-run"
+import { DiaryCompletionDialog } from "@/components/development-diary/completion-dialog"
 import { cn } from "@/lib/utils"
 import { mainGutterX, mainUnderNav, pageTitle } from "@/lib/app-page-layout"
+import type {
+  DevelopmentProcessSnapshot,
+  DiaryCompletionSummary,
+} from "@/types/development-log"
 
 export function DevelopCalculator() {
   const searchParams = useSearchParams()
@@ -69,9 +74,30 @@ export function DevelopCalculator() {
     snapshotRef.current = favoriteSnapshot
   }, [favoriteSnapshot])
 
+  const diarySummary = React.useMemo<DiaryCompletionSummary | null>(() => {
+    if (!favoriteSnapshot) return null
+    return {
+      film_name: favoriteSnapshot.filmName,
+      film_format: favoriteSnapshot.filmFormat,
+      film_iso: favoriteSnapshot.filmIso,
+      developer_name: favoriteSnapshot.developerName,
+      option_key: favoriteSnapshot.optionKey,
+      total_volume: favoriteSnapshot.totalVolume,
+      temperature_unit: favoriteSnapshot.temperatureUnit,
+      modified_temperature: favoriteSnapshot.modifiedTemperature,
+      push_pull_stops: favoriteSnapshot.pushPullStops,
+    }
+  }, [favoriteSnapshot])
+
+  const logEntryIdRef = React.useRef<string | null>(null)
+  const [celebrateOpen, setCelebrateOpen] = React.useState(false)
+  const [celebrateLogId, setCelebrateLogId] = React.useState<string | null>(null)
+  const [celebrateProcessSnapshot, setCelebrateProcessSnapshot] =
+    React.useState<DevelopmentProcessSnapshot | null>(null)
+
   const loggedRef = React.useRef(false)
   const loggingRef = React.useRef(false)
-  const handleDevComplete = React.useCallback(() => {
+  const handleDevComplete = React.useCallback((processSnapshot: DevelopmentProcessSnapshot) => {
     if (loggedRef.current || loggingRef.current) return
     const snap = snapshotRef.current
     if (!snap) return
@@ -88,10 +114,28 @@ export function DevelopCalculator() {
       push_pull_stops: snap.pushPullStops,
       recipe_id: null,
       favorite_id: null,
-    }).then((logged) => {
+      process_snapshot: processSnapshot,
+    }).then((res) => {
       loggingRef.current = false
-      loggedRef.current = logged
+      if (res) {
+        loggedRef.current = true
+        logEntryIdRef.current = res.id
+      }
     })
+  }, [])
+
+  const handleProcessComplete = React.useCallback(
+    (processSnapshot: DevelopmentProcessSnapshot) => {
+      setCelebrateProcessSnapshot(processSnapshot)
+      setCelebrateLogId(logEntryIdRef.current)
+      setCelebrateOpen(true)
+    },
+    [],
+  )
+
+  const handleCelebrateOpenChange = React.useCallback((open: boolean) => {
+    setCelebrateOpen(open)
+    if (!open) setCelebrateProcessSnapshot(null)
   }, [])
 
   return (
@@ -170,6 +214,16 @@ export function DevelopCalculator() {
                 />
 
                 <div className="rounded-lg bg-card p-6 ds-card">
+                  <DiaryCompletionDialog
+                    open={celebrateOpen}
+                    onOpenChange={handleCelebrateOpenChange}
+                    logEntryId={celebrateLogId}
+                    summary={
+                      diarySummary
+                        ? { ...diarySummary, process_snapshot: celebrateProcessSnapshot ?? undefined }
+                        : null
+                    }
+                  />
                   <Timer
                     filmName={selection.selectedFilm}
                     filmFormat={selection.selectedFormat}
@@ -187,7 +241,10 @@ export function DevelopCalculator() {
                       20
                     }
                     totalVolume={totalVolume}
+                    temperatureUnit={correction.temperatureUnit}
+                    isColor={isColor}
                     onDevComplete={handleDevComplete}
+                    onProcessComplete={handleProcessComplete}
                   />
                 </div>
               </>

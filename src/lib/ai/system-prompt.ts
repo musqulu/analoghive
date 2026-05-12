@@ -48,12 +48,25 @@ function formatFavorites(ctx: UserChatContext): string {
     .join("\n")
 }
 
+function truncateForAssistant(text: string, max: number): string {
+  const t = text.trim()
+  if (t.length <= max) return t
+  return `${t.slice(0, max)}…`
+}
+
 function formatLogs(ctx: UserChatContext): string {
   if (ctx.recentLogs.length === 0) return "(no development logs yet)"
   return ctx.recentLogs
     .map((l) => {
       const when = l.createdAt.slice(0, 10)
-      return `- ${when}: ${l.filmName} @ ISO ${l.filmIso} | ${l.developerName} ${l.optionKey}`
+      const base = `- ${when}: ${l.filmName} @ ISO ${l.filmIso} | ${l.developerName} ${l.optionKey}`
+      const bits: string[] = []
+      if (l.title?.trim()) bits.push(`title: ${truncateForAssistant(l.title, 160)}`)
+      if (l.notes?.trim()) bits.push(`notes: ${truncateForAssistant(l.notes, 240)}`)
+      if (l.processCompact?.trim())
+        bits.push(`process: ${truncateForAssistant(l.processCompact, 280)}`)
+      if (bits.length === 0) return base
+      return `${base} — ${bits.join(" | ")}`
     })
     .join("\n")
 }

@@ -1,3 +1,4 @@
+import Link from "next/link"
 import type { DarkroomStats } from "@/lib/darkroom-stats"
 
 interface DarkroomLogCardProps {
@@ -34,6 +35,14 @@ export function DarkroomLogCard({ stats }: DarkroomLogCardProps) {
           </div>
         ))}
       </dl>
+      <p className="mt-4 text-center sm:text-end">
+        <Link
+          href="/diary"
+          className="text-sm font-medium text-foreground underline-offset-4 hover:underline"
+        >
+          Open diary →
+        </Link>
+      </p>
     </section>
   )
 }

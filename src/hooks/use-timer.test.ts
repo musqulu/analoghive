@@ -315,4 +315,57 @@ describe("useTimer", () => {
       expect(onDevComplete).toHaveBeenCalledTimes(1)
     })
   })
+
+  describe("onProcessComplete", () => {
+    it("fires once when wash finishes naturally after a full countdown run", () => {
+      const onProcessComplete = jest.fn()
+      const times: ProcessTimes = { dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }
+      const { result } = renderHook(() =>
+        useTimer({
+          developmentTime: 0.05,
+          temperature: 20,
+          customTimes: times,
+          onProcessComplete,
+        }),
+      )
+
+      act(() => result.current.startTimer("dev"))
+      act(() => jest.advanceTimersByTime(3500))
+      expect(result.current.currentStep).toBe("stop")
+
+      act(() => jest.advanceTimersByTime(3500))
+      expect(result.current.currentStep).toBe("fix")
+
+      act(() => jest.advanceTimersByTime(3500))
+      expect(result.current.currentStep).toBe("wash")
+
+      act(() => jest.advanceTimersByTime(3500))
+      expect(onProcessComplete).toHaveBeenCalledTimes(1)
+      expect(result.current.isRunning).toBe(false)
+
+      act(() => result.current.startTimer("dev"))
+      act(() => jest.advanceTimersByTime(3500))
+      act(() => jest.advanceTimersByTime(3500))
+      act(() => jest.advanceTimersByTime(3500))
+      act(() => jest.advanceTimersByTime(3500))
+      expect(onProcessComplete).toHaveBeenCalledTimes(2)
+    })
+
+    it("fires when wash is run standalone to completion after startTimer(\"wash\")", () => {
+      const onProcessComplete = jest.fn()
+      const times: ProcessTimes = { dev: 1, stop: 0.05, fix: 0.05, wash: 0.05 }
+      const { result } = renderHook(() =>
+        useTimer({
+          developmentTime: 1,
+          temperature: 20,
+          customTimes: times,
+          onProcessComplete,
+        }),
+      )
+
+      act(() => result.current.startTimer("wash"))
+      act(() => jest.advanceTimersByTime(3500))
+      expect(onProcessComplete).toHaveBeenCalledTimes(1)
+    })
+  })
 })

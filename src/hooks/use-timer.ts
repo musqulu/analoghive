@@ -22,6 +22,12 @@ interface UseTimerOptions {
    * Used by /develop/timer to auto-record a darkroom log entry.
    */
   onDevComplete?: () => void
+  /**
+   * Fires once when the wash step finishes naturally (timer reaches zero) and there
+   * is no further step — not when skipping steps manually. Resets like `onDevComplete`
+   * when entering `preSoak` / `dev` via `startTimer`, and on every `resetTimer`.
+   */
+  onProcessComplete?: () => void
 }
 
 function hasPreSoakDuration(customTimes: ProcessTimes): boolean {
@@ -41,6 +47,7 @@ export function useTimer({
   isColor = false,
   customTimes,
   onDevComplete,
+  onProcessComplete,
 }: UseTimerOptions) {
   const [timeLeft, setTimeLeft] = React.useState(() =>
     initialIdleSeconds(customTimes, developmentTime),
@@ -155,9 +162,16 @@ export function useTimer({
     onDevCompleteRef.current = onDevComplete
   }, [onDevComplete])
 
+  const onProcessCompleteRef = React.useRef(onProcessComplete)
+  React.useEffect(() => {
+    onProcessCompleteRef.current = onProcessComplete
+  }, [onProcessComplete])
+
   // Guards `onDevComplete` to fire once per `startTimer("dev")` invocation; resets
   // when dev is started again (or via resetTimer mid-dev).
   const devCompleteFiredRef = React.useRef(false)
+  /** Once per wash completion from the countdown (not skips). Reset with dev guard + resetTimer. */
+  const processCompleteFiredRef = React.useRef(false)
 
   // Auto-advance steps
   React.useEffect(() => {
@@ -172,6 +186,10 @@ export function useTimer({
         setCurrentStep(next)
         setTimeLeft(steps[next].time)
       } else {
+        if (currentStep === "wash" && !processCompleteFiredRef.current) {
+          processCompleteFiredRef.current = true
+          onProcessCompleteRef.current?.()
+        }
         setIsRunning(false)
       }
     }
@@ -180,6 +198,7 @@ export function useTimer({
   const startTimer = (step: Step) => {
     if (step === "dev" || step === "preSoak") {
       devCompleteFiredRef.current = false
+      processCompleteFiredRef.current = false
     }
     setCurrentStep(step)
     setTimeLeft(steps[step].time)
@@ -196,6 +215,7 @@ export function useTimer({
       if (currentStep === "dev" || currentStep === "preSoak") {
         devCompleteFiredRef.current = false
       }
+      processCompleteFiredRef.current = false
       setTimeLeft(steps[currentStep].time)
       setIsRunning(false)
       setIsPaused(false)

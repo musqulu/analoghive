@@ -5,6 +5,7 @@ import {
   parseRecipePayload,
   type RecipePayloadV1,
 } from "@/types/recipe"
+import { summarizeProcessSnapshot, parseDevelopmentProcessSnapshot } from "@/lib/process-snapshot"
 
 export const RECIPE_LIMIT = 30
 export const FAVORITE_LIMIT = 30
@@ -45,6 +46,10 @@ export interface CompactLogEntry {
   developerName: string
   optionKey: string
   createdAt: string
+  title: string | null
+  notes: string | null
+  /** Derived from persisted `process_snapshot` when valid. */
+  processCompact: string | null
 }
 
 export interface UserChatContext {
@@ -91,7 +96,7 @@ export async function loadUserContext(
     supabase
       .from("development_log_entries")
       .select(
-        "id, film_name, film_format, film_iso, developer_name, option_key, created_at",
+        "id, film_name, film_format, film_iso, developer_name, option_key, created_at, title, notes, process_snapshot",
       )
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
@@ -154,15 +159,24 @@ export async function loadUserContext(
     developer_name: string
     option_key: string
     created_at: string
-  }>).map((l) => ({
-    id: l.id,
-    filmName: l.film_name,
-    filmFormat: l.film_format,
-    filmIso: l.film_iso,
-    developerName: l.developer_name,
-    optionKey: l.option_key,
-    createdAt: l.created_at,
-  }))
+    title?: string | null
+    notes?: string | null
+    process_snapshot?: unknown | null
+  }>).map((l) => {
+    const snapshot = parseDevelopmentProcessSnapshot(l.process_snapshot ?? null)
+    return {
+      id: l.id,
+      filmName: l.film_name,
+      filmFormat: l.film_format,
+      filmIso: l.film_iso,
+      developerName: l.developer_name,
+      optionKey: l.option_key,
+      createdAt: l.created_at,
+      title: l.title ?? null,
+      notes: l.notes ?? null,
+      processCompact: snapshot ? summarizeProcessSnapshot(snapshot) : null,
+    }
+  })
 
   return { recipes, favorites, recentLogs }
 }

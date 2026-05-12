@@ -53,6 +53,9 @@ const log: CompactLogEntry = {
   developerName: "Rodinal",
   optionKey: "1+50|20",
   createdAt: "2026-04-12T18:30:00Z",
+  title: null,
+  notes: null,
+  processCompact: null,
 }
 
 const row: CompactDeveloperRow = {
@@ -95,6 +98,36 @@ describe("buildSystemPrompt", () => {
 
     expect(prompt).toContain("<user-recent-logs>")
     expect(prompt).toContain("2026-04-12: FP4+")
+  })
+
+  it("appends truncated diary title and notes to log lines when present", () => {
+    const diaryLog: CompactLogEntry = {
+      ...log,
+      title: "Weekend portraits",
+      notes: "Grain looks clean; consider +30s next time.",
+    }
+    const prompt = buildSystemPrompt({
+      context: { recipes: [], favorites: [], recentLogs: [diaryLog] },
+      developerRows: [],
+    })
+    expect(prompt).toContain(
+      "| Rodinal 1+50|20 — title: Weekend portraits | notes: Grain looks clean; consider +30s next time.",
+    )
+  })
+
+  it("appends persisted process_snapshot text after title and notes", () => {
+    const diaryLog: CompactLogEntry = {
+      ...log,
+      title: "Portrait push",
+      notes: "Grain ok.",
+      processCompact: 'dev 8 min @ 20°C (Rodinal · 1+50 · stop/fix/wash at 20°C)',
+    }
+    const prompt = buildSystemPrompt({
+      context: { recipes: [], favorites: [], recentLogs: [diaryLog] },
+      developerRows: [],
+    })
+    expect(prompt).toContain("title: Portrait push | notes: Grain ok.")
+    expect(prompt).toContain("process: dev 8 min @ 20°C (Rodinal · 1+50 · stop/fix/wash at 20°C)")
   })
 
   it("formats developer rows with dilution + temperature + per-ISO times", () => {

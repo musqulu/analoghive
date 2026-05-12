@@ -13,3 +13,7 @@ export const LISTING_CARD_DIVIDER = "my-5 border-t border-border"
 
 export const LISTING_CARD_OPEN_LINK =
   "inline-flex w-full shrink-0 items-center justify-center rounded-lg border border-border bg-background px-6 py-2.5 text-sm font-semibold text-foreground outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card sm:w-auto"
+
+/** Kebab-style icon button row (recipe / favorites / diary secondary actions). */
+export const LISTING_CARD_MENU_TRIGGER =
+  "inline-flex h-10 shrink-0 items-center justify-center rounded-lg border border-border bg-background px-3 text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:opacity-50"

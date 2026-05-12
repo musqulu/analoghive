@@ -224,6 +224,9 @@ describe("loadUserContext", () => {
       developerName: "Cinestill Cs41",
       optionKey: "stock|38",
       createdAt: "2026-04-15T00:00:00Z",
+      title: null,
+      notes: null,
+      processCompact: null,
     })
   })
 })

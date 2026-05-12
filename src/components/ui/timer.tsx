@@ -9,6 +9,8 @@ import { TimerDisplay } from "@/components/timer/timer-display"
 import { StepIndicator } from "@/components/timer/step-indicator"
 import { ProcessEditor } from "@/components/timer/process-editor"
 import { DevelopmentMode } from "@/components/development-mode"
+import { buildDevelopmentProcessSnapshot } from "@/lib/process-snapshot"
+import type { DevelopmentProcessSnapshot } from "@/types/development-log"
 import type { ProcessTimes, WashingMethod, Step } from "@/types/development"
 
 interface TimerProps {
@@ -27,8 +29,10 @@ interface TimerProps {
   initialWashingMethod?: WashingMethod
   /** Personal notes (saved recipes), shown separately from chart reference */
   recipeNotes?: string
-  /** Fires once each time the dev step countdown completes. */
-  onDevComplete?: () => void
+  /** Fires once each time the dev step countdown completes (current process edits included). */
+  onDevComplete?: (snapshot: DevelopmentProcessSnapshot) => void
+  /** Full process finished naturally after wash countdown. */
+  onProcessComplete?: (snapshot: DevelopmentProcessSnapshot) => void
 }
 
 export function Timer({
@@ -40,11 +44,13 @@ export function Timer({
   developerName,
   developerDilution,
   totalVolume = 500,
+  temperatureUnit,
   isColor = false,
   initialProcessTimes,
   initialWashingMethod,
   recipeNotes,
   onDevComplete,
+  onProcessComplete,
 }: TimerProps) {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false)
   const [isDevelopmentModeOpen, setIsDevelopmentModeOpen] = React.useState(false)
@@ -71,12 +77,59 @@ export function Timer({
     setCustomTimes((prev) => ({ ...prev, dev: developmentTime }))
   }, [developmentTime])
 
+  const snapshotInputRef = React.useRef({
+    developmentTime,
+    developerDilution,
+    temperature,
+    temperatureUnit,
+    totalVolume,
+    isColor,
+    customTimes,
+    washingMethod,
+  })
+  snapshotInputRef.current = {
+    developmentTime,
+    developerDilution,
+    temperature,
+    temperatureUnit,
+    totalVolume,
+    isColor,
+    customTimes,
+    washingMethod,
+  }
+
+  const buildCurrentSnapshot = () => {
+    const sIn = snapshotInputRef.current
+    return buildDevelopmentProcessSnapshot({
+      developmentTimeMinutes: sIn.developmentTime,
+      developerDilution: sIn.developerDilution ?? null,
+      temperature: sIn.temperature,
+      temperatureUnit: sIn.temperatureUnit ?? null,
+      totalVolume:
+        typeof sIn.totalVolume === "number" && Number.isFinite(sIn.totalVolume)
+          ? sIn.totalVolume
+          : null,
+      isColor: sIn.isColor,
+      customTimes: sIn.customTimes,
+      washingMethod: sIn.washingMethod,
+    })
+  }
+
+  const emitDevComplete = React.useCallback(() => {
+    onDevComplete?.(buildCurrentSnapshot())
+  }, [onDevComplete])
+
+  const emitProcessComplete = React.useCallback(() => {
+    onProcessComplete?.(buildCurrentSnapshot())
+  }, [onProcessComplete])
+
   const timer = useTimer({
     developmentTime,
     temperature,
     isColor,
     customTimes,
-    onDevComplete,
+    onDevComplete: emitDevComplete,
+    onProcessComplete: emitProcessComplete,
   })
 
   const stepOrder = React.useMemo((): Step[] => {
@@ -207,7 +260,8 @@ export function Timer({
         stopSeconds={Math.round(customTimes.stop * 60)}
         fixSeconds={Math.round(customTimes.fix * 60)}
         washSeconds={Math.round(customTimes.wash * 60)}
-        onDevComplete={onDevComplete}
+        onDevComplete={emitDevComplete}
+        onProcessComplete={emitProcessComplete}
       />
     </div>
   )

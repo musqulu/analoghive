@@ -6,9 +6,14 @@ import * as Dialog from "@radix-ui/react-dialog"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { Timer } from "@/components/ui/timer"
+import { DiaryCompletionDialog } from "@/components/development-diary/completion-dialog"
 import { Button } from "@/components/landing/button"
 import { recipePayloadToTimerProps, type RecipePayloadV1 } from "@/types/recipe"
 import { logDevelopmentRun } from "@/lib/log-development-run"
+import type {
+  DiaryCompletionSummary,
+  DevelopmentProcessSnapshot,
+} from "@/types/development-log"
 
 export function RecipeDetailClient({
   recipeId,
@@ -27,15 +32,8 @@ export function RecipeDetailClient({
       .join("\n\n")
       .trim() || undefined
 
-  // Auto-log a darkroom entry the first time the dev step finishes for this
-  // recipe in this page-load. The hook re-arms internally on each startTimer
-  // ("dev"), but we cap to one persisted entry per page-load so retries don't
-  // multiply rolls.
-  const loggedRef = React.useRef(false)
-  const handleDevComplete = React.useCallback(() => {
-    if (loggedRef.current) return
-    loggedRef.current = true
-    void logDevelopmentRun({
+  const diarySummary = React.useMemo<DiaryCompletionSummary>(
+    () => ({
       film_name: payload.identity.filmName,
       film_format: payload.identity.filmFormat,
       film_iso: payload.identity.filmIso,
@@ -45,12 +43,69 @@ export function RecipeDetailClient({
       temperature_unit: payload.temperatureUnit,
       modified_temperature: payload.modifiedTemperature,
       push_pull_stops: payload.identity.pushPullStops,
-      recipe_id: recipeId,
-      favorite_id: null,
-    }).then((logged) => {
-      if (!logged) loggedRef.current = false
-    })
-  }, [recipeId, payload])
+    }),
+    [
+      payload.identity.filmFormat,
+      payload.identity.filmIso,
+      payload.identity.filmName,
+      payload.identity.developerName,
+      payload.identity.optionKey,
+      payload.identity.pushPullStops,
+      payload.modifiedTemperature,
+      payload.temperatureUnit,
+      payload.totalVolume,
+    ],
+  )
+
+  const logEntryIdRef = React.useRef<string | null>(null)
+  const [celebrateOpen, setCelebrateOpen] = React.useState(false)
+  const [celebrateLogId, setCelebrateLogId] = React.useState<string | null>(null)
+  const [celebrateProcessSnapshot, setCelebrateProcessSnapshot] =
+    React.useState<DevelopmentProcessSnapshot | null>(null)
+
+  // Auto-log a darkroom entry the first time the dev step finishes for this
+  // recipe in this page-load. The hook re-arms internally on each startTimer
+  // ("dev"), but we cap to one persisted entry per page-load so retries don't
+  // multiply rolls.
+  const loggedRef = React.useRef(false)
+  const handleDevComplete = React.useCallback(
+    (processSnapshot: DevelopmentProcessSnapshot) => {
+      if (loggedRef.current) return
+      loggedRef.current = true
+      void logDevelopmentRun({
+        film_name: payload.identity.filmName,
+        film_format: payload.identity.filmFormat,
+        film_iso: payload.identity.filmIso,
+        developer_name: payload.identity.developerName,
+        option_key: payload.identity.optionKey,
+        total_volume: payload.totalVolume,
+        temperature_unit: payload.temperatureUnit,
+        modified_temperature: payload.modifiedTemperature,
+        push_pull_stops: payload.identity.pushPullStops,
+        recipe_id: recipeId,
+        favorite_id: null,
+        process_snapshot: processSnapshot,
+      }).then((res) => {
+        if (res) logEntryIdRef.current = res.id
+        else loggedRef.current = false
+      })
+    },
+    [recipeId, payload],
+  )
+
+  const handleProcessComplete = React.useCallback(
+    (processSnapshot: DevelopmentProcessSnapshot) => {
+      setCelebrateProcessSnapshot(processSnapshot)
+      setCelebrateLogId(logEntryIdRef.current)
+      setCelebrateOpen(true)
+    },
+    [],
+  )
+
+  const handleCelebrateOpenChange = React.useCallback((open: boolean) => {
+    setCelebrateOpen(open)
+    if (!open) setCelebrateProcessSnapshot(null)
+  }, [])
 
   const remove = async () => {
     setDeleting(true)
@@ -82,6 +137,12 @@ export function RecipeDetailClient({
         ) : null}
       </div>
 
+      <DiaryCompletionDialog
+        open={celebrateOpen}
+        onOpenChange={handleCelebrateOpenChange}
+        logEntryId={celebrateLogId}
+        summary={{ ...diarySummary, process_snapshot: celebrateProcessSnapshot ?? undefined }}
+      />
       <Timer
         key={recipeId}
         {...timerProps}
@@ -89,6 +150,7 @@ export function RecipeDetailClient({
         initialWashingMethod={payload.washingMethod}
         recipeNotes={combinedNotes}
         onDevComplete={handleDevComplete}
+        onProcessComplete={handleProcessComplete}
       />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">

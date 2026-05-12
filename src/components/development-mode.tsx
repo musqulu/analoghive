@@ -55,6 +55,8 @@ interface DevelopmentModeProps {
   washSeconds?: number
   /** Fires once when the developer countdown completes. */
   onDevComplete?: () => void
+  /** When wash finishes by countdown only (not "Next Step" skip). */
+  onProcessComplete?: () => void
 }
 
 export function DevelopmentMode({
@@ -70,6 +72,7 @@ export function DevelopmentMode({
   fixSeconds = 300,
   washSeconds = 600,
   onDevComplete,
+  onProcessComplete,
 }: DevelopmentModeProps) {
   const devDuration = durationSeconds(time)
   const preSoakDuration = durationSeconds(preSoakSeconds)
@@ -85,12 +88,18 @@ export function DevelopmentMode({
   )
   const scrollPositionRef = useRef<number>(0)
   const devCompleteFiredRef = useRef(false)
+  const processCompleteFiredRef = useRef(false)
   const onDevCompleteRef = useRef(onDevComplete)
+  const onProcessCompleteRef = useRef(onProcessComplete)
   const [shouldShake, setShouldShake] = useState(false)
 
   useEffect(() => {
     onDevCompleteRef.current = onDevComplete
   }, [onDevComplete])
+
+  useEffect(() => {
+    onProcessCompleteRef.current = onProcessComplete
+  }, [onProcessComplete])
 
   // Save scroll position when opening and restore when closing
   useEffect(() => {
@@ -128,6 +137,7 @@ export function DevelopmentMode({
     setSeconds(presoak ? preSoakDuration : devDuration)
     setIsRunning(false)
     devCompleteFiredRef.current = false
+    processCompleteFiredRef.current = false
     setShouldShake(false)
   }, [isOpen, devDuration, preSoakDuration, stopDuration, fixDuration, washDuration])
 
@@ -159,7 +169,13 @@ export function DevelopmentMode({
         setCurrentStep("stop")
       } else if (currentStep === "stop") setCurrentStep("fixer")
       else if (currentStep === "fixer") setCurrentStep("wash")
-      else if (currentStep === "wash") setCurrentStep("complete")
+      else if (currentStep === "wash") {
+        if (!processCompleteFiredRef.current) {
+          processCompleteFiredRef.current = true
+          onProcessCompleteRef.current?.()
+        }
+        setCurrentStep("complete")
+      }
     }
 
     return () => {
@@ -205,6 +221,7 @@ export function DevelopmentMode({
     setCurrentStep(first)
     setSeconds(first === "presoak" ? preSoakDuration : devDuration)
     devCompleteFiredRef.current = false
+    processCompleteFiredRef.current = false
     setShouldShake(false)
   }
 

@@ -19,6 +19,7 @@ const toolLinks = [
 const STORIES_HREF = "/stories"
 const FAVORITES_HREF = "/favorites"
 const RECIPES_HREF = "/recipes"
+const DIARY_HREF = "/diary"
 
 function isToolsActive(pathname: string) {
   return toolLinks.some(({ href }) => pathname === href)
@@ -62,6 +63,15 @@ function recipesNavClass(pathname: string) {
     pathname === RECIPES_HREF || pathname.startsWith(`${RECIPES_HREF}/`)
       ? "font-semibold text-foreground"
       : "text-muted-foreground hover:text-foreground"
+  )
+}
+
+function diaryNavClass(pathname: string) {
+  return cn(
+    "text-sm/7 font-medium transition-colors",
+    pathname === DIARY_HREF
+      ? "font-semibold text-foreground"
+      : "text-muted-foreground hover:text-foreground",
   )
 }
 
@@ -128,6 +138,9 @@ export function Nav() {
               <Link href={RECIPES_HREF} className={recipesNavClass(pathname)}>
                 Recipes
               </Link>
+              <Link href={DIARY_HREF} className={diaryNavClass(pathname)}>
+                Diary
+              </Link>
               <Link href={FAVORITES_HREF} className={favoritesNavClass(pathname)}>
                 Favorites
               </Link>
@@ -163,7 +176,7 @@ export function Nav() {
               >
                 <Dialog.Title className="sr-only">Main navigation</Dialog.Title>
                 <Dialog.Description className="sr-only">
-                  Tools, stories, recipes, favorites, and account actions.
+                  Tools, stories, recipes, diary, favorites, and account actions.
                 </Dialog.Description>
                 <div className="mb-4 flex shrink-0 items-center justify-between border-b border-border pb-4">
                   <span className="text-sm font-semibold text-foreground">Menu</span>
@@ -216,6 +229,15 @@ export function Nav() {
                         )}
                       >
                         Recipes
+                      </Link>
+                      <Link
+                        href={DIARY_HREF}
+                        className={cn(
+                          diaryNavClass(pathname),
+                          "rounded-md px-3 py-3 text-base/7"
+                        )}
+                      >
+                        Diary
                       </Link>
                       <Link
                         href={FAVORITES_HREF}

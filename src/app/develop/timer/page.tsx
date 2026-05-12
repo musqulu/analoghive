@@ -2,11 +2,14 @@
 
 import * as React from "react"
 import { useSearchParams } from "next/navigation"
-import { Timer } from "@/components/ui/timer"
 import { Suspense } from "react"
 import { cn } from "@/lib/utils"
 import { mainGutterX, mainUnderNav } from "@/lib/app-page-layout"
-import { logDevelopmentRun } from "@/lib/log-development-run"
+import { TimerPageWithDiary } from "@/app/develop/timer/with-diary"
+import {
+  decodeDiaryReplayParam,
+  DIARY_TIMER_REPLAY_PARAM,
+} from "@/lib/diary-timer-replay"
 import type { FilmFormat } from "@/types/development"
 
 function TimerContent() {
@@ -25,54 +28,12 @@ function TimerContent() {
   const optionKeyParam = params.get("optionKey")
   const tempUnitParam = params.get("tempUnit")
   const pushPullParam = params.get("pushPull")
-
-  // Same-page guard: a single page-load should only log one entry, even if the
-  // user resets the dev step and re-runs it (e.g. to retry).
-  const loggedRef = React.useRef(false)
-
-  const handleDevComplete = React.useCallback(() => {
-    if (loggedRef.current) return
-    loggedRef.current = true
-    const optionKey =
-      optionKeyParam ?? (developerDilution ? `${developerDilution}|${temperature}` : `|${temperature}`)
-    const temperatureUnit =
-      tempUnitParam === "fahrenheit" ? "fahrenheit" : tempUnitParam === "celsius" ? "celsius" : null
-    const pushPullStops = pushPullParam !== null ? Number(pushPullParam) : null
-    void (async () => {
-      const logged = await logDevelopmentRun({
-        film_name: filmName,
-        film_format: filmFormat,
-        film_iso: filmIso,
-        developer_name: developerName,
-        option_key: optionKey,
-        total_volume: Number.isFinite(totalVolume) ? totalVolume : null,
-        temperature_unit: temperatureUnit,
-        modified_temperature: Number.isFinite(temperature) ? temperature : null,
-        push_pull_stops: Number.isFinite(pushPullStops as number) ? pushPullStops : null,
-        recipe_id: recipeId,
-        favorite_id: favoriteId,
-      })
-      if (!logged) loggedRef.current = false
-    })()
-  }, [
-    filmName,
-    filmFormat,
-    filmIso,
-    developerName,
-    developerDilution,
-    optionKeyParam,
-    tempUnitParam,
-    pushPullParam,
-    temperature,
-    totalVolume,
-    recipeId,
-    favoriteId,
-  ])
+  const replaySnapshot = decodeDiaryReplayParam(params.get(DIARY_TIMER_REPLAY_PARAM))
 
   return (
     <main className={cn("flex flex-col items-center", mainUnderNav, mainGutterX)}>
       <div className="max-w-md w-full">
-        <Timer
+        <TimerPageWithDiary
           filmName={filmName}
           filmFormat={filmFormat}
           filmIso={filmIso}
@@ -81,7 +42,12 @@ function TimerContent() {
           developmentTime={developmentTime}
           temperature={temperature}
           totalVolume={totalVolume}
-          onDevComplete={handleDevComplete}
+          recipeId={recipeId}
+          favoriteId={favoriteId}
+          optionKeyParam={optionKeyParam}
+          tempUnitParam={tempUnitParam}
+          pushPullParam={pushPullParam}
+          replaySnapshot={replaySnapshot}
         />
       </div>
     </main>
