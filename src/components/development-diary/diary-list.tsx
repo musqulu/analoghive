@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { FilmFormatIcon } from "@/components/film-format-icon"
 import { DiaryEntryEditDialog } from "@/components/development-diary/diary-entry-edit-dialog"
+import { DiaryPageEmpty } from "@/components/development-diary/diary-page-empty"
 import { buildDiaryTimerReplayHref } from "@/lib/diary-timer-replay"
 import {
   LISTING_CARD_DIVIDER,
@@ -104,15 +105,7 @@ export function DiaryList({ entries }: { entries: DevelopmentLogEntryRow[] }) {
   const refresh = React.useCallback(() => router.refresh(), [router])
 
   if (entries.length === 0) {
-    return (
-      <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-8 text-center text-sm text-muted-foreground shadow-ds-card-lg">
-        <p className="font-medium text-foreground">No diary entries yet</p>
-        <p className="mt-2">
-          Run the development timer through to the end while signed in. After the wash step,
-          you can add a title and notes for each roll.
-        </p>
-      </div>
-    )
+    return <DiaryPageEmpty />
   }
 
   return (
