@@ -21,6 +21,7 @@ export function DiaryCompletionDialog({
   const [title, setTitle] = React.useState("")
   const [notes, setNotes] = React.useState("")
   const [busy, setBusy] = React.useState(false)
+  const [saveError, setSaveError] = React.useState<string | null>(null)
 
   React.useEffect(() => {
     if (!open) return
@@ -28,6 +29,7 @@ export function DiaryCompletionDialog({
     setTitle("")
     setNotes("")
     setBusy(false)
+    setSaveError(null)
   }, [open])
 
   const handleSave = async () => {
@@ -36,12 +38,17 @@ export function DiaryCompletionDialog({
       return
     }
     setBusy(true)
-    await updateDiaryEntry({
+    setSaveError(null)
+    const ok = await updateDiaryEntry({
       id: logEntryId,
       title: title.trim() ? title.trim() : null,
       notes: notes.trim() ? notes.trim() : null,
     })
     setBusy(false)
+    if (!ok) {
+      setSaveError("We couldn't save your diary notes. Please try again before closing this dialog.")
+      return
+    }
     onOpenChange(false)
   }
 
@@ -93,6 +100,11 @@ export function DiaryCompletionDialog({
                   onChange={(e) => setNotes(e.target.value)}
                 />
               </div>
+              {saveError ? (
+                <p className="text-sm text-destructive" role="alert">
+                  {saveError}
+                </p>
+              ) : null}
             </div>
           ) : (
             <p className="mt-4 text-xs text-muted-foreground">
