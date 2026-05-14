@@ -8,16 +8,18 @@ export async function updateDiaryEntry(params: {
   const { id, title, notes } = params
   try {
     const supabase = createClient()
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("development_log_entries")
       .update({
         title: title?.trim() || null,
         notes: notes?.trim() || null,
       })
       .eq("id", id)
+      .select("id")
+      .single()
 
-    if (error) {
-      console.warn("[diary] update failed:", error.message)
+    if (error || !data?.id) {
+      console.warn("[diary] update failed:", error?.message ?? "missing id")
       return false
     }
     return true
