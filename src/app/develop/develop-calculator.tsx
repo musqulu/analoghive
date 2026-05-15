@@ -120,6 +120,7 @@ export function DevelopCalculator() {
       if (res) {
         loggedRef.current = true
         logEntryIdRef.current = res.id
+        setCelebrateLogId(res.id)
       }
     })
   }, [])

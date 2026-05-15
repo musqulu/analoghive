@@ -114,8 +114,10 @@ export function TimerPageWithDiary({
           favorite_id: favoriteId,
           process_snapshot: processSnapshot,
         })
-        if (res) logEntryIdRef.current = res.id
-        else loggedRef.current = false
+        if (res) {
+          logEntryIdRef.current = res.id
+          setCelebrateLogId(res.id)
+        } else loggedRef.current = false
       })()
     },
     [
