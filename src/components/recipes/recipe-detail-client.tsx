@@ -86,8 +86,10 @@ export function RecipeDetailClient({
         favorite_id: null,
         process_snapshot: processSnapshot,
       }).then((res) => {
-        if (res) logEntryIdRef.current = res.id
-        else loggedRef.current = false
+        if (res) {
+          logEntryIdRef.current = res.id
+          setCelebrateLogId(res.id)
+        } else loggedRef.current = false
       })
     },
     [recipeId, payload],
