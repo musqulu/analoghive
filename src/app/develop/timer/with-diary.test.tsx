@@ -26,30 +26,26 @@ jest.mock("@/components/development-diary/confetti", () => ({
   burstCelebrationConfetti: jest.fn(),
 }))
 
+function mockTimer({
+  onDevComplete,
+  onProcessComplete,
+}: {
+  onDevComplete?: (snapshot: DevelopmentProcessSnapshot) => void
+  onProcessComplete?: (snapshot: DevelopmentProcessSnapshot) => void
+}) {
+  return (
+    <div>
+      <button onClick={() => onDevComplete?.(mockProcessSnapshot)}>Finish dev</button>
+      <button onClick={() => onProcessComplete?.(mockProcessSnapshot)}>
+        Finish process
+      </button>
+    </div>
+  )
+}
+
 jest.mock("@/components/ui/timer", () => {
-  const React = require("react")
   return {
-    Timer: ({
-      onDevComplete,
-      onProcessComplete,
-    }: {
-      onDevComplete?: (snapshot: DevelopmentProcessSnapshot) => void
-      onProcessComplete?: (snapshot: DevelopmentProcessSnapshot) => void
-    }) =>
-      React.createElement(
-        "div",
-        null,
-        React.createElement(
-          "button",
-          { onClick: () => onDevComplete?.(mockProcessSnapshot) },
-          "Finish dev",
-        ),
-        React.createElement(
-          "button",
-          { onClick: () => onProcessComplete?.(mockProcessSnapshot) },
-          "Finish process",
-        ),
-      ),
+    Timer: mockTimer,
   }
 })
 
