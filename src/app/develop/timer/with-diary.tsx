@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { DiaryCompletionDialog } from "@/components/development-diary/completion-dialog"
-import { Timer } from "@/components/ui/timer"
+import { Timer, type DevelopmentSessionId } from "@/components/ui/timer"
 import { logDevelopmentRun } from "@/lib/log-development-run"
 import type { FilmFormat } from "@/types/development"
 import type {
@@ -42,8 +42,10 @@ export function TimerPageWithDiary({
   /** Decoded diary “Run again” hydration; null keeps default timer steps. */
   replaySnapshot?: DevelopmentProcessSnapshot | null
 }) {
-  const loggedRef = React.useRef(false)
-  const logEntryIdRef = React.useRef<string | null>(null)
+  const loggedSessionsRef = React.useRef(new Set<DevelopmentSessionId>())
+  const loggingSessionsRef = React.useRef(new Set<DevelopmentSessionId>())
+  const logEntryIdsRef = React.useRef(new Map<DevelopmentSessionId, string>())
+  const celebrateSessionRef = React.useRef<DevelopmentSessionId | null>(null)
   const [celebrateOpen, setCelebrateOpen] = React.useState(false)
   const [celebrateLogId, setCelebrateLogId] = React.useState<string | null>(null)
   const [celebrateProcessSnapshot, setCelebrateProcessSnapshot] =
@@ -86,9 +88,14 @@ export function TimerPageWithDiary({
   )
 
   const handleDevComplete = React.useCallback(
-    (processSnapshot: DevelopmentProcessSnapshot) => {
-      if (loggedRef.current) return
-      loggedRef.current = true
+    (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
+      if (
+        loggedSessionsRef.current.has(sessionId) ||
+        loggingSessionsRef.current.has(sessionId)
+      ) {
+        return
+      }
+      loggingSessionsRef.current.add(sessionId)
       void (async () => {
         const res = await logDevelopmentRun({
           film_name: filmName,
@@ -114,10 +121,12 @@ export function TimerPageWithDiary({
           favorite_id: favoriteId,
           process_snapshot: processSnapshot,
         })
+        loggingSessionsRef.current.delete(sessionId)
         if (res) {
-          logEntryIdRef.current = res.id
-          setCelebrateLogId(res.id)
-        } else loggedRef.current = false
+          loggedSessionsRef.current.add(sessionId)
+          logEntryIdsRef.current.set(sessionId, res.id)
+          if (celebrateSessionRef.current === sessionId) setCelebrateLogId(res.id)
+        }
       })()
     },
     [
@@ -136,9 +145,10 @@ export function TimerPageWithDiary({
   ])
 
   const handleProcessComplete = React.useCallback(
-    (processSnapshot: DevelopmentProcessSnapshot) => {
+    (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
+      celebrateSessionRef.current = sessionId
       setCelebrateProcessSnapshot(processSnapshot)
-      setCelebrateLogId(logEntryIdRef.current)
+      setCelebrateLogId(logEntryIdsRef.current.get(sessionId) ?? null)
       setCelebrateOpen(true)
     },
     [],
@@ -146,7 +156,10 @@ export function TimerPageWithDiary({
 
   const handleCelebrateOpenChange = React.useCallback((open: boolean) => {
     setCelebrateOpen(open)
-    if (!open) setCelebrateProcessSnapshot(null)
+    if (!open) {
+      celebrateSessionRef.current = null
+      setCelebrateProcessSnapshot(null)
+    }
   }, [])
 
   return (

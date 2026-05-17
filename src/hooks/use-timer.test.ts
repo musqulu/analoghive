@@ -262,10 +262,12 @@ describe("useTimer", () => {
       act(() => result.current.startTimer("dev"))
       act(() => jest.advanceTimersByTime(4000))
       expect(onDevComplete).toHaveBeenCalledTimes(1)
+      expect(onDevComplete).toHaveBeenLastCalledWith(1)
 
       act(() => result.current.startTimer("dev"))
       act(() => jest.advanceTimersByTime(4000))
       expect(onDevComplete).toHaveBeenCalledTimes(2)
+      expect(onDevComplete).toHaveBeenLastCalledWith(2)
     })
 
     it("does not fire when stop/fix/wash steps complete on their own", () => {

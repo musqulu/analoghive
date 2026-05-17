@@ -5,7 +5,7 @@ import Link from "next/link"
 import * as Dialog from "@radix-ui/react-dialog"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
-import { Timer } from "@/components/ui/timer"
+import { Timer, type DevelopmentSessionId } from "@/components/ui/timer"
 import { DiaryCompletionDialog } from "@/components/development-diary/completion-dialog"
 import { Button } from "@/components/landing/button"
 import { recipePayloadToTimerProps, type RecipePayloadV1 } from "@/types/recipe"
@@ -57,21 +57,26 @@ export function RecipeDetailClient({
     ],
   )
 
-  const logEntryIdRef = React.useRef<string | null>(null)
+  const loggedSessionsRef = React.useRef(new Set<DevelopmentSessionId>())
+  const loggingSessionsRef = React.useRef(new Set<DevelopmentSessionId>())
+  const logEntryIdsRef = React.useRef(new Map<DevelopmentSessionId, string>())
+  const celebrateSessionRef = React.useRef<DevelopmentSessionId | null>(null)
   const [celebrateOpen, setCelebrateOpen] = React.useState(false)
   const [celebrateLogId, setCelebrateLogId] = React.useState<string | null>(null)
   const [celebrateProcessSnapshot, setCelebrateProcessSnapshot] =
     React.useState<DevelopmentProcessSnapshot | null>(null)
 
-  // Auto-log a darkroom entry the first time the dev step finishes for this
-  // recipe in this page-load. The hook re-arms internally on each startTimer
-  // ("dev"), but we cap to one persisted entry per page-load so retries don't
-  // multiply rolls.
-  const loggedRef = React.useRef(false)
+  // Auto-log once per timer session, while still allowing multiple rolls from
+  // the same recipe without requiring navigation between runs.
   const handleDevComplete = React.useCallback(
-    (processSnapshot: DevelopmentProcessSnapshot) => {
-      if (loggedRef.current) return
-      loggedRef.current = true
+    (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
+      if (
+        loggedSessionsRef.current.has(sessionId) ||
+        loggingSessionsRef.current.has(sessionId)
+      ) {
+        return
+      }
+      loggingSessionsRef.current.add(sessionId)
       void logDevelopmentRun({
         film_name: payload.identity.filmName,
         film_format: payload.identity.filmFormat,
@@ -86,19 +91,22 @@ export function RecipeDetailClient({
         favorite_id: null,
         process_snapshot: processSnapshot,
       }).then((res) => {
+        loggingSessionsRef.current.delete(sessionId)
         if (res) {
-          logEntryIdRef.current = res.id
-          setCelebrateLogId(res.id)
-        } else loggedRef.current = false
+          loggedSessionsRef.current.add(sessionId)
+          logEntryIdsRef.current.set(sessionId, res.id)
+          if (celebrateSessionRef.current === sessionId) setCelebrateLogId(res.id)
+        }
       })
     },
     [recipeId, payload],
   )
 
   const handleProcessComplete = React.useCallback(
-    (processSnapshot: DevelopmentProcessSnapshot) => {
+    (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
+      celebrateSessionRef.current = sessionId
       setCelebrateProcessSnapshot(processSnapshot)
-      setCelebrateLogId(logEntryIdRef.current)
+      setCelebrateLogId(logEntryIdsRef.current.get(sessionId) ?? null)
       setCelebrateOpen(true)
     },
     [],
@@ -106,7 +114,10 @@ export function RecipeDetailClient({
 
   const handleCelebrateOpenChange = React.useCallback((open: boolean) => {
     setCelebrateOpen(open)
-    if (!open) setCelebrateProcessSnapshot(null)
+    if (!open) {
+      celebrateSessionRef.current = null
+      setCelebrateProcessSnapshot(null)
+    }
   }, [])
 
   const remove = async () => {
