@@ -13,6 +13,8 @@ import { buildDevelopmentProcessSnapshot } from "@/lib/process-snapshot"
 import type { DevelopmentProcessSnapshot } from "@/types/development-log"
 import type { ProcessTimes, WashingMethod, Step } from "@/types/development"
 
+export type DevelopmentSessionId = string
+
 interface TimerProps {
   developmentTime: number
   temperature: number
@@ -30,9 +32,15 @@ interface TimerProps {
   /** Personal notes (saved recipes), shown separately from chart reference */
   recipeNotes?: string
   /** Fires once each time the dev step countdown completes (current process edits included). */
-  onDevComplete?: (snapshot: DevelopmentProcessSnapshot) => void
+  onDevComplete?: (
+    snapshot: DevelopmentProcessSnapshot,
+    sessionId: DevelopmentSessionId,
+  ) => void
   /** Full process finished naturally after wash countdown. */
-  onProcessComplete?: (snapshot: DevelopmentProcessSnapshot) => void
+  onProcessComplete?: (
+    snapshot: DevelopmentProcessSnapshot,
+    sessionId: DevelopmentSessionId,
+  ) => void
 }
 
 export function Timer({
@@ -120,12 +128,12 @@ export function Timer({
     })
   }
 
-  const emitDevComplete = React.useCallback(() => {
-    onDevComplete?.(buildCurrentSnapshot())
+  const emitDevComplete = React.useCallback((sessionId: DevelopmentSessionId) => {
+    onDevComplete?.(buildCurrentSnapshot(), sessionId)
   }, [onDevComplete])
 
-  const emitProcessComplete = React.useCallback(() => {
-    onProcessComplete?.(buildCurrentSnapshot())
+  const emitProcessComplete = React.useCallback((sessionId: DevelopmentSessionId) => {
+    onProcessComplete?.(buildCurrentSnapshot(), sessionId)
   }, [onProcessComplete])
 
   const timer = useTimer({
@@ -133,8 +141,8 @@ export function Timer({
     temperature,
     isColor,
     customTimes,
-    onDevComplete: emitDevComplete,
-    onProcessComplete: emitProcessComplete,
+    onDevComplete: (sessionId) => emitDevComplete(`timer:${sessionId}`),
+    onProcessComplete: (sessionId) => emitProcessComplete(`timer:${sessionId}`),
   })
 
   const stepOrder = React.useMemo((): Step[] => {
@@ -269,8 +277,8 @@ export function Timer({
         stopSeconds={Math.round(customTimes.stop * 60)}
         fixSeconds={Math.round(customTimes.fix * 60)}
         washSeconds={Math.round(customTimes.wash * 60)}
-        onDevComplete={emitDevComplete}
-        onProcessComplete={emitProcessComplete}
+        onDevComplete={(sessionId) => emitDevComplete(`darkroom:${sessionId}`)}
+        onProcessComplete={(sessionId) => emitProcessComplete(`darkroom:${sessionId}`)}
       />
     </div>
   )

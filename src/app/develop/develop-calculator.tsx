@@ -8,7 +8,7 @@ import { FilmDeveloperForm } from "@/components/develop/film-developer-form"
 import { DevelopmentSummary } from "@/components/develop/development-summary"
 import { TemperatureCorrection } from "@/components/develop/temperature-correction"
 import { VolumeMixer } from "@/components/ui/volume-mixer"
-import { Timer } from "@/components/ui/timer"
+import { Timer, type DevelopmentSessionId } from "@/components/ui/timer"
 import {
   SaveFavoriteButton,
   buildFavoriteSnapshotFromCalculator,
@@ -89,19 +89,25 @@ export function DevelopCalculator() {
     }
   }, [favoriteSnapshot])
 
-  const logEntryIdRef = React.useRef<string | null>(null)
+  const loggedSessionsRef = React.useRef(new Set<DevelopmentSessionId>())
+  const loggingSessionsRef = React.useRef(new Set<DevelopmentSessionId>())
+  const logEntryIdsRef = React.useRef(new Map<DevelopmentSessionId, string>())
+  const celebrateSessionRef = React.useRef<DevelopmentSessionId | null>(null)
   const [celebrateOpen, setCelebrateOpen] = React.useState(false)
   const [celebrateLogId, setCelebrateLogId] = React.useState<string | null>(null)
   const [celebrateProcessSnapshot, setCelebrateProcessSnapshot] =
     React.useState<DevelopmentProcessSnapshot | null>(null)
 
-  const loggedRef = React.useRef(false)
-  const loggingRef = React.useRef(false)
-  const handleDevComplete = React.useCallback((processSnapshot: DevelopmentProcessSnapshot) => {
-    if (loggedRef.current || loggingRef.current) return
+  const handleDevComplete = React.useCallback((processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
+    if (
+      loggedSessionsRef.current.has(sessionId) ||
+      loggingSessionsRef.current.has(sessionId)
+    ) {
+      return
+    }
     const snap = snapshotRef.current
     if (!snap) return
-    loggingRef.current = true
+    loggingSessionsRef.current.add(sessionId)
     void logDevelopmentRun({
       film_name: snap.filmName,
       film_format: snap.filmFormat,
@@ -116,19 +122,20 @@ export function DevelopCalculator() {
       favorite_id: null,
       process_snapshot: processSnapshot,
     }).then((res) => {
-      loggingRef.current = false
+      loggingSessionsRef.current.delete(sessionId)
       if (res) {
-        loggedRef.current = true
-        logEntryIdRef.current = res.id
-        setCelebrateLogId(res.id)
+        loggedSessionsRef.current.add(sessionId)
+        logEntryIdsRef.current.set(sessionId, res.id)
+        if (celebrateSessionRef.current === sessionId) setCelebrateLogId(res.id)
       }
     })
   }, [])
 
   const handleProcessComplete = React.useCallback(
-    (processSnapshot: DevelopmentProcessSnapshot) => {
+    (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
+      celebrateSessionRef.current = sessionId
       setCelebrateProcessSnapshot(processSnapshot)
-      setCelebrateLogId(logEntryIdRef.current)
+      setCelebrateLogId(logEntryIdsRef.current.get(sessionId) ?? null)
       setCelebrateOpen(true)
     },
     [],
@@ -136,7 +143,10 @@ export function DevelopCalculator() {
 
   const handleCelebrateOpenChange = React.useCallback((open: boolean) => {
     setCelebrateOpen(open)
-    if (!open) setCelebrateProcessSnapshot(null)
+    if (!open) {
+      celebrateSessionRef.current = null
+      setCelebrateProcessSnapshot(null)
+    }
   }, [])
 
   return (

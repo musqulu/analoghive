@@ -54,9 +54,9 @@ interface DevelopmentModeProps {
   /** Wash duration in seconds (matches main timer). */
   washSeconds?: number
   /** Fires once when the developer countdown completes. */
-  onDevComplete?: () => void
+  onDevComplete?: (sessionId: number) => void
   /** When wash finishes by countdown only (not "Next Step" skip). */
-  onProcessComplete?: () => void
+  onProcessComplete?: (sessionId: number) => void
 }
 
 export function DevelopmentMode({
@@ -89,6 +89,9 @@ export function DevelopmentMode({
   const scrollPositionRef = useRef<number>(0)
   const devCompleteFiredRef = useRef(false)
   const processCompleteFiredRef = useRef(false)
+  const sessionCounterRef = useRef(0)
+  const currentSessionIdRef = useRef(0)
+  const sessionStartedRef = useRef(false)
   const onDevCompleteRef = useRef(onDevComplete)
   const onProcessCompleteRef = useRef(onProcessComplete)
   const [shouldShake, setShouldShake] = useState(false)
@@ -138,6 +141,8 @@ export function DevelopmentMode({
     setIsRunning(false)
     devCompleteFiredRef.current = false
     processCompleteFiredRef.current = false
+    currentSessionIdRef.current = 0
+    sessionStartedRef.current = false
     setShouldShake(false)
   }, [isOpen, devDuration, preSoakDuration, stopDuration, fixDuration, washDuration])
 
@@ -164,7 +169,7 @@ export function DevelopmentMode({
       else if (currentStep === "developer") {
         if (!devCompleteFiredRef.current) {
           devCompleteFiredRef.current = true
-          onDevCompleteRef.current?.()
+          onDevCompleteRef.current?.(currentSessionIdRef.current)
         }
         setCurrentStep("stop")
       } else if (currentStep === "stop") setCurrentStep("fixer")
@@ -172,7 +177,7 @@ export function DevelopmentMode({
       else if (currentStep === "wash") {
         if (!processCompleteFiredRef.current) {
           processCompleteFiredRef.current = true
-          onProcessCompleteRef.current?.()
+          onProcessCompleteRef.current?.(currentSessionIdRef.current)
         }
         setCurrentStep("complete")
       }
@@ -222,7 +227,16 @@ export function DevelopmentMode({
     setSeconds(first === "presoak" ? preSoakDuration : devDuration)
     devCompleteFiredRef.current = false
     processCompleteFiredRef.current = false
+    currentSessionIdRef.current = 0
+    sessionStartedRef.current = false
     setShouldShake(false)
+  }
+
+  const ensureDevelopmentSession = () => {
+    if (sessionStartedRef.current) return
+    sessionCounterRef.current += 1
+    currentSessionIdRef.current = sessionCounterRef.current
+    sessionStartedRef.current = true
   }
 
   // Handle close with scroll position preservation
@@ -304,7 +318,16 @@ export function DevelopmentMode({
         <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-6">
           {currentStep !== "complete" && (
             <button
-              onClick={() => setIsRunning(!isRunning)}
+              onClick={() => {
+                if (isRunning) {
+                  setIsRunning(false)
+                } else {
+                  if (currentStep === "presoak" || currentStep === "developer") {
+                    ensureDevelopmentSession()
+                  }
+                  setIsRunning(true)
+                }
+              }}
               className="px-4 md:px-6 py-2 md:py-3 bg-red-900/30 text-red-600 border border-red-900 rounded-md hover:bg-red-900/50 transition-colors text-base md:text-xl"
             >
               {isRunning ? "Pause" : "Start"}

@@ -4,6 +4,7 @@ import "@testing-library/jest-dom"
 import { TimerPageWithDiary } from "./with-diary"
 import { logDevelopmentRun } from "@/lib/log-development-run"
 import type { DevelopmentProcessSnapshot } from "@/types/development-log"
+import type { DevelopmentSessionId } from "@/components/ui/timer"
 
 const mockProcessSnapshot: DevelopmentProcessSnapshot = {
   v: 1,
@@ -30,13 +31,24 @@ function mockTimer({
   onDevComplete,
   onProcessComplete,
 }: {
-  onDevComplete?: (snapshot: DevelopmentProcessSnapshot) => void
-  onProcessComplete?: (snapshot: DevelopmentProcessSnapshot) => void
+  onDevComplete?: (
+    snapshot: DevelopmentProcessSnapshot,
+    sessionId: DevelopmentSessionId,
+  ) => void
+  onProcessComplete?: (
+    snapshot: DevelopmentProcessSnapshot,
+    sessionId: DevelopmentSessionId,
+  ) => void
 }) {
   return (
     <div>
-      <button onClick={() => onDevComplete?.(mockProcessSnapshot)}>Finish dev</button>
-      <button onClick={() => onProcessComplete?.(mockProcessSnapshot)}>
+      <button onClick={() => onDevComplete?.(mockProcessSnapshot, "timer:1")}>
+        Finish dev
+      </button>
+      <button onClick={() => onDevComplete?.(mockProcessSnapshot, "timer:2")}>
+        Finish second dev
+      </button>
+      <button onClick={() => onProcessComplete?.(mockProcessSnapshot, "timer:1")}>
         Finish process
       </button>
     </div>
@@ -102,5 +114,34 @@ describe("TimerPageWithDiary", () => {
       expect(screen.getByLabelText("Diary title (optional)")).toBeInTheDocument(),
     )
     expect(screen.getByLabelText("Diary notes (optional)")).toBeInTheDocument()
+  })
+
+  it("logs each timer session once instead of capping at one per page load", async () => {
+    mockLogDevelopmentRun.mockResolvedValueOnce({ id: "log-1" })
+    mockLogDevelopmentRun.mockResolvedValueOnce({ id: "log-2" })
+
+    render(
+      <TimerPageWithDiary
+        filmName="HP5 Plus"
+        filmFormat="35mm"
+        filmIso="400"
+        developerName="Rodinal"
+        developerDilution="1+50"
+        developmentTime={1}
+        temperature={20}
+        totalVolume={500}
+        recipeId={null}
+        favoriteId={null}
+        optionKeyParam={null}
+        tempUnitParam="celsius"
+        pushPullParam={null}
+      />,
+    )
+
+    fireEvent.click(screen.getByRole("button", { name: "Finish dev" }))
+    fireEvent.click(screen.getByRole("button", { name: "Finish dev" }))
+    fireEvent.click(screen.getByRole("button", { name: "Finish second dev" }))
+
+    await waitFor(() => expect(mockLogDevelopmentRun).toHaveBeenCalledTimes(2))
   })
 })

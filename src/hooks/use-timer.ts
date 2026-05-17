@@ -21,13 +21,13 @@ interface UseTimerOptions {
    * (or auto-advance from `preSoak`). Re-arms when `startTimer` enters `dev` again.
    * Used by /develop/timer to auto-record a darkroom log entry.
    */
-  onDevComplete?: () => void
+  onDevComplete?: (sessionId: number) => void
   /**
    * Fires once when the wash step finishes naturally (timer reaches zero) and there
    * is no further step — not when skipping steps manually. Resets like `onDevComplete`
    * when entering `preSoak` / `dev` via `startTimer`, and on every `resetTimer`.
    */
-  onProcessComplete?: () => void
+  onProcessComplete?: (sessionId: number) => void
 }
 
 function hasPreSoakDuration(customTimes: ProcessTimes): boolean {
@@ -172,6 +172,8 @@ export function useTimer({
   const devCompleteFiredRef = React.useRef(false)
   /** Once per wash completion from the countdown (not skips). Reset with dev guard + resetTimer. */
   const processCompleteFiredRef = React.useRef(false)
+  const sessionCounterRef = React.useRef(0)
+  const currentSessionIdRef = React.useRef(0)
 
   // Auto-advance steps
   React.useEffect(() => {
@@ -179,7 +181,7 @@ export function useTimer({
     if (currentStep) {
       if (currentStep === "dev" && !devCompleteFiredRef.current) {
         devCompleteFiredRef.current = true
-        onDevCompleteRef.current?.()
+        onDevCompleteRef.current?.(currentSessionIdRef.current)
       }
       const next = getNextStep(currentStep)
       if (next) {
@@ -188,7 +190,7 @@ export function useTimer({
       } else {
         if (currentStep === "wash" && !processCompleteFiredRef.current) {
           processCompleteFiredRef.current = true
-          onProcessCompleteRef.current?.()
+          onProcessCompleteRef.current?.(currentSessionIdRef.current)
         }
         setIsRunning(false)
       }
@@ -197,6 +199,8 @@ export function useTimer({
 
   const startTimer = (step: Step) => {
     if (step === "dev" || step === "preSoak") {
+      sessionCounterRef.current += 1
+      currentSessionIdRef.current = sessionCounterRef.current
       devCompleteFiredRef.current = false
       processCompleteFiredRef.current = false
     }
