@@ -56,21 +56,80 @@ export function buildDevelopmentProcessSnapshot(
   }
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object"
+}
+
+function isFiniteNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value)
+}
+
+function isProcessTimes(value: unknown): value is ProcessTimes {
+  if (!isRecord(value)) return false
+  return (
+    (value.preSoak === undefined || isFiniteNumber(value.preSoak)) &&
+    isFiniteNumber(value.dev) &&
+    isFiniteNumber(value.stop) &&
+    isFiniteNumber(value.fix) &&
+    isFiniteNumber(value.wash)
+  )
+}
+
+function isTemperatures(value: unknown): value is DevelopmentProcessSnapshot["temperatures"] {
+  if (!isRecord(value)) return false
+  return (
+    isFiniteNumber(value.dev) &&
+    isFiniteNumber(value.stop) &&
+    isFiniteNumber(value.fix) &&
+    isFiniteNumber(value.wash)
+  )
+}
+
+function isWashingMethod(value: unknown): value is WashingMethod {
+  if (!isRecord(value)) return false
+  if (
+    value.type !== "running" &&
+    value.type !== "ilford" &&
+    value.type !== "custom"
+  ) {
+    return false
+  }
+
+  const ilford = value.ilfordInversions
+  const custom = value.custom
+  return (
+    isFiniteNumber(value.runningWaterTime) &&
+    isRecord(ilford) &&
+    isFiniteNumber(ilford.first) &&
+    isFiniteNumber(ilford.second) &&
+    isFiniteNumber(ilford.third) &&
+    isRecord(custom) &&
+    isFiniteNumber(custom.totalTime) &&
+    isFiniteNumber(custom.waterChanges)
+  )
+}
+
 export function parseDevelopmentProcessSnapshot(
   json: unknown,
 ): DevelopmentProcessSnapshot | null {
-  if (!json || typeof json !== "object") return null
-  const o = json as Partial<DevelopmentProcessSnapshot>
+  if (!isRecord(json)) return null
+  const o = json
   if (o.v !== 1) return null
   if (
-    !o.processTimes ||
-    typeof o.processTimes.dev !== "number" ||
-    !o.washingMethod ||
-    !o.temperatures
+    !isFiniteNumber(o.developmentTimeMinutes) ||
+    !isProcessTimes(o.processTimes) ||
+    !isWashingMethod(o.washingMethod) ||
+    !isTemperatures(o.temperatures) ||
+    (o.developerDilution !== null && typeof o.developerDilution !== "string") ||
+    (o.temperatureUnit !== null &&
+      o.temperatureUnit !== "celsius" &&
+      o.temperatureUnit !== "fahrenheit") ||
+    (o.totalVolume !== null && !isFiniteNumber(o.totalVolume)) ||
+    typeof o.isColor !== "boolean"
   ) {
     return null
   }
-  return json as DevelopmentProcessSnapshot
+  return o as unknown as DevelopmentProcessSnapshot
 }
 
 function degLabel(
