@@ -144,6 +144,7 @@ export function useAiChat(): UseAiChatResult {
   const ndjsonBufferRef = useRef("")
   const abortRef = useRef<AbortController | null>(null)
   const threadLoadSeqRef = useRef(0)
+  const streamSeqRef = useRef(0)
 
   const mergeStep = useCallback((line: Extract<NdJsonLine, { type: "step" }>) => {
     setSteps((prev) => {
@@ -166,8 +167,15 @@ export function useAiChat(): UseAiChatResult {
     setConversations(json.conversations)
   }, [])
 
+  const cancelActiveStream = useCallback(() => {
+    streamSeqRef.current += 1
+    abortRef.current?.abort()
+    setStreaming(false)
+  }, [])
+
   const openThread = useCallback(async (conversationId: string) => {
     const loadSeq = ++threadLoadSeqRef.current
+    cancelActiveStream()
     const isCurrentLoad = () => threadLoadSeqRef.current === loadSeq
 
     setMessagesLoading(true)
@@ -215,7 +223,7 @@ export function useAiChat(): UseAiChatResult {
     } finally {
       if (isCurrentLoad()) setMessagesLoading(false)
     }
-  }, [])
+  }, [cancelActiveStream])
 
   useEffect(() => {
     if (hydrated) return
@@ -234,6 +242,7 @@ export function useAiChat(): UseAiChatResult {
 
   const goToList = useCallback(() => {
     threadLoadSeqRef.current += 1
+    cancelActiveStream()
     setView("list")
     persistActiveConversation(null)
     setActiveConversationId(null)
@@ -242,10 +251,11 @@ export function useAiChat(): UseAiChatResult {
     setSteps([])
     setMessagesLoading(false)
     void refreshList()
-  }, [refreshList])
+  }, [cancelActiveStream, refreshList])
 
   const newConversation = useCallback(async () => {
     threadLoadSeqRef.current += 1
+    cancelActiveStream()
     setMessagesLoading(false)
     setError(null)
     const { ok, json } = await fetchJson<{ id: string; title: string }>(
@@ -263,7 +273,7 @@ export function useAiChat(): UseAiChatResult {
     setActiveTitle(json.title ?? "New chat")
     persistActiveConversation(json.id)
     setView("thread")
-  }, [refreshList])
+  }, [cancelActiveStream, refreshList])
 
   const deleteConversationCb = useCallback(
     async (id: string) => {
@@ -275,6 +285,7 @@ export function useAiChat(): UseAiChatResult {
       }
       if (activeConversationId === id) {
         threadLoadSeqRef.current += 1
+        cancelActiveStream()
         persistActiveConversation(null)
         setActiveConversationId(null)
         setActiveTitle("")
@@ -284,7 +295,7 @@ export function useAiChat(): UseAiChatResult {
       }
       await refreshList()
     },
-    [activeConversationId, refreshList],
+    [activeConversationId, cancelActiveStream, refreshList],
   )
 
   const send = useCallback(
@@ -323,6 +334,8 @@ export function useAiChat(): UseAiChatResult {
       abortRef.current?.abort()
       const ac = new AbortController()
       abortRef.current = ac
+      const streamSeq = ++streamSeqRef.current
+      const isCurrentStream = () => streamSeqRef.current === streamSeq
 
       let assistantText = ""
 
@@ -351,14 +364,18 @@ export function useAiChat(): UseAiChatResult {
         const decoder = new TextDecoder()
 
         const handlers = {
-          mergeStep,
+          mergeStep: (line: Extract<NdJsonLine, { type: "step" }>) => {
+            if (isCurrentStream()) mergeStep(line)
+          },
           appendToken: (t: string) => {
+            if (!isCurrentStream()) return
             assistantText += t
             setMessages((prev) =>
               prev.map((m) => (m.id === assistantId ? { ...m, content: assistantText } : m)),
             )
           },
           onDone: (conv?: string) => {
+            if (!isCurrentStream()) return
             if (conv) {
               setActiveConversationId(conv)
               persistActiveConversation(conv)
@@ -382,22 +399,26 @@ export function useAiChat(): UseAiChatResult {
         ndjsonBufferRef.current = ""
 
         const finalAssistant = assistantText.trim()
-        setMessages((prev) =>
-          prev.map((m) => (m.id === assistantId ? { ...m, content: finalAssistant } : m)),
-        )
+        if (isCurrentStream()) {
+          setMessages((prev) =>
+            prev.map((m) => (m.id === assistantId ? { ...m, content: finalAssistant } : m)),
+          )
+        }
 
         await refreshList()
       } catch (err) {
         const aborted = err instanceof Error && err.name === "AbortError"
         const message =
           aborted ? "Cancelled." : err instanceof Error ? err.message : "Something went wrong."
-        if (!aborted) setError(message)
-        setMessages((prev) =>
-          prev.filter((m) => (aborted ? m.id !== assistantId : m.id !== assistantId && m.id !== userMsgId)),
-        )
+        if (isCurrentStream()) {
+          if (!aborted) setError(message)
+          setMessages((prev) =>
+            prev.filter((m) => (aborted ? m.id !== assistantId : m.id !== assistantId && m.id !== userMsgId)),
+          )
+        }
       } finally {
-        setStreaming(false)
-        abortRef.current = null
+        if (isCurrentStream()) setStreaming(false)
+        if (abortRef.current === ac) abortRef.current = null
       }
     },
     [activeConversationId, mergeStep, streaming, messagesLoading, refreshList],
