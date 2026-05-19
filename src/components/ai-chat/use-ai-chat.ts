@@ -323,6 +323,8 @@ export function useAiChat(): UseAiChatResult {
       abortRef.current?.abort()
       const ac = new AbortController()
       abortRef.current = ac
+      const streamSeq = ++streamSeqRef.current
+      const isCurrentStream = () => streamSeqRef.current === streamSeq
 
       let assistantText = ""
 
@@ -351,14 +353,18 @@ export function useAiChat(): UseAiChatResult {
         const decoder = new TextDecoder()
 
         const handlers = {
-          mergeStep,
+          mergeStep: (line: Extract<NdJsonLine, { type: "step" }>) => {
+            if (isCurrentStream()) mergeStep(line)
+          },
           appendToken: (t: string) => {
+            if (!isCurrentStream()) return
             assistantText += t
             setMessages((prev) =>
               prev.map((m) => (m.id === assistantId ? { ...m, content: assistantText } : m)),
             )
           },
           onDone: (conv?: string) => {
+            if (!isCurrentStream()) return
             if (conv) {
               setActiveConversationId(conv)
               persistActiveConversation(conv)
@@ -382,22 +388,26 @@ export function useAiChat(): UseAiChatResult {
         ndjsonBufferRef.current = ""
 
         const finalAssistant = assistantText.trim()
-        setMessages((prev) =>
-          prev.map((m) => (m.id === assistantId ? { ...m, content: finalAssistant } : m)),
-        )
+        if (isCurrentStream()) {
+          setMessages((prev) =>
+            prev.map((m) => (m.id === assistantId ? { ...m, content: finalAssistant } : m)),
+          )
+        }
 
         await refreshList()
       } catch (err) {
         const aborted = err instanceof Error && err.name === "AbortError"
         const message =
           aborted ? "Cancelled." : err instanceof Error ? err.message : "Something went wrong."
-        if (!aborted) setError(message)
-        setMessages((prev) =>
-          prev.filter((m) => (aborted ? m.id !== assistantId : m.id !== assistantId && m.id !== userMsgId)),
-        )
+        if (isCurrentStream()) {
+          if (!aborted) setError(message)
+          setMessages((prev) =>
+            prev.filter((m) => (aborted ? m.id !== assistantId : m.id !== assistantId && m.id !== userMsgId)),
+          )
+        }
       } finally {
-        setStreaming(false)
-        abortRef.current = null
+        if (isCurrentStream()) setStreaming(false)
+        if (abortRef.current === ac) abortRef.current = null
       }
     },
     [activeConversationId, mergeStep, streaming, messagesLoading, refreshList],

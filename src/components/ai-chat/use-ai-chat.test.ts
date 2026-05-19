@@ -40,6 +40,35 @@ function streamingFakeResponse(chunks: string[]): FakeResponse {
   }
 }
 
+function deferredStreamFakeResponse(chunk: string): {
+  response: FakeResponse
+  release: () => void
+} {
+  const encoder = new NodeTextEncoder()
+  let release!: () => void
+  const firstRead = new Promise<{ done: boolean; value?: Uint8Array }>((resolve) => {
+    release = () => resolve({ done: false, value: encoder.encode(chunk) })
+  })
+  let readCount = 0
+
+  return {
+    release,
+    response: {
+      ok: true,
+      status: 200,
+      body: {
+        getReader: () => ({
+          read: async () => {
+            readCount += 1
+            if (readCount === 1) return firstRead
+            return { done: true }
+          },
+        }),
+      },
+    },
+  }
+}
+
 function jsonFakeResponse(payload: unknown, status = 200): FakeResponse {
   return {
     ok: status >= 200 && status < 300,
@@ -307,5 +336,60 @@ describe("useAiChat", () => {
       { id: "fast-m1", role: "user", content: "fast thread" },
     ])
     expect(window.localStorage.getItem(ACTIVE_CONV_STORAGE_KEY)).toBe("fast")
+  })
+
+  it("does not let a completed stale stream reactivate a previously open thread", async () => {
+    const first = convRow("c1", "First chat")
+    const second = convRow("c2", "Second chat")
+    const resultRef = await settleInitialHydrate([first, second])
+
+    fetchMock.mockResolvedValueOnce(jsonFakeResponse({ conversations: [first, second] }))
+    fetchMock.mockResolvedValueOnce(
+      jsonFakeResponse({
+        messages: [{ id: "c1-m1", role: "user", content: "first thread" }],
+      }),
+    )
+
+    await act(async () => {
+      await resultRef.current.openThread("c1")
+    })
+
+    const delayedStream = deferredStreamFakeResponse('{"type":"done","conversationId":"c1"}\n')
+    fetchMock.mockResolvedValueOnce(delayedStream.response)
+
+    let sendDone!: Promise<void>
+    await act(() => {
+      sendDone = resultRef.current.send("continue first")
+    })
+    await waitFor(() => expect(resultRef.current.streaming).toBe(true))
+
+    fetchMock.mockResolvedValueOnce(jsonFakeResponse({ conversations: [first, second] }))
+    fetchMock.mockResolvedValueOnce(
+      jsonFakeResponse({
+        messages: [{ id: "c2-m1", role: "user", content: "second thread" }],
+      }),
+    )
+
+    await act(async () => {
+      await resultRef.current.openThread("c2")
+    })
+
+    expect(resultRef.current.activeConversationId).toBe("c2")
+    expect(resultRef.current.messages).toEqual([
+      { id: "c2-m1", role: "user", content: "second thread" },
+    ])
+
+    fetchMock.mockResolvedValueOnce(jsonFakeResponse({ conversations: [first, second] }))
+
+    await act(async () => {
+      delayedStream.release()
+      await sendDone
+    })
+
+    expect(resultRef.current.activeConversationId).toBe("c2")
+    expect(resultRef.current.messages).toEqual([
+      { id: "c2-m1", role: "user", content: "second thread" },
+    ])
+    expect(window.localStorage.getItem(ACTIVE_CONV_STORAGE_KEY)).toBe("c2")
   })
 })
