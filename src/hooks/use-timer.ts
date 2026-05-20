@@ -105,8 +105,8 @@ export function useTimer({
   }, [preSoakActive, customTimes.preSoak, developmentTime])
 
   React.useEffect(() => {
-    setTimeLeft(idleFirstSeconds)
-  }, [idleFirstSeconds])
+    if (!isRunning && currentStep === null) setTimeLeft(idleFirstSeconds)
+  }, [idleFirstSeconds, isRunning, currentStep])
 
   React.useEffect(() => {
     let interval: NodeJS.Timeout

@@ -42,6 +42,26 @@ describe("useTimer", () => {
     expect(result.current.timeLeft).toBe(55)
   })
 
+  it("does not reset an active countdown when developmentTime changes", () => {
+    const { result, rerender } = renderHook(
+      ({ developmentTime }) =>
+        useTimer({
+          developmentTime,
+          temperature: 20,
+          customTimes: defaultCustomTimes,
+        }),
+      { initialProps: { developmentTime: 10 } },
+    )
+
+    act(() => result.current.startTimer("stop"))
+    act(() => jest.advanceTimersByTime(5000))
+    expect(result.current.timeLeft).toBe(55)
+
+    rerender({ developmentTime: 12 })
+    expect(result.current.currentStep).toBe("stop")
+    expect(result.current.timeLeft).toBe(55)
+  })
+
   it("toggleTimer pauses and resumes", () => {
     const { result } = createTimer()
     act(() => result.current.startTimer("dev"))

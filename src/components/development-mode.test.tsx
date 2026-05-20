@@ -59,6 +59,19 @@ describe("DevelopmentMode", () => {
     expect(screen.getByText("01:55")).toBeInTheDocument()
   })
 
+  it("does not reset a running countdown when duration props change", () => {
+    const { rerender } = render(<DevelopmentMode {...defaultProps} time={120} />)
+    fireEvent.click(screen.getByText("Start"))
+
+    act(() => jest.advanceTimersByTime(5000))
+    expect(screen.getByText("01:55")).toBeInTheDocument()
+
+    rerender(<DevelopmentMode {...defaultProps} time={240} />)
+
+    expect(screen.getByText("DEVELOPER STEP")).toBeInTheDocument()
+    expect(screen.getByText("01:55")).toBeInTheDocument()
+  })
+
   it("transitions to next step when countdown reaches zero", () => {
     render(<DevelopmentMode {...defaultProps} time={3} />)
     fireEvent.click(screen.getByText("Start"))
