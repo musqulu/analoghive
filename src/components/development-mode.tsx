@@ -92,6 +92,8 @@ export function DevelopmentMode({
   const sessionCounterRef = useRef(0)
   const currentSessionIdRef = useRef(0)
   const sessionStartedRef = useRef(false)
+  const openedRef = useRef(false)
+  const previousStepRef = useRef<DarkroomStep>(hasPreSoak ? "presoak" : "developer")
   const onDevCompleteRef = useRef(onDevComplete)
   const onProcessCompleteRef = useRef(onProcessComplete)
   const [shouldShake, setShouldShake] = useState(false)
@@ -134,9 +136,16 @@ export function DevelopmentMode({
   }, [isOpen])
 
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen) {
+      openedRef.current = false
+      return
+    }
+    if (openedRef.current) return
+    openedRef.current = true
     const presoak = preSoakDuration > 0
-    setCurrentStep(presoak ? "presoak" : "developer")
+    const firstStep = presoak ? "presoak" : "developer"
+    previousStepRef.current = firstStep
+    setCurrentStep(firstStep)
     setSeconds(presoak ? preSoakDuration : devDuration)
     setIsRunning(false)
     devCompleteFiredRef.current = false
@@ -190,6 +199,10 @@ export function DevelopmentMode({
 
   // Set appropriate time for each step
   useEffect(() => {
+    const stepChanged = previousStepRef.current !== currentStep
+    previousStepRef.current = currentStep
+    if (!stepChanged && sessionStartedRef.current) return
+
     if (currentStep === "presoak") {
       setSeconds(preSoakDuration)
       setShouldShake(false)
