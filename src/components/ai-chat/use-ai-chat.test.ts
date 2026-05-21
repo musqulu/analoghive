@@ -69,6 +69,20 @@ function deferredStreamFakeResponse(chunk: string): {
   }
 }
 
+function failingStreamFakeResponse(error: Error): FakeResponse {
+  return {
+    ok: true,
+    status: 200,
+    body: {
+      getReader: () => ({
+        read: async () => {
+          throw error
+        },
+      }),
+    },
+  }
+}
+
 function jsonFakeResponse(payload: unknown, status = 200): FakeResponse {
   return {
     ok: status >= 200 && status < 300,
@@ -216,6 +230,23 @@ describe("useAiChat", () => {
     await waitFor(() => expect(resultRef.current.streaming).toBe(false))
     expect(resultRef.current.error).toBe("Bad")
     expect(resultRef.current.messages).toEqual([])
+  })
+
+  it("keeps the user message when an accepted chat stream fails", async () => {
+    const resultRef = await settleInitialHydrate([])
+    fetchMock.mockResolvedValueOnce(jsonFakeResponse({ id: "c1", title: "New chat" }))
+    fetchMock.mockResolvedValueOnce(jsonFakeResponse({ conversations: [convRow("c1")] }))
+    fetchMock.mockResolvedValueOnce(failingStreamFakeResponse(new Error("stream failed")))
+
+    await act(async () => {
+      await resultRef.current.send("persist me")
+    })
+
+    await waitFor(() => expect(resultRef.current.streaming).toBe(false))
+    expect(resultRef.current.error).toBe("stream failed")
+    expect(resultRef.current.messages).toEqual([
+      { id: expect.stringMatching(/^u-/), role: "user", content: "persist me" },
+    ])
   })
 
   it("ignores empty input and does not call fetch beyond hydrate", async () => {
