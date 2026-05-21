@@ -2,6 +2,7 @@
  * @jest-environment node
  */
 const mockGetUser = jest.fn<Promise<{ data: { user: { id: string } | null } }>, []>()
+const mockGetConversation = jest.fn()
 const mockGetMessages = jest.fn()
 
 jest.mock("@/lib/supabase/server", () => ({
@@ -13,6 +14,7 @@ jest.mock("@/lib/supabase/server", () => ({
 }))
 
 jest.mock("@/lib/ai/conversation-store", () => ({
+  getConversation: (...args: unknown[]) => mockGetConversation(...args),
   getMessages: (...args: unknown[]) => mockGetMessages(...args),
 }))
 
@@ -20,6 +22,7 @@ describe("GET /api/chat/conversations/[id]/messages", () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockGetUser.mockResolvedValue({ data: { user: { id: "user-1" } } })
+    mockGetConversation.mockResolvedValue({ id: "c1" })
   })
 
   it("returns 401 when unauthenticated", async () => {
@@ -29,6 +32,19 @@ describe("GET /api/chat/conversations/[id]/messages", () => {
       params: Promise.resolve({ id: "c1" }),
     })
     expect(res.status).toBe(401)
+    expect(mockGetConversation).not.toHaveBeenCalled()
+    expect(mockGetMessages).not.toHaveBeenCalled()
+  })
+
+  it("returns 404 when the conversation is not owned by the user", async () => {
+    mockGetConversation.mockResolvedValueOnce(null)
+    const { GET } = await import("./route")
+    const res = await GET(new Request("http://localhost"), {
+      params: Promise.resolve({ id: "foreign" }),
+    })
+
+    expect(res.status).toBe(404)
+    expect(mockGetConversation).toHaveBeenCalledWith(expect.anything(), "user-1", "foreign")
     expect(mockGetMessages).not.toHaveBeenCalled()
   })
 
@@ -51,6 +67,7 @@ describe("GET /api/chat/conversations/[id]/messages", () => {
     }
     expect(json.messages).toHaveLength(1)
     expect(json.messages[0]).toMatchObject({ id: "m1", role: "user", content: "hello" })
+    expect(mockGetConversation).toHaveBeenCalledWith(expect.anything(), "user-1", "c1")
     expect(mockGetMessages).toHaveBeenCalledWith(expect.anything(), "user-1", "c1")
   })
 })

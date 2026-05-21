@@ -338,6 +338,7 @@ export function useAiChat(): UseAiChatResult {
       const isCurrentStream = () => streamSeqRef.current === streamSeq
 
       let assistantText = ""
+      let serverMayHavePersistedUserMessage = false
 
       try {
         const res = await fetch(CHAT_ENDPOINT, {
@@ -359,6 +360,7 @@ export function useAiChat(): UseAiChatResult {
         }
 
         if (!res.body) throw new Error("No response body")
+        serverMayHavePersistedUserMessage = true
 
         const reader = res.body.getReader()
         const decoder = new TextDecoder()
@@ -413,7 +415,11 @@ export function useAiChat(): UseAiChatResult {
         if (isCurrentStream()) {
           if (!aborted) setError(message)
           setMessages((prev) =>
-            prev.filter((m) => (aborted ? m.id !== assistantId : m.id !== assistantId && m.id !== userMsgId)),
+            prev.filter((m) =>
+              aborted || serverMayHavePersistedUserMessage
+                ? m.id !== assistantId
+                : m.id !== assistantId && m.id !== userMsgId,
+            ),
           )
         }
       } finally {
