@@ -62,6 +62,27 @@ describe("useTimer", () => {
     expect(result.current.timeLeft).toBe(55)
   })
 
+  it("resyncs an active stop countdown when stop duration changes mid-step", () => {
+    const times1: ProcessTimes = { dev: 10, stop: 1, fix: 5, wash: 5 }
+    const { result, rerender } = renderHook(
+      ({ customTimes }) =>
+        useTimer({
+          developmentTime: 10,
+          temperature: 20,
+          customTimes,
+        }),
+      { initialProps: { customTimes: times1 } },
+    )
+
+    act(() => result.current.startTimer("stop"))
+    act(() => jest.advanceTimersByTime(5000))
+    expect(result.current.timeLeft).toBe(55)
+
+    const times2: ProcessTimes = { dev: 10, stop: 3, fix: 5, wash: 5 }
+    rerender({ customTimes: times2 })
+    expect(result.current.timeLeft).toBe(180)
+  })
+
   it("toggleTimer pauses and resumes", () => {
     const { result } = createTimer()
     act(() => result.current.startTimer("dev"))

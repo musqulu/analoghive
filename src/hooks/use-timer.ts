@@ -108,6 +108,20 @@ export function useTimer({
     if (!isRunning && currentStep === null) setTimeLeft(idleFirstSeconds)
   }, [idleFirstSeconds, isRunning, currentStep])
 
+  const prevActiveStepDurationRef = React.useRef<number | null>(null)
+  React.useEffect(() => {
+    if (!isRunning || !currentStep || currentStep === "dev") {
+      prevActiveStepDurationRef.current = null
+      return
+    }
+    const stepDuration = steps[currentStep].time
+    const prevDuration = prevActiveStepDurationRef.current
+    if (prevDuration !== null && prevDuration !== stepDuration) {
+      setTimeLeft(stepDuration)
+    }
+    prevActiveStepDurationRef.current = stepDuration
+  }, [currentStep, isRunning, steps])
+
   React.useEffect(() => {
     let interval: NodeJS.Timeout
     if (isRunning && !isPaused && timeLeft > 0) {

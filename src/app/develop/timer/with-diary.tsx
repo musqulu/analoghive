@@ -146,12 +146,13 @@ export function TimerPageWithDiary({
 
   const handleProcessComplete = React.useCallback(
     (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
+      handleDevComplete(processSnapshot, sessionId)
       celebrateSessionRef.current = sessionId
       setCelebrateProcessSnapshot(processSnapshot)
       setCelebrateLogId(logEntryIdsRef.current.get(sessionId) ?? null)
       setCelebrateOpen(true)
     },
-    [],
+    [handleDevComplete],
   )
 
   const handleCelebrateOpenChange = React.useCallback((open: boolean) => {
