@@ -410,5 +410,32 @@ describe("useTimer", () => {
       act(() => jest.advanceTimersByTime(3500))
       expect(onProcessComplete).toHaveBeenCalledTimes(1)
     })
+
+    it("starts a new session when wash is rerun after a full completion and reset", () => {
+      const onProcessComplete = jest.fn()
+      const times: ProcessTimes = { dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }
+      const { result } = renderHook(() =>
+        useTimer({
+          developmentTime: 0.05,
+          temperature: 20,
+          customTimes: times,
+          onProcessComplete,
+        }),
+      )
+
+      act(() => result.current.startTimer("dev"))
+      act(() => jest.advanceTimersByTime(3500))
+      act(() => jest.advanceTimersByTime(3500))
+      act(() => jest.advanceTimersByTime(3500))
+      act(() => jest.advanceTimersByTime(3500))
+      expect(onProcessComplete).toHaveBeenCalledTimes(1)
+      expect(onProcessComplete).toHaveBeenLastCalledWith(1)
+
+      act(() => result.current.resetTimer())
+      act(() => result.current.startTimer("wash"))
+      act(() => jest.advanceTimersByTime(3500))
+      expect(onProcessComplete).toHaveBeenCalledTimes(2)
+      expect(onProcessComplete).toHaveBeenLastCalledWith(2)
+    })
   })
 })

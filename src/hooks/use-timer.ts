@@ -25,7 +25,8 @@ interface UseTimerOptions {
   /**
    * Fires once when the wash step finishes naturally (timer reaches zero) and there
    * is no further step — not when skipping steps manually. Resets like `onDevComplete`
-   * when entering `preSoak` / `dev` via `startTimer`, and on every `resetTimer`.
+   * when entering `preSoak` / `dev` via `startTimer`, or when starting any step after a
+   * completed wash countdown. `resetTimer` does not clear this guard.
    */
   onProcessComplete?: (sessionId: number) => void
 }
@@ -212,7 +213,11 @@ export function useTimer({
   }, [isRunning, timeLeft, currentStep, steps, getNextStep])
 
   const startTimer = (step: Step) => {
-    if (step === "dev" || step === "preSoak") {
+    const shouldStartNewSession =
+      step === "dev" ||
+      step === "preSoak" ||
+      (!isRunning && processCompleteFiredRef.current)
+    if (shouldStartNewSession) {
       sessionCounterRef.current += 1
       currentSessionIdRef.current = sessionCounterRef.current
       devCompleteFiredRef.current = false
@@ -233,7 +238,6 @@ export function useTimer({
       if (currentStep === "dev" || currentStep === "preSoak") {
         devCompleteFiredRef.current = false
       }
-      processCompleteFiredRef.current = false
       setTimeLeft(steps[currentStep].time)
       setIsRunning(false)
       setIsPaused(false)
