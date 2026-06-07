@@ -5,11 +5,11 @@ import Link from "next/link"
 import * as Dialog from "@radix-ui/react-dialog"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
-import { Timer, type DevelopmentSessionId } from "@/components/ui/timer"
+import { Timer } from "@/components/ui/timer"
 import { DiaryCompletionDialog } from "@/components/development-diary/completion-dialog"
 import { Button } from "@/components/landing/button"
 import { recipePayloadToTimerProps, type RecipePayloadV1 } from "@/types/recipe"
-import { logDevelopmentRun } from "@/lib/log-development-run"
+import { useDiaryAutoLog } from "@/hooks/use-diary-auto-log"
 import type {
   DiaryCompletionSummary,
   DevelopmentProcessSnapshot,
@@ -57,69 +57,32 @@ export function RecipeDetailClient({
     ],
   )
 
-  const loggedSessionsRef = React.useRef(new Set<DevelopmentSessionId>())
-  const loggingSessionsRef = React.useRef(new Set<DevelopmentSessionId>())
-  const logEntryIdsRef = React.useRef(new Map<DevelopmentSessionId, string>())
-  const celebrateSessionRef = React.useRef<DevelopmentSessionId | null>(null)
-  const [celebrateOpen, setCelebrateOpen] = React.useState(false)
-  const [celebrateLogId, setCelebrateLogId] = React.useState<string | null>(null)
-  const [celebrateProcessSnapshot, setCelebrateProcessSnapshot] =
-    React.useState<DevelopmentProcessSnapshot | null>(null)
-
-  // Auto-log once per timer session, while still allowing multiple rolls from
-  // the same recipe without requiring navigation between runs.
-  const handleDevComplete = React.useCallback(
-    (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
-      if (
-        loggedSessionsRef.current.has(sessionId) ||
-        loggingSessionsRef.current.has(sessionId)
-      ) {
-        return
-      }
-      loggingSessionsRef.current.add(sessionId)
-      void logDevelopmentRun({
-        film_name: payload.identity.filmName,
-        film_format: payload.identity.filmFormat,
-        film_iso: payload.identity.filmIso,
-        developer_name: payload.identity.developerName,
-        option_key: payload.identity.optionKey,
-        total_volume: payload.totalVolume,
-        temperature_unit: payload.temperatureUnit,
-        modified_temperature: payload.modifiedTemperature,
-        push_pull_stops: payload.identity.pushPullStops,
-        recipe_id: recipeId,
-        favorite_id: null,
-        process_snapshot: processSnapshot,
-      }).then((res) => {
-        loggingSessionsRef.current.delete(sessionId)
-        if (res) {
-          loggedSessionsRef.current.add(sessionId)
-          logEntryIdsRef.current.set(sessionId, res.id)
-          if (celebrateSessionRef.current === sessionId) setCelebrateLogId(res.id)
-        }
-      })
-    },
+  const buildLogPayload = React.useCallback(
+    (processSnapshot: DevelopmentProcessSnapshot) => ({
+      film_name: payload.identity.filmName,
+      film_format: payload.identity.filmFormat,
+      film_iso: payload.identity.filmIso,
+      developer_name: payload.identity.developerName,
+      option_key: payload.identity.optionKey,
+      total_volume: payload.totalVolume,
+      temperature_unit: payload.temperatureUnit,
+      modified_temperature: payload.modifiedTemperature,
+      push_pull_stops: payload.identity.pushPullStops,
+      recipe_id: recipeId,
+      favorite_id: null,
+      process_snapshot: processSnapshot,
+    }),
     [recipeId, payload],
   )
 
-  const handleProcessComplete = React.useCallback(
-    (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
-      handleDevComplete(processSnapshot, sessionId)
-      celebrateSessionRef.current = sessionId
-      setCelebrateProcessSnapshot(processSnapshot)
-      setCelebrateLogId(logEntryIdsRef.current.get(sessionId) ?? null)
-      setCelebrateOpen(true)
-    },
-    [handleDevComplete],
-  )
-
-  const handleCelebrateOpenChange = React.useCallback((open: boolean) => {
-    setCelebrateOpen(open)
-    if (!open) {
-      celebrateSessionRef.current = null
-      setCelebrateProcessSnapshot(null)
-    }
-  }, [])
+  const {
+    celebrateOpen,
+    celebrateLogId,
+    celebrateProcessSnapshot,
+    handleDevComplete,
+    handleProcessComplete,
+    handleCelebrateOpenChange,
+  } = useDiaryAutoLog(buildLogPayload)
 
   const remove = async () => {
     setDeleting(true)
