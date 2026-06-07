@@ -239,10 +239,18 @@ export function DevelopmentMode({
     setCurrentStep(first)
     setSeconds(first === "presoak" ? preSoakDuration : devDuration)
     devCompleteFiredRef.current = false
-    processCompleteFiredRef.current = false
     currentSessionIdRef.current = 0
     sessionStartedRef.current = false
     setShouldShake(false)
+  }
+
+  const beginNewSessionIfNeeded = () => {
+    if (!processCompleteFiredRef.current) return
+    sessionCounterRef.current += 1
+    currentSessionIdRef.current = sessionCounterRef.current
+    devCompleteFiredRef.current = false
+    processCompleteFiredRef.current = false
+    sessionStartedRef.current = true
   }
 
   const ensureDevelopmentSession = () => {
@@ -335,6 +343,7 @@ export function DevelopmentMode({
                 if (isRunning) {
                   setIsRunning(false)
                 } else {
+                  beginNewSessionIfNeeded()
                   if (currentStep === "presoak" || currentStep === "developer") {
                     ensureDevelopmentSession()
                   }
