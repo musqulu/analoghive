@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { X, RotateCcw } from "lucide-react"
 import { AgitationCue } from "@/components/timer/agitation-cue"
 import { shouldShakeSpiralTank } from "@/lib/spiral-tank-agitation"
+import type { TimerSessionRefs } from "@/hooks/use-timer"
 import type { Step } from "@/types/development"
 
 type DarkroomStep = "presoak" | "developer" | "stop" | "fixer" | "wash" | "complete"
@@ -57,6 +58,8 @@ interface DevelopmentModeProps {
   onDevComplete?: (sessionId: number) => void
   /** When wash finishes by countdown only (not "Next Step" skip). */
   onProcessComplete?: (sessionId: number) => void
+  /** When set, shares session ids with the main timer on the same page. */
+  sessionRefs?: TimerSessionRefs
 }
 
 export function DevelopmentMode({
@@ -73,6 +76,7 @@ export function DevelopmentMode({
   washSeconds = 600,
   onDevComplete,
   onProcessComplete,
+  sessionRefs,
 }: DevelopmentModeProps) {
   const devDuration = durationSeconds(time)
   const preSoakDuration = durationSeconds(preSoakSeconds)
@@ -89,8 +93,10 @@ export function DevelopmentMode({
   const scrollPositionRef = useRef<number>(0)
   const devCompleteFiredRef = useRef(false)
   const processCompleteFiredRef = useRef(false)
-  const sessionCounterRef = useRef(0)
-  const currentSessionIdRef = useRef(0)
+  const internalSessionCounterRef = useRef(0)
+  const internalCurrentSessionIdRef = useRef(0)
+  const sessionCounterRef = sessionRefs?.counter ?? internalSessionCounterRef
+  const currentSessionIdRef = sessionRefs?.current ?? internalCurrentSessionIdRef
   const sessionStartedRef = useRef(false)
   const openedRef = useRef(false)
   const previousStepRef = useRef<DarkroomStep>(hasPreSoak ? "presoak" : "developer")
@@ -150,7 +156,9 @@ export function DevelopmentMode({
     setIsRunning(false)
     devCompleteFiredRef.current = false
     processCompleteFiredRef.current = false
-    currentSessionIdRef.current = 0
+    if (!sessionRefs) {
+      currentSessionIdRef.current = 0
+    }
     sessionStartedRef.current = false
     setShouldShake(false)
   }, [isOpen, devDuration, preSoakDuration, stopDuration, fixDuration, washDuration])
@@ -239,7 +247,8 @@ export function DevelopmentMode({
     setCurrentStep(first)
     setSeconds(first === "presoak" ? preSoakDuration : devDuration)
     devCompleteFiredRef.current = false
-    currentSessionIdRef.current = 0
+    // Keep the active session id so a wash-only finish after reset still matches
+    // the dev-step diary log for this roll (resetTimer in useTimer does the same).
     sessionStartedRef.current = false
     setShouldShake(false)
   }

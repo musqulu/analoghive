@@ -11,11 +11,18 @@ interface StepConfig {
   agitation: { initial: number; interval: number; duration: number }
 }
 
+export interface TimerSessionRefs {
+  counter: React.MutableRefObject<number>
+  current: React.MutableRefObject<number>
+}
+
 interface UseTimerOptions {
   developmentTime: number
   temperature: number
   isColor?: boolean
   customTimes: ProcessTimes
+  /** When set, shares session ids with DevelopmentMode (or other timer UI). */
+  sessionRefs?: TimerSessionRefs
   /**
    * Fires once each time the dev step countdown finishes from a `startTimer("dev")`
    * (or auto-advance from `preSoak`). Re-arms when `startTimer` enters `dev` again.
@@ -47,6 +54,7 @@ export function useTimer({
   temperature,
   isColor = false,
   customTimes,
+  sessionRefs,
   onDevComplete,
   onProcessComplete,
 }: UseTimerOptions) {
@@ -187,8 +195,10 @@ export function useTimer({
   const devCompleteFiredRef = React.useRef(false)
   /** Once per wash completion from the countdown (not skips). Reset with dev guard + resetTimer. */
   const processCompleteFiredRef = React.useRef(false)
-  const sessionCounterRef = React.useRef(0)
-  const currentSessionIdRef = React.useRef(0)
+  const internalSessionCounterRef = React.useRef(0)
+  const internalCurrentSessionIdRef = React.useRef(0)
+  const sessionCounterRef = sessionRefs?.counter ?? internalSessionCounterRef
+  const currentSessionIdRef = sessionRefs?.current ?? internalCurrentSessionIdRef
 
   // Auto-advance steps
   React.useEffect(() => {

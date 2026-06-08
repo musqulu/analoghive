@@ -226,6 +226,58 @@ describe('Timer Component', () => {
   });
 
   // Test for dilution normalization
+  test('shares session ids between main timer and darkroom mode', () => {
+    const onDevComplete = jest.fn()
+    const onProcessComplete = jest.fn()
+    const shortWashMethod = {
+      type: 'running' as const,
+      runningWaterTime: 0.05,
+      ilfordInversions: { first: 5, second: 10, third: 20 },
+      custom: { totalTime: 0.05, waterChanges: 1 },
+    }
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }}
+        initialWashingMethod={shortWashMethod}
+        onDevComplete={onDevComplete}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByTestId('start-button'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+    expect(onDevComplete).toHaveBeenCalledWith(
+      expect.any(Object),
+      'session:1',
+    )
+
+    fireEvent.click(screen.getByText(/Darkroom mode/))
+    expect(screen.getByText('DEVELOPER STEP')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText('Next Step'))
+    fireEvent.click(screen.getByText('Next Step'))
+    fireEvent.click(screen.getByText('Next Step'))
+    expect(screen.getByText('WASH STEP')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText('Start'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+
+    expect(screen.getByText('DEVELOPMENT COMPLETE')).toBeInTheDocument()
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
+    expect(onProcessComplete).toHaveBeenCalledWith(
+      expect.any(Object),
+      'session:1',
+    )
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+  })
+
   test('normalizes dilution display from colon to plus format', () => {
     render(
       <Timer 
