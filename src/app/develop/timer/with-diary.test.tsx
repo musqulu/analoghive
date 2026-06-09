@@ -145,6 +145,47 @@ describe("TimerPageWithDiary", () => {
     await waitFor(() => expect(mockLogDevelopmentRun).toHaveBeenCalledTimes(2))
   })
 
+  it("retries diary logging when dev insert fails while still in flight at process completion", async () => {
+    let resolveFirst!: (value: { id: string } | null) => void
+    const firstLog = new Promise<{ id: string } | null>((resolve) => {
+      resolveFirst = resolve
+    })
+    mockLogDevelopmentRun.mockReturnValueOnce(firstLog)
+    mockLogDevelopmentRun.mockResolvedValueOnce({ id: "log-retry" })
+
+    render(
+      <TimerPageWithDiary
+        filmName="HP5 Plus"
+        filmFormat="35mm"
+        filmIso="400"
+        developerName="Rodinal"
+        developerDilution="1+50"
+        developmentTime={1}
+        temperature={20}
+        totalVolume={500}
+        recipeId={null}
+        favoriteId={null}
+        optionKeyParam={null}
+        tempUnitParam="celsius"
+        pushPullParam={null}
+      />,
+    )
+
+    fireEvent.click(screen.getByRole("button", { name: "Finish dev" }))
+    fireEvent.click(screen.getByRole("button", { name: "Finish process" }))
+
+    await act(async () => {
+      resolveFirst(null)
+      await Promise.resolve()
+      await Promise.resolve()
+    })
+
+    await waitFor(() => expect(mockLogDevelopmentRun).toHaveBeenCalledTimes(2))
+    await waitFor(() =>
+      expect(screen.getByLabelText("Diary title (optional)")).toBeInTheDocument(),
+    )
+  })
+
   it("creates a diary log when the process completes without a dev auto-log", async () => {
     mockLogDevelopmentRun.mockResolvedValueOnce({ id: "log-skipped-dev" })
 

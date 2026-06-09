@@ -9,6 +9,7 @@ import { Timer, type DevelopmentSessionId } from "@/components/ui/timer"
 import { DiaryCompletionDialog } from "@/components/development-diary/completion-dialog"
 import { Button } from "@/components/landing/button"
 import { recipePayloadToTimerProps, type RecipePayloadV1 } from "@/types/recipe"
+import { createDiarySessionLogTracker } from "@/lib/diary-session-logging"
 import { logDevelopmentRun } from "@/lib/log-development-run"
 import type {
   DiaryCompletionSummary,
@@ -57,27 +58,16 @@ export function RecipeDetailClient({
     ],
   )
 
-  const loggedSessionsRef = React.useRef(new Set<DevelopmentSessionId>())
-  const loggingSessionsRef = React.useRef(new Set<DevelopmentSessionId>())
-  const logEntryIdsRef = React.useRef(new Map<DevelopmentSessionId, string>())
+  const logTrackerRef = React.useRef(createDiarySessionLogTracker())
   const celebrateSessionRef = React.useRef<DevelopmentSessionId | null>(null)
   const [celebrateOpen, setCelebrateOpen] = React.useState(false)
   const [celebrateLogId, setCelebrateLogId] = React.useState<string | null>(null)
   const [celebrateProcessSnapshot, setCelebrateProcessSnapshot] =
     React.useState<DevelopmentProcessSnapshot | null>(null)
 
-  // Auto-log once per timer session, while still allowing multiple rolls from
-  // the same recipe without requiring navigation between runs.
-  const handleDevComplete = React.useCallback(
-    (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
-      if (
-        loggedSessionsRef.current.has(sessionId) ||
-        loggingSessionsRef.current.has(sessionId)
-      ) {
-        return
-      }
-      loggingSessionsRef.current.add(sessionId)
-      void logDevelopmentRun({
+  const buildLogFn = React.useCallback(
+    (processSnapshot: DevelopmentProcessSnapshot) => () =>
+      logDevelopmentRun({
         film_name: payload.identity.filmName,
         film_format: payload.identity.filmFormat,
         film_iso: payload.identity.filmIso,
@@ -90,16 +80,23 @@ export function RecipeDetailClient({
         recipe_id: recipeId,
         favorite_id: null,
         process_snapshot: processSnapshot,
-      }).then((res) => {
-        loggingSessionsRef.current.delete(sessionId)
-        if (res) {
-          loggedSessionsRef.current.add(sessionId)
-          logEntryIdsRef.current.set(sessionId, res.id)
-          if (celebrateSessionRef.current === sessionId) setCelebrateLogId(res.id)
-        }
-      })
-    },
+      }),
     [recipeId, payload],
+  )
+
+  const onLogSuccess = React.useCallback((sessionId: DevelopmentSessionId, logId: string) => {
+    if (celebrateSessionRef.current === sessionId) setCelebrateLogId(logId)
+  }, [])
+
+  // Auto-log once per timer session, while still allowing multiple rolls from
+  // the same recipe without requiring navigation between runs.
+  const handleDevComplete = React.useCallback(
+    (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
+      logTrackerRef.current.scheduleLog(sessionId, buildLogFn(processSnapshot), (logId) =>
+        onLogSuccess(sessionId, logId),
+      )
+    },
+    [buildLogFn, onLogSuccess],
   )
 
   const handleProcessComplete = React.useCallback(
@@ -107,10 +104,18 @@ export function RecipeDetailClient({
       handleDevComplete(processSnapshot, sessionId)
       celebrateSessionRef.current = sessionId
       setCelebrateProcessSnapshot(processSnapshot)
-      setCelebrateLogId(logEntryIdsRef.current.get(sessionId) ?? null)
+      setCelebrateLogId(logTrackerRef.current.getLogEntryId(sessionId) ?? null)
       setCelebrateOpen(true)
+      void logTrackerRef.current
+        .ensureLogged(sessionId, buildLogFn(processSnapshot), (logId) =>
+          onLogSuccess(sessionId, logId),
+        )
+        .then(() => {
+          if (celebrateSessionRef.current !== sessionId) return
+          setCelebrateLogId(logTrackerRef.current.getLogEntryId(sessionId) ?? null)
+        })
     },
-    [handleDevComplete],
+    [buildLogFn, handleDevComplete, onLogSuccess],
   )
 
   const handleCelebrateOpenChange = React.useCallback((open: boolean) => {
