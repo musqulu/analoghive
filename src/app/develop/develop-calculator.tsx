@@ -15,6 +15,7 @@ import {
 } from "@/components/develop/save-favorite-button"
 import { CreateRecipeFromButton } from "@/components/develop/create-recipe-button"
 import { parseDevelopFavoriteSearchParams } from "@/lib/favorite-develop-query"
+import { createDiarySessionLogTracker } from "@/lib/diary-session-logging"
 import { logDevelopmentRun } from "@/lib/log-development-run"
 import { DiaryCompletionDialog } from "@/components/development-diary/completion-dialog"
 import { cn } from "@/lib/utils"
@@ -89,57 +90,65 @@ export function DevelopCalculator() {
     }
   }, [favoriteSnapshot])
 
-  const loggedSessionsRef = React.useRef(new Set<DevelopmentSessionId>())
-  const loggingSessionsRef = React.useRef(new Set<DevelopmentSessionId>())
-  const logEntryIdsRef = React.useRef(new Map<DevelopmentSessionId, string>())
+  const logTrackerRef = React.useRef(createDiarySessionLogTracker())
   const celebrateSessionRef = React.useRef<DevelopmentSessionId | null>(null)
   const [celebrateOpen, setCelebrateOpen] = React.useState(false)
   const [celebrateLogId, setCelebrateLogId] = React.useState<string | null>(null)
   const [celebrateProcessSnapshot, setCelebrateProcessSnapshot] =
     React.useState<DevelopmentProcessSnapshot | null>(null)
 
-  const handleDevComplete = React.useCallback((processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
-    if (
-      loggedSessionsRef.current.has(sessionId) ||
-      loggingSessionsRef.current.has(sessionId)
-    ) {
-      return
-    }
-    const snap = snapshotRef.current
-    if (!snap) return
-    loggingSessionsRef.current.add(sessionId)
-    void logDevelopmentRun({
-      film_name: snap.filmName,
-      film_format: snap.filmFormat,
-      film_iso: snap.filmIso,
-      developer_name: snap.developerName,
-      option_key: snap.optionKey,
-      total_volume: snap.totalVolume,
-      temperature_unit: snap.temperatureUnit,
-      modified_temperature: snap.modifiedTemperature,
-      push_pull_stops: snap.pushPullStops,
-      recipe_id: null,
-      favorite_id: null,
-      process_snapshot: processSnapshot,
-    }).then((res) => {
-      loggingSessionsRef.current.delete(sessionId)
-      if (res) {
-        loggedSessionsRef.current.add(sessionId)
-        logEntryIdsRef.current.set(sessionId, res.id)
-        if (celebrateSessionRef.current === sessionId) setCelebrateLogId(res.id)
-      }
-    })
+  const buildLogFn = React.useCallback(
+    (processSnapshot: DevelopmentProcessSnapshot) => () => {
+      const snap = snapshotRef.current
+      if (!snap) return Promise.resolve(null)
+      return logDevelopmentRun({
+        film_name: snap.filmName,
+        film_format: snap.filmFormat,
+        film_iso: snap.filmIso,
+        developer_name: snap.developerName,
+        option_key: snap.optionKey,
+        total_volume: snap.totalVolume,
+        temperature_unit: snap.temperatureUnit,
+        modified_temperature: snap.modifiedTemperature,
+        push_pull_stops: snap.pushPullStops,
+        recipe_id: null,
+        favorite_id: null,
+        process_snapshot: processSnapshot,
+      })
+    },
+    [],
+  )
+
+  const onLogSuccess = React.useCallback((sessionId: DevelopmentSessionId, logId: string) => {
+    if (celebrateSessionRef.current === sessionId) setCelebrateLogId(logId)
   }, [])
+
+  const handleDevComplete = React.useCallback(
+    (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
+      logTrackerRef.current.scheduleLog(sessionId, buildLogFn(processSnapshot), (logId) =>
+        onLogSuccess(sessionId, logId),
+      )
+    },
+    [buildLogFn, onLogSuccess],
+  )
 
   const handleProcessComplete = React.useCallback(
     (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
       handleDevComplete(processSnapshot, sessionId)
       celebrateSessionRef.current = sessionId
       setCelebrateProcessSnapshot(processSnapshot)
-      setCelebrateLogId(logEntryIdsRef.current.get(sessionId) ?? null)
+      setCelebrateLogId(logTrackerRef.current.getLogEntryId(sessionId) ?? null)
       setCelebrateOpen(true)
+      void logTrackerRef.current
+        .ensureLogged(sessionId, buildLogFn(processSnapshot), (logId) =>
+          onLogSuccess(sessionId, logId),
+        )
+        .then(() => {
+          if (celebrateSessionRef.current !== sessionId) return
+          setCelebrateLogId(logTrackerRef.current.getLogEntryId(sessionId) ?? null)
+        })
     },
-    [handleDevComplete],
+    [buildLogFn, handleDevComplete, onLogSuccess],
   )
 
   const handleCelebrateOpenChange = React.useCallback((open: boolean) => {
