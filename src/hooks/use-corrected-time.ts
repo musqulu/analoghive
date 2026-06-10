@@ -2,9 +2,18 @@
 
 import * as React from "react"
 import { calculateCorrectedTime } from "@/data/processed-development-times"
+import { resolveFavoriteOptionKey } from "@/lib/favorite-restore"
 import { celsiusToFahrenheit, fahrenheitToCelsius } from "@/utils/temperature"
 import type { DevelopmentOption } from "@/types/development"
 import type { DevelopmentFavoriteSnapshot } from "@/types/favorite"
+
+function restoredSelectionMatchesSnapshot(
+  snap: DevelopmentFavoriteSnapshot,
+  selectedInfo: DevelopmentOption,
+): boolean {
+  if (selectedInfo.optionKey === snap.optionKey) return true
+  return resolveFavoriteOptionKey(snap, selectedInfo) === selectedInfo.optionKey
+}
 
 export function useCorrectedTime(
   selectedInfo: DevelopmentOption | undefined | null,
@@ -44,7 +53,7 @@ export function useCorrectedTime(
   React.useEffect(() => {
     const snap = pendingCorrectionSnapRef.current
     if (!snap || !selectedInfo) return
-    if (selectedInfo.optionKey !== snap.optionKey) return
+    if (!restoredSelectionMatchesSnapshot(snap, selectedInfo)) return
     setTemperatureUnit(snap.temperatureUnit)
     setModifiedTemperature(snap.modifiedTemperature)
     setConstantAgitation(snap.constantAgitation)

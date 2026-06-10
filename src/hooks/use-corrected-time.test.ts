@@ -1,6 +1,7 @@
 import { renderHook, act } from "@testing-library/react"
 import { useCorrectedTime } from "./use-corrected-time"
 import type { DevelopmentOption } from "@/types/development"
+import type { DevelopmentFavoriteSnapshot } from "@/types/favorite"
 
 const mockCalculateCorrectedTime = jest.fn()
 jest.mock("@/data/processed-development-times", () => ({
@@ -84,6 +85,45 @@ describe("useCorrectedTime", () => {
 
     act(() => result.current.handleTemperatureUnitChange("celsius"))
     expect(result.current.temperatureUnit).toBe("celsius")
+    expect(result.current.modifiedTemperature).toBe(20)
+  })
+
+  it("resets temperature when developer changes after legacy HC-110 restore", () => {
+    const hc110Snap: DevelopmentFavoriteSnapshot = {
+      filmName: "Adox CHM",
+      filmFormat: "35mm",
+      filmIso: "100",
+      developerName: "HC-110",
+      optionKey: "B|20",
+      pushPullStops: 0,
+      totalVolume: 500,
+      temperatureUnit: "celsius",
+      modifiedTemperature: 24,
+      constantAgitation: false,
+    }
+    const hc110Option: DevelopmentOption = {
+      optionKey: "B 1+31|20",
+      dilution: "B 1+31",
+      time: 8,
+      temperature: 20,
+    }
+    const rodinalOption: DevelopmentOption = {
+      optionKey: "1+25|20",
+      dilution: "1+25",
+      time: 8,
+      temperature: 20,
+    }
+
+    const { result, rerender } = renderHook(
+      ({ info }: { info: DevelopmentOption | null }) => useCorrectedTime(info, hc110Snap),
+      { initialProps: { info: null as DevelopmentOption | null } },
+    )
+
+    expect(result.current.modifiedTemperature).toBe(24)
+
+    rerender({ info: hc110Option })
+    rerender({ info: rodinalOption })
+
     expect(result.current.modifiedTemperature).toBe(20)
   })
 })
