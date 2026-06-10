@@ -136,13 +136,25 @@ export function Timer({
     onProcessComplete?.(buildCurrentSnapshot(), sessionId)
   }, [onProcessComplete])
 
+  const sessionCounterRef = React.useRef(0)
+  const currentSessionIdRef = React.useRef(0)
+  const sessionRefs = React.useMemo(
+    () => ({ counter: sessionCounterRef, current: currentSessionIdRef }),
+    [],
+  )
+  const formatSessionId = React.useCallback(
+    (sessionId: number): DevelopmentSessionId => `session:${sessionId}`,
+    [],
+  )
+
   const timer = useTimer({
     developmentTime,
     temperature,
     isColor,
     customTimes,
-    onDevComplete: (sessionId) => emitDevComplete(`timer:${sessionId}`),
-    onProcessComplete: (sessionId) => emitProcessComplete(`timer:${sessionId}`),
+    sessionRefs,
+    onDevComplete: (sessionId) => emitDevComplete(formatSessionId(sessionId)),
+    onProcessComplete: (sessionId) => emitProcessComplete(formatSessionId(sessionId)),
   })
 
   const stepOrder = React.useMemo((): Step[] => {
@@ -277,8 +289,9 @@ export function Timer({
         stopSeconds={Math.round(customTimes.stop * 60)}
         fixSeconds={Math.round(customTimes.fix * 60)}
         washSeconds={Math.round(customTimes.wash * 60)}
-        onDevComplete={(sessionId) => emitDevComplete(`darkroom:${sessionId}`)}
-        onProcessComplete={(sessionId) => emitProcessComplete(`darkroom:${sessionId}`)}
+        sessionRefs={sessionRefs}
+        onDevComplete={(sessionId) => emitDevComplete(formatSessionId(sessionId))}
+        onProcessComplete={(sessionId) => emitProcessComplete(formatSessionId(sessionId))}
       />
     </div>
   )

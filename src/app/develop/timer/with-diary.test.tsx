@@ -42,13 +42,13 @@ function mockTimer({
 }) {
   return (
     <div>
-      <button onClick={() => onDevComplete?.(mockProcessSnapshot, "timer:1")}>
+      <button onClick={() => onDevComplete?.(mockProcessSnapshot, "session:1")}>
         Finish dev
       </button>
-      <button onClick={() => onDevComplete?.(mockProcessSnapshot, "timer:2")}>
+      <button onClick={() => onDevComplete?.(mockProcessSnapshot, "session:2")}>
         Finish second dev
       </button>
-      <button onClick={() => onProcessComplete?.(mockProcessSnapshot, "timer:1")}>
+      <button onClick={() => onProcessComplete?.(mockProcessSnapshot, "session:1")}>
         Finish process
       </button>
     </div>
