@@ -16,7 +16,9 @@ import {
 import { CreateRecipeFromButton } from "@/components/develop/create-recipe-button"
 import { parseDevelopFavoriteSearchParams } from "@/lib/favorite-develop-query"
 import { createDiarySessionLogTracker } from "@/lib/diary-session-logging"
+import { ensureFrozenDiarySessionLogContext } from "@/lib/diary-session-log-context"
 import { logDevelopmentRun } from "@/lib/log-development-run"
+import type { DevelopmentFavoriteSnapshot } from "@/types/favorite"
 import { DiaryCompletionDialog } from "@/components/development-diary/completion-dialog"
 import { cn } from "@/lib/utils"
 import { mainGutterX, mainUnderNav, pageTitle } from "@/lib/app-page-layout"
@@ -67,28 +69,18 @@ export function DevelopCalculator() {
         })
       : null
 
-  // Mirror the latest snapshot into a ref so the auto-log callback (called from
-  // useTimer's effect) always logs the values the user actually developed at,
-  // not whatever was selected when the callback was first wired.
   const snapshotRef = React.useRef(favoriteSnapshot)
   React.useEffect(() => {
     snapshotRef.current = favoriteSnapshot
   }, [favoriteSnapshot])
 
-  const diarySummary = React.useMemo<DiaryCompletionSummary | null>(() => {
-    if (!favoriteSnapshot) return null
-    return {
-      film_name: favoriteSnapshot.filmName,
-      film_format: favoriteSnapshot.filmFormat,
-      film_iso: favoriteSnapshot.filmIso,
-      developer_name: favoriteSnapshot.developerName,
-      option_key: favoriteSnapshot.optionKey,
-      total_volume: favoriteSnapshot.totalVolume,
-      temperature_unit: favoriteSnapshot.temperatureUnit,
-      modified_temperature: favoriteSnapshot.modifiedTemperature,
-      push_pull_stops: favoriteSnapshot.pushPullStops,
-    }
-  }, [favoriteSnapshot])
+  type CalcSnapshot = DevelopmentFavoriteSnapshot & { correctedTimeMinutes: number }
+  const sessionLogContextRef = React.useRef(
+    new Map<
+      DevelopmentSessionId,
+      { calcSnapshot: CalcSnapshot; processSnapshot: DevelopmentProcessSnapshot }
+    >(),
+  )
 
   const logTrackerRef = React.useRef(createDiarySessionLogTracker())
   const celebrateSessionRef = React.useRef<DevelopmentSessionId | null>(null)
@@ -96,26 +88,40 @@ export function DevelopCalculator() {
   const [celebrateLogId, setCelebrateLogId] = React.useState<string | null>(null)
   const [celebrateProcessSnapshot, setCelebrateProcessSnapshot] =
     React.useState<DevelopmentProcessSnapshot | null>(null)
+  const [celebrateDiarySummary, setCelebrateDiarySummary] =
+    React.useState<DiaryCompletionSummary | null>(null)
 
   const buildLogFn = React.useCallback(
-    (processSnapshot: DevelopmentProcessSnapshot) => () => {
-      const snap = snapshotRef.current
-      if (!snap) return Promise.resolve(null)
-      return logDevelopmentRun({
-        film_name: snap.filmName,
-        film_format: snap.filmFormat,
-        film_iso: snap.filmIso,
-        developer_name: snap.developerName,
-        option_key: snap.optionKey,
-        total_volume: snap.totalVolume,
-        temperature_unit: snap.temperatureUnit,
-        modified_temperature: snap.modifiedTemperature,
-        push_pull_stops: snap.pushPullStops,
+    (ctx: { calcSnapshot: CalcSnapshot; processSnapshot: DevelopmentProcessSnapshot }) => () =>
+      logDevelopmentRun({
+        film_name: ctx.calcSnapshot.filmName,
+        film_format: ctx.calcSnapshot.filmFormat,
+        film_iso: ctx.calcSnapshot.filmIso,
+        developer_name: ctx.calcSnapshot.developerName,
+        option_key: ctx.calcSnapshot.optionKey,
+        total_volume: ctx.calcSnapshot.totalVolume,
+        temperature_unit: ctx.calcSnapshot.temperatureUnit,
+        modified_temperature: ctx.calcSnapshot.modifiedTemperature,
+        push_pull_stops: ctx.calcSnapshot.pushPullStops,
         recipe_id: null,
         favorite_id: null,
-        process_snapshot: processSnapshot,
-      })
-    },
+        process_snapshot: ctx.processSnapshot,
+      }),
+    [],
+  )
+
+  const diarySummaryFromCalcSnapshot = React.useCallback(
+    (snap: CalcSnapshot): DiaryCompletionSummary => ({
+      film_name: snap.filmName,
+      film_format: snap.filmFormat,
+      film_iso: snap.filmIso,
+      developer_name: snap.developerName,
+      option_key: snap.optionKey,
+      total_volume: snap.totalVolume,
+      temperature_unit: snap.temperatureUnit,
+      modified_temperature: snap.modifiedTemperature,
+      push_pull_stops: snap.pushPullStops,
+    }),
     [],
   )
 
@@ -125,7 +131,14 @@ export function DevelopCalculator() {
 
   const handleDevComplete = React.useCallback(
     (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
-      logTrackerRef.current.scheduleLog(sessionId, buildLogFn(processSnapshot), (logId) =>
+      const ctx = ensureFrozenDiarySessionLogContext(
+        sessionLogContextRef.current,
+        sessionId,
+        processSnapshot,
+        snapshotRef.current,
+      )
+      if (!ctx) return
+      logTrackerRef.current.scheduleLog(sessionId, buildLogFn(ctx), (logId) =>
         onLogSuccess(sessionId, logId),
       )
     },
@@ -134,28 +147,37 @@ export function DevelopCalculator() {
 
   const handleProcessComplete = React.useCallback(
     (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
+      const ctx = ensureFrozenDiarySessionLogContext(
+        sessionLogContextRef.current,
+        sessionId,
+        processSnapshot,
+        snapshotRef.current,
+      )
+      if (!ctx) return
       handleDevComplete(processSnapshot, sessionId)
       celebrateSessionRef.current = sessionId
-      setCelebrateProcessSnapshot(processSnapshot)
+      setCelebrateProcessSnapshot(ctx.processSnapshot)
+      setCelebrateDiarySummary(diarySummaryFromCalcSnapshot(ctx.calcSnapshot))
       setCelebrateLogId(logTrackerRef.current.getLogEntryId(sessionId) ?? null)
       setCelebrateOpen(true)
       void logTrackerRef.current
-        .ensureLogged(sessionId, buildLogFn(processSnapshot), (logId) =>
-          onLogSuccess(sessionId, logId),
-        )
+        .ensureLogged(sessionId, buildLogFn(ctx), (logId) => onLogSuccess(sessionId, logId))
         .then(() => {
           if (celebrateSessionRef.current !== sessionId) return
           setCelebrateLogId(logTrackerRef.current.getLogEntryId(sessionId) ?? null)
         })
     },
-    [buildLogFn, handleDevComplete, onLogSuccess],
+    [buildLogFn, diarySummaryFromCalcSnapshot, handleDevComplete, onLogSuccess],
   )
 
   const handleCelebrateOpenChange = React.useCallback((open: boolean) => {
     setCelebrateOpen(open)
     if (!open) {
+      const sessionId = celebrateSessionRef.current
       celebrateSessionRef.current = null
       setCelebrateProcessSnapshot(null)
+      setCelebrateDiarySummary(null)
+      if (sessionId) sessionLogContextRef.current.delete(sessionId)
     }
   }, [])
 
@@ -240,8 +262,11 @@ export function DevelopCalculator() {
                     onOpenChange={handleCelebrateOpenChange}
                     logEntryId={celebrateLogId}
                     summary={
-                      diarySummary
-                        ? { ...diarySummary, process_snapshot: celebrateProcessSnapshot ?? undefined }
+                      celebrateDiarySummary
+                        ? {
+                            ...celebrateDiarySummary,
+                            process_snapshot: celebrateProcessSnapshot ?? undefined,
+                          }
                         : null
                     }
                   />
