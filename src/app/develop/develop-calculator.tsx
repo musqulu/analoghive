@@ -16,7 +16,12 @@ import {
 import { CreateRecipeFromButton } from "@/components/develop/create-recipe-button"
 import { parseDevelopFavoriteSearchParams } from "@/lib/favorite-develop-query"
 import { createDiarySessionLogTracker } from "@/lib/diary-session-logging"
-import { ensureFrozenDiarySessionLogContext } from "@/lib/diary-session-log-context"
+import {
+  freezeCalcSnapshot,
+  freezeProcessSnapshot,
+  getCompleteFrozenContext,
+  type DiarySessionLogEntry,
+} from "@/lib/diary-session-log-context"
 import { logDevelopmentRun } from "@/lib/log-development-run"
 import type { DevelopmentFavoriteSnapshot } from "@/types/favorite"
 import { DiaryCompletionDialog } from "@/components/development-diary/completion-dialog"
@@ -76,10 +81,7 @@ export function DevelopCalculator() {
 
   type CalcSnapshot = DevelopmentFavoriteSnapshot & { correctedTimeMinutes: number }
   const sessionLogContextRef = React.useRef(
-    new Map<
-      DevelopmentSessionId,
-      { calcSnapshot: CalcSnapshot; processSnapshot: DevelopmentProcessSnapshot }
-    >(),
+    new Map<DevelopmentSessionId, DiarySessionLogEntry<CalcSnapshot>>(),
   )
 
   const logTrackerRef = React.useRef(createDiarySessionLogTracker())
@@ -129,14 +131,15 @@ export function DevelopCalculator() {
     if (celebrateSessionRef.current === sessionId) setCelebrateLogId(logId)
   }, [])
 
+  const handleSessionStart = React.useCallback((sessionId: DevelopmentSessionId) => {
+    freezeCalcSnapshot(sessionLogContextRef.current, sessionId, snapshotRef.current)
+  }, [])
+
   const handleDevComplete = React.useCallback(
     (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
-      const ctx = ensureFrozenDiarySessionLogContext(
-        sessionLogContextRef.current,
-        sessionId,
-        processSnapshot,
-        snapshotRef.current,
-      )
+      freezeCalcSnapshot(sessionLogContextRef.current, sessionId, snapshotRef.current)
+      freezeProcessSnapshot(sessionLogContextRef.current, sessionId, processSnapshot)
+      const ctx = getCompleteFrozenContext(sessionLogContextRef.current, sessionId)
       if (!ctx) return
       logTrackerRef.current.scheduleLog(sessionId, buildLogFn(ctx), (logId) =>
         onLogSuccess(sessionId, logId),
@@ -147,12 +150,9 @@ export function DevelopCalculator() {
 
   const handleProcessComplete = React.useCallback(
     (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
-      const ctx = ensureFrozenDiarySessionLogContext(
-        sessionLogContextRef.current,
-        sessionId,
-        processSnapshot,
-        snapshotRef.current,
-      )
+      freezeCalcSnapshot(sessionLogContextRef.current, sessionId, snapshotRef.current)
+      freezeProcessSnapshot(sessionLogContextRef.current, sessionId, processSnapshot)
+      const ctx = getCompleteFrozenContext(sessionLogContextRef.current, sessionId)
       if (!ctx) return
       handleDevComplete(processSnapshot, sessionId)
       celebrateSessionRef.current = sessionId
@@ -289,6 +289,7 @@ export function DevelopCalculator() {
                     totalVolume={totalVolume}
                     temperatureUnit={correction.temperatureUnit}
                     isColor={isColor}
+                    onSessionStart={handleSessionStart}
                     onDevComplete={handleDevComplete}
                     onProcessComplete={handleProcessComplete}
                   />

@@ -41,6 +41,8 @@ interface TimerProps {
     snapshot: DevelopmentProcessSnapshot,
     sessionId: DevelopmentSessionId,
   ) => void
+  /** Fires when a new development session starts (pre-soak or dev). */
+  onSessionStart?: (sessionId: DevelopmentSessionId) => void
 }
 
 export function Timer({
@@ -59,6 +61,7 @@ export function Timer({
   recipeNotes,
   onDevComplete,
   onProcessComplete,
+  onSessionStart,
 }: TimerProps) {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false)
   const [isDevelopmentModeOpen, setIsDevelopmentModeOpen] = React.useState(false)
@@ -111,10 +114,17 @@ export function Timer({
     washingMethod,
   }
 
-  const buildCurrentSnapshot = () => {
+  const sessionDevelopmentTimeRef = React.useRef(new Map<number, number>())
+
+  const buildCurrentSnapshot = React.useCallback((numericSessionId?: number) => {
     const sIn = snapshotInputRef.current
+    const frozenDevTime =
+      numericSessionId != null
+        ? sessionDevelopmentTimeRef.current.get(numericSessionId)
+        : undefined
+    const developmentTimeMinutes = frozenDevTime ?? sIn.developmentTime
     return buildDevelopmentProcessSnapshot({
-      developmentTimeMinutes: sIn.developmentTime,
+      developmentTimeMinutes,
       developerDilution: sIn.developerDilution ?? null,
       temperature: sIn.temperature,
       temperatureUnit: sIn.temperatureUnit ?? null,
@@ -123,18 +133,29 @@ export function Timer({
           ? sIn.totalVolume
           : null,
       isColor: sIn.isColor,
-      customTimes: sIn.customTimes,
+      customTimes: { ...sIn.customTimes, dev: developmentTimeMinutes },
       washingMethod: sIn.washingMethod,
     })
-  }
+  }, [])
 
-  const emitDevComplete = React.useCallback((sessionId: DevelopmentSessionId) => {
-    onDevComplete?.(buildCurrentSnapshot(), sessionId)
-  }, [onDevComplete])
+  const parseNumericSessionId = React.useCallback((sessionId: DevelopmentSessionId) => {
+    const match = /^session:(\d+)$/.exec(sessionId)
+    return match ? Number(match[1]) : undefined
+  }, [])
 
-  const emitProcessComplete = React.useCallback((sessionId: DevelopmentSessionId) => {
-    onProcessComplete?.(buildCurrentSnapshot(), sessionId)
-  }, [onProcessComplete])
+  const emitDevComplete = React.useCallback(
+    (sessionId: DevelopmentSessionId) => {
+      onDevComplete?.(buildCurrentSnapshot(parseNumericSessionId(sessionId)), sessionId)
+    },
+    [buildCurrentSnapshot, onDevComplete, parseNumericSessionId],
+  )
+
+  const emitProcessComplete = React.useCallback(
+    (sessionId: DevelopmentSessionId) => {
+      onProcessComplete?.(buildCurrentSnapshot(parseNumericSessionId(sessionId)), sessionId)
+    },
+    [buildCurrentSnapshot, onProcessComplete, parseNumericSessionId],
+  )
 
   const sessionCounterRef = React.useRef(0)
   const currentSessionIdRef = React.useRef(0)
@@ -147,12 +168,21 @@ export function Timer({
     [],
   )
 
+  const onSessionStartRef = React.useRef(onSessionStart)
+  React.useEffect(() => {
+    onSessionStartRef.current = onSessionStart
+  }, [onSessionStart])
+
   const timer = useTimer({
     developmentTime,
     temperature,
     isColor,
     customTimes,
     sessionRefs,
+    onSessionStart: (sessionId) => {
+      sessionDevelopmentTimeRef.current.set(sessionId, developmentTime)
+      onSessionStartRef.current?.(formatSessionId(sessionId))
+    },
     onDevComplete: (sessionId) => emitDevComplete(formatSessionId(sessionId)),
     onProcessComplete: (sessionId) => emitProcessComplete(formatSessionId(sessionId)),
   })

@@ -1,4 +1,10 @@
-import { ensureFrozenDiarySessionLogContext } from "@/lib/diary-session-log-context"
+import {
+  ensureFrozenDiarySessionLogContext,
+  freezeCalcSnapshot,
+  freezeProcessSnapshot,
+  freezeProcessSnapshotOnly,
+  getCompleteFrozenContext,
+} from "@/lib/diary-session-log-context"
 import type { DevelopmentProcessSnapshot } from "@/types/development-log"
 
 const processSnapshot = (devMinutes: number): DevelopmentProcessSnapshot => ({
@@ -44,5 +50,36 @@ describe("ensureFrozenDiarySessionLogContext", () => {
       ensureFrozenDiarySessionLogContext(store, "session:1", processSnapshot(8), null),
     ).toBeNull()
     expect(store.size).toBe(0)
+  })
+})
+
+describe("freezeCalcSnapshot + freezeProcessSnapshot", () => {
+  it("freezes calculator metadata at session start before dev completes", () => {
+    const store = new Map()
+    const calcAtStart = { filmName: "HP5", correctedTimeMinutes: 10 }
+    const calcAfterEdit = { filmName: "HP5", correctedTimeMinutes: 12 }
+    const snapAtDev = processSnapshot(10)
+
+    freezeCalcSnapshot(store, "session:1", calcAtStart)
+    freezeProcessSnapshot(store, "session:1", snapAtDev)
+
+    freezeCalcSnapshot(store, "session:1", calcAfterEdit)
+    freezeProcessSnapshot(store, "session:1", processSnapshot(12))
+
+    expect(getCompleteFrozenContext(store, "session:1")).toEqual({
+      calcSnapshot: calcAtStart,
+      processSnapshot: snapAtDev,
+    })
+  })
+})
+
+describe("freezeProcessSnapshotOnly", () => {
+  it("keeps the first process snapshot for timer/recipe routes", () => {
+    const store = new Map()
+    const snapA = processSnapshot(8)
+    const snapB = processSnapshot(11)
+
+    expect(freezeProcessSnapshotOnly(store, "session:1", snapA)).toBe(snapA)
+    expect(freezeProcessSnapshotOnly(store, "session:1", snapB)).toBe(snapA)
   })
 })

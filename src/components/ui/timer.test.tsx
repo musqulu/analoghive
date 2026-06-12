@@ -278,6 +278,26 @@ describe('Timer Component', () => {
     expect(onDevComplete).toHaveBeenCalledTimes(1)
   })
 
+  test('reports the development time from session start when duration changes mid-dev', () => {
+    const onDevComplete = jest.fn()
+    const { rerender } = render(
+      <Timer developmentTime={10} temperature={20} onDevComplete={onDevComplete} />,
+    )
+
+    fireEvent.click(screen.getByTestId('start-button'))
+    rerender(<Timer developmentTime={12} temperature={20} onDevComplete={onDevComplete} />)
+
+    act(() => {
+      jest.advanceTimersByTime(10 * 60 * 1000)
+    })
+
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+    expect(onDevComplete).toHaveBeenCalledWith(
+      expect.objectContaining({ developmentTimeMinutes: 10 }),
+      'session:1',
+    )
+  })
+
   test('normalizes dilution display from colon to plus format', () => {
     render(
       <Timer 
