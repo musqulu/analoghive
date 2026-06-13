@@ -36,6 +36,8 @@ interface UseTimerOptions {
    * completed wash countdown. `resetTimer` does not clear this guard.
    */
   onProcessComplete?: (sessionId: number) => void
+  /** Fires when a new development session id is allocated (pre-soak or dev start). */
+  onSessionStart?: (sessionId: number) => void
 }
 
 function hasPreSoakDuration(customTimes: ProcessTimes): boolean {
@@ -57,6 +59,7 @@ export function useTimer({
   sessionRefs,
   onDevComplete,
   onProcessComplete,
+  onSessionStart,
 }: UseTimerOptions) {
   const [timeLeft, setTimeLeft] = React.useState(() =>
     initialIdleSeconds(customTimes, developmentTime),
@@ -190,6 +193,11 @@ export function useTimer({
     onProcessCompleteRef.current = onProcessComplete
   }, [onProcessComplete])
 
+  const onSessionStartRef = React.useRef(onSessionStart)
+  React.useEffect(() => {
+    onSessionStartRef.current = onSessionStart
+  }, [onSessionStart])
+
   // Guards `onDevComplete` to fire once per `startTimer("dev")` invocation; resets
   // when dev is started again (or via resetTimer mid-dev).
   const devCompleteFiredRef = React.useRef(false)
@@ -232,6 +240,7 @@ export function useTimer({
       currentSessionIdRef.current = sessionCounterRef.current
       devCompleteFiredRef.current = false
       processCompleteFiredRef.current = false
+      onSessionStartRef.current?.(currentSessionIdRef.current)
     }
     setCurrentStep(step)
     setTimeLeft(steps[step].time)

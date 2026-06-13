@@ -9,6 +9,7 @@ import { Timer, type DevelopmentSessionId } from "@/components/ui/timer"
 import { DiaryCompletionDialog } from "@/components/development-diary/completion-dialog"
 import { Button } from "@/components/landing/button"
 import { recipePayloadToTimerProps, type RecipePayloadV1 } from "@/types/recipe"
+import { freezeProcessSnapshotOnly } from "@/lib/diary-session-log-context"
 import { createDiarySessionLogTracker } from "@/lib/diary-session-logging"
 import { logDevelopmentRun } from "@/lib/log-development-run"
 import type {
@@ -58,6 +59,9 @@ export function RecipeDetailClient({
     ],
   )
 
+  const sessionProcessSnapshotRef = React.useRef(
+    new Map<DevelopmentSessionId, DevelopmentProcessSnapshot>(),
+  )
   const logTrackerRef = React.useRef(createDiarySessionLogTracker())
   const celebrateSessionRef = React.useRef<DevelopmentSessionId | null>(null)
   const [celebrateOpen, setCelebrateOpen] = React.useState(false)
@@ -90,39 +94,47 @@ export function RecipeDetailClient({
 
   // Auto-log once per timer session, while still allowing multiple rolls from
   // the same recipe without requiring navigation between runs.
+  const frozenProcessSnapshot = React.useCallback(
+    (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) =>
+      freezeProcessSnapshotOnly(sessionProcessSnapshotRef.current, sessionId, processSnapshot),
+    [],
+  )
+
   const handleDevComplete = React.useCallback(
     (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
-      logTrackerRef.current.scheduleLog(sessionId, buildLogFn(processSnapshot), (logId) =>
+      const frozen = frozenProcessSnapshot(processSnapshot, sessionId)
+      logTrackerRef.current.scheduleLog(sessionId, buildLogFn(frozen), (logId) =>
         onLogSuccess(sessionId, logId),
       )
     },
-    [buildLogFn, onLogSuccess],
+    [buildLogFn, frozenProcessSnapshot, onLogSuccess],
   )
 
   const handleProcessComplete = React.useCallback(
     (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
+      const frozen = frozenProcessSnapshot(processSnapshot, sessionId)
       handleDevComplete(processSnapshot, sessionId)
       celebrateSessionRef.current = sessionId
-      setCelebrateProcessSnapshot(processSnapshot)
+      setCelebrateProcessSnapshot(frozen)
       setCelebrateLogId(logTrackerRef.current.getLogEntryId(sessionId) ?? null)
       setCelebrateOpen(true)
       void logTrackerRef.current
-        .ensureLogged(sessionId, buildLogFn(processSnapshot), (logId) =>
-          onLogSuccess(sessionId, logId),
-        )
+        .ensureLogged(sessionId, buildLogFn(frozen), (logId) => onLogSuccess(sessionId, logId))
         .then(() => {
           if (celebrateSessionRef.current !== sessionId) return
           setCelebrateLogId(logTrackerRef.current.getLogEntryId(sessionId) ?? null)
         })
     },
-    [buildLogFn, handleDevComplete, onLogSuccess],
+    [buildLogFn, frozenProcessSnapshot, handleDevComplete, onLogSuccess],
   )
 
   const handleCelebrateOpenChange = React.useCallback((open: boolean) => {
     setCelebrateOpen(open)
     if (!open) {
+      const sessionId = celebrateSessionRef.current
       celebrateSessionRef.current = null
       setCelebrateProcessSnapshot(null)
+      if (sessionId) sessionProcessSnapshotRef.current.delete(sessionId)
     }
   }, [])
 

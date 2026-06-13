@@ -42,6 +42,18 @@ describe("useTimer", () => {
     expect(result.current.timeLeft).toBe(55)
   })
 
+  it("fires onSessionStart when a new development session begins", () => {
+    const onSessionStart = jest.fn()
+    const { result } = createTimer({ onSessionStart })
+
+    act(() => result.current.startTimer("dev"))
+    expect(onSessionStart).toHaveBeenCalledWith(1)
+
+    act(() => result.current.startTimer("dev"))
+    expect(onSessionStart).toHaveBeenCalledWith(2)
+    expect(onSessionStart).toHaveBeenCalledTimes(2)
+  })
+
   it("does not reset an active countdown when developmentTime changes", () => {
     const { result, rerender } = renderHook(
       ({ developmentTime }) =>
