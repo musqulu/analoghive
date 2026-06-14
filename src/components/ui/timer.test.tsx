@@ -278,6 +278,40 @@ describe('Timer Component', () => {
     expect(onDevComplete).toHaveBeenCalledTimes(1)
   })
 
+  test('does not allocate a new session when darkroom developer starts after main timer dev completes', () => {
+    const onDevComplete = jest.fn()
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }}
+        initialWashingMethod={{
+          type: 'running' as const,
+          runningWaterTime: 0.05,
+          ilfordInversions: { first: 5, second: 10, third: 20 },
+          custom: { totalTime: 0.05, waterChanges: 1 },
+        }}
+        onDevComplete={onDevComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByTestId('start-button'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+    expect(onDevComplete).toHaveBeenCalledWith(expect.any(Object), 'session:1')
+
+    fireEvent.click(screen.getByText(/Darkroom mode/))
+    fireEvent.click(screen.getByText('Start'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+
+    expect(onDevComplete).toHaveBeenCalledTimes(2)
+    expect(onDevComplete).toHaveBeenLastCalledWith(expect.any(Object), 'session:1')
+  })
+
   test('reports the development time from session start when duration changes mid-dev', () => {
     const onDevComplete = jest.fn()
     const { rerender } = render(

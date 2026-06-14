@@ -80,4 +80,36 @@ describe("DiaryCompletionDialog", () => {
 
     await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false))
   })
+
+  it("clears entered notes when a new completion arrives while the dialog stays open", () => {
+    const { rerender } = render(
+      <DiaryCompletionDialog
+        open
+        onOpenChange={jest.fn()}
+        logEntryId="log-1"
+        completionKey="session:1"
+        summary={null}
+      />,
+    )
+
+    fireEvent.change(screen.getByLabelText("Diary title (optional)"), {
+      target: { value: "Roll A" },
+    })
+    fireEvent.change(screen.getByLabelText("Diary notes (optional)"), {
+      target: { value: "Notes for roll A" },
+    })
+
+    rerender(
+      <DiaryCompletionDialog
+        open
+        onOpenChange={jest.fn()}
+        logEntryId="log-2"
+        completionKey="session:2"
+        summary={null}
+      />,
+    )
+
+    expect(screen.getByLabelText("Diary title (optional)")).toHaveValue("")
+    expect(screen.getByLabelText("Diary notes (optional)")).toHaveValue("")
+  })
 })
