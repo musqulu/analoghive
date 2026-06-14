@@ -49,6 +49,8 @@ export function TimerPageWithDiary({
   )
   const logTrackerRef = React.useRef(createDiarySessionLogTracker())
   const celebrateSessionRef = React.useRef<DevelopmentSessionId | null>(null)
+  const [celebrateSessionId, setCelebrateSessionId] =
+    React.useState<DevelopmentSessionId | null>(null)
   const [celebrateOpen, setCelebrateOpen] = React.useState(false)
   const [celebrateLogId, setCelebrateLogId] = React.useState<string | null>(null)
   const [celebrateProcessSnapshot, setCelebrateProcessSnapshot] =
@@ -157,6 +159,7 @@ export function TimerPageWithDiary({
       const frozen = frozenProcessSnapshot(processSnapshot, sessionId)
       handleDevComplete(processSnapshot, sessionId)
       celebrateSessionRef.current = sessionId
+      setCelebrateSessionId(sessionId)
       setCelebrateProcessSnapshot(frozen)
       setCelebrateLogId(logTrackerRef.current.getLogEntryId(sessionId) ?? null)
       setCelebrateOpen(true)
@@ -175,6 +178,7 @@ export function TimerPageWithDiary({
     if (!open) {
       const sessionId = celebrateSessionRef.current
       celebrateSessionRef.current = null
+      setCelebrateSessionId(null)
       setCelebrateProcessSnapshot(null)
       if (sessionId) sessionProcessSnapshotRef.current.delete(sessionId)
     }
@@ -186,6 +190,7 @@ export function TimerPageWithDiary({
         open={celebrateOpen}
         onOpenChange={handleCelebrateOpenChange}
         logEntryId={celebrateLogId}
+        completionKey={celebrateSessionId}
         summary={{ ...summary, process_snapshot: celebrateProcessSnapshot ?? undefined }}
       />
       <Timer

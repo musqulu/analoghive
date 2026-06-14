@@ -12,11 +12,14 @@ export function DiaryCompletionDialog({
   onOpenChange,
   logEntryId,
   summary,
+  completionKey,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
   logEntryId: string | null
   summary: DiaryCompletionSummary | null
+  /** Changes when a new roll completes so notes reset even if the dialog stays open. */
+  completionKey?: string | null
 }) {
   const [title, setTitle] = React.useState("")
   const [notes, setNotes] = React.useState("")
@@ -30,7 +33,7 @@ export function DiaryCompletionDialog({
     setNotes("")
     setBusy(false)
     setSaveError(null)
-  }, [open])
+  }, [open, completionKey])
 
   const handleSave = async () => {
     if (!logEntryId) {

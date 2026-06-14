@@ -264,6 +264,12 @@ export function DevelopmentMode({
 
   const ensureDevelopmentSession = () => {
     if (sessionStartedRef.current) return
+    // Reuse the main timer's active session when darkroom shares session refs,
+    // so starting developer again mid-roll does not allocate a new session id.
+    if (sessionRefs && currentSessionIdRef.current > 0) {
+      sessionStartedRef.current = true
+      return
+    }
     sessionCounterRef.current += 1
     currentSessionIdRef.current = sessionCounterRef.current
     sessionStartedRef.current = true

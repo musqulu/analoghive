@@ -86,6 +86,8 @@ export function DevelopCalculator() {
 
   const logTrackerRef = React.useRef(createDiarySessionLogTracker())
   const celebrateSessionRef = React.useRef<DevelopmentSessionId | null>(null)
+  const [celebrateSessionId, setCelebrateSessionId] =
+    React.useState<DevelopmentSessionId | null>(null)
   const [celebrateOpen, setCelebrateOpen] = React.useState(false)
   const [celebrateLogId, setCelebrateLogId] = React.useState<string | null>(null)
   const [celebrateProcessSnapshot, setCelebrateProcessSnapshot] =
@@ -156,6 +158,7 @@ export function DevelopCalculator() {
       if (!ctx) return
       handleDevComplete(processSnapshot, sessionId)
       celebrateSessionRef.current = sessionId
+      setCelebrateSessionId(sessionId)
       setCelebrateProcessSnapshot(ctx.processSnapshot)
       setCelebrateDiarySummary(diarySummaryFromCalcSnapshot(ctx.calcSnapshot))
       setCelebrateLogId(logTrackerRef.current.getLogEntryId(sessionId) ?? null)
@@ -175,6 +178,7 @@ export function DevelopCalculator() {
     if (!open) {
       const sessionId = celebrateSessionRef.current
       celebrateSessionRef.current = null
+      setCelebrateSessionId(null)
       setCelebrateProcessSnapshot(null)
       setCelebrateDiarySummary(null)
       if (sessionId) sessionLogContextRef.current.delete(sessionId)
@@ -261,6 +265,7 @@ export function DevelopCalculator() {
                     open={celebrateOpen}
                     onOpenChange={handleCelebrateOpenChange}
                     logEntryId={celebrateLogId}
+                    completionKey={celebrateSessionId}
                     summary={
                       celebrateDiarySummary
                         ? {

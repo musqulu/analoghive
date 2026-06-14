@@ -291,6 +291,30 @@ describe("DevelopmentMode", () => {
     expect(onDevComplete).toHaveBeenCalledTimes(1)
   })
 
+  it("reuses an active shared session id when starting developer mid-roll", () => {
+    const onDevComplete = jest.fn()
+    const sessionRefs = {
+      counter: { current: 1 },
+      current: { current: 1 },
+    }
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        sessionRefs={sessionRefs}
+        onDevComplete={onDevComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+    expect(onDevComplete).toHaveBeenLastCalledWith(1)
+    expect(sessionRefs.counter.current).toBe(1)
+    expect(sessionRefs.current.current).toBe(1)
+  })
+
   it("starts a new session when wash is rerun after completion and reset", () => {
     const onProcessComplete = jest.fn()
     render(
