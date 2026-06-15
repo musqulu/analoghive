@@ -56,7 +56,7 @@ interface DevelopmentModeProps {
   washSeconds?: number
   /** Fires once when the developer countdown completes. */
   onDevComplete?: (sessionId: number) => void
-  /** When wash finishes by countdown only (not "Next Step" skip). */
+  /** Fires once when the full process is finished (wash countdown or manual complete). */
   onProcessComplete?: (sessionId: number) => void
   /** When set, shares session ids with the main timer on the same page. */
   sessionRefs?: TimerSessionRefs
@@ -192,10 +192,7 @@ export function DevelopmentMode({
       } else if (currentStep === "stop") setCurrentStep("fixer")
       else if (currentStep === "fixer") setCurrentStep("wash")
       else if (currentStep === "wash") {
-        if (!processCompleteFiredRef.current) {
-          processCompleteFiredRef.current = true
-          onProcessCompleteRef.current?.(currentSessionIdRef.current)
-        }
+        finishProcessIfNeeded()
         setCurrentStep("complete")
       }
     }
@@ -273,6 +270,12 @@ export function DevelopmentMode({
     sessionCounterRef.current += 1
     currentSessionIdRef.current = sessionCounterRef.current
     sessionStartedRef.current = true
+  }
+
+  const finishProcessIfNeeded = () => {
+    if (processCompleteFiredRef.current) return
+    processCompleteFiredRef.current = true
+    onProcessCompleteRef.current?.(currentSessionIdRef.current)
   }
 
   // Handle close with scroll position preservation
@@ -378,7 +381,10 @@ export function DevelopmentMode({
                 else if (currentStep === "developer") setCurrentStep("stop")
                 else if (currentStep === "stop") setCurrentStep("fixer")
                 else if (currentStep === "fixer") setCurrentStep("wash")
-                else if (currentStep === "wash") setCurrentStep("complete")
+                else if (currentStep === "wash") {
+                  finishProcessIfNeeded()
+                  setCurrentStep("complete")
+                }
               }}
               className="px-4 md:px-6 py-2 md:py-3 bg-red-900/30 text-red-600 border border-red-900 rounded-md hover:bg-red-900/50 transition-colors text-base md:text-xl"
             >

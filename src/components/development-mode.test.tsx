@@ -237,7 +237,7 @@ describe("DevelopmentMode", () => {
     expect(screen.getByText("DEVELOPMENT COMPLETE")).toBeInTheDocument()
   })
 
-  it("does not call onProcessComplete when skipping wash via Next Step", () => {
+  it("calls onProcessComplete when marking complete via Next Step from wash", () => {
     const onProcessComplete = jest.fn()
     render(
       <DevelopmentMode
@@ -255,7 +255,26 @@ describe("DevelopmentMode", () => {
     fireEvent.click(screen.getByText("Next Step"))
     fireEvent.click(screen.getByText("Next Step"))
 
-    expect(onProcessComplete).not.toHaveBeenCalled()
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
+    expect(screen.getByText("DEVELOPMENT COMPLETE")).toBeInTheDocument()
+  })
+
+  it("calls onProcessComplete once when skipping every step to complete", () => {
+    const onProcessComplete = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={600}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
     expect(screen.getByText("DEVELOPMENT COMPLETE")).toBeInTheDocument()
   })
 

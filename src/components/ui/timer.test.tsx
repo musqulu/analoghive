@@ -226,6 +226,26 @@ describe('Timer Component', () => {
   });
 
   // Test for dilution normalization
+  test('calls onProcessComplete when darkroom mode is stepped through to complete', () => {
+    const onProcessComplete = jest.fn()
+    render(
+      <Timer
+        developmentTime={11}
+        temperature={20}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText(/Darkroom mode/))
+    fireEvent.click(screen.getByText('Next Step'))
+    fireEvent.click(screen.getByText('Next Step'))
+    fireEvent.click(screen.getByText('Next Step'))
+    fireEvent.click(screen.getByText('Next Step'))
+
+    expect(screen.getByText('DEVELOPMENT COMPLETE')).toBeInTheDocument()
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
+  })
+
   test('shares session ids between main timer and darkroom mode', () => {
     const onDevComplete = jest.fn()
     const onProcessComplete = jest.fn()
