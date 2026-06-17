@@ -334,6 +334,31 @@ describe("DevelopmentMode", () => {
     expect(sessionRefs.current.current).toBe(1)
   })
 
+  it("fires onProcessComplete again after reset from complete and skip-to-complete", () => {
+    const onProcessComplete = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
+
+    fireEvent.click(screen.getByText("Reset"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+
+    expect(onProcessComplete).toHaveBeenCalledTimes(2)
+    expect(onProcessComplete).toHaveBeenLastCalledWith(1)
+  })
+
   it("starts a new session when wash is rerun after completion and reset", () => {
     const onProcessComplete = jest.fn()
     render(

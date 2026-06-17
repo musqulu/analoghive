@@ -239,14 +239,21 @@ export function DevelopmentMode({
 
   // Reset development process
   const resetDevelopment = () => {
+    const wasComplete = currentStep === "complete"
     setIsRunning(false)
     const first: DarkroomStep = hasPreSoak ? "presoak" : "developer"
     setCurrentStep(first)
     setSeconds(first === "presoak" ? preSoakDuration : devDuration)
     devCompleteFiredRef.current = false
-    // Keep the active session id so a wash-only finish after reset still matches
-    // the dev-step diary log for this roll (resetTimer in useTimer does the same).
-    sessionStartedRef.current = false
+    // After a finished roll, allocate a new session and re-arm completion so
+    // skip-to-complete or wash-only reruns still fire onProcessComplete.
+    if (wasComplete) {
+      beginNewSessionIfNeeded()
+    } else {
+      // Keep the active session id so a wash-only finish after reset still matches
+      // the dev-step diary log for this roll (resetTimer in useTimer does the same).
+      sessionStartedRef.current = false
+    }
     setShouldShake(false)
   }
 
@@ -261,9 +268,8 @@ export function DevelopmentMode({
 
   const ensureDevelopmentSession = () => {
     if (sessionStartedRef.current) return
-    // Reuse the main timer's active session when darkroom shares session refs,
-    // so starting developer again mid-roll does not allocate a new session id.
-    if (sessionRefs && currentSessionIdRef.current > 0) {
+    // Reuse an already-allocated session (shared main timer, or reset after complete).
+    if (currentSessionIdRef.current > 0) {
       sessionStartedRef.current = true
       return
     }
