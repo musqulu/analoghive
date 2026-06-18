@@ -240,10 +240,14 @@ export function DevelopmentMode({
   // Reset development process
   const resetDevelopment = () => {
     setIsRunning(false)
+    const fromComplete = currentStep === "complete"
     const first: DarkroomStep = hasPreSoak ? "presoak" : "developer"
     setCurrentStep(first)
     setSeconds(first === "presoak" ? preSoakDuration : devDuration)
     devCompleteFiredRef.current = false
+    if (fromComplete) {
+      beginNewSessionIfNeeded()
+    }
     // Keep the active session id so a wash-only finish after reset still matches
     // the dev-step diary log for this roll (resetTimer in useTimer does the same).
     sessionStartedRef.current = false
