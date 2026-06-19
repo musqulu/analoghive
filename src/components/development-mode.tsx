@@ -239,6 +239,9 @@ export function DevelopmentMode({
 
   // Reset development process
   const resetDevelopment = () => {
+    if (currentStep === "complete") {
+      beginNewSessionIfNeeded()
+    }
     setIsRunning(false)
     const first: DarkroomStep = hasPreSoak ? "presoak" : "developer"
     setCurrentStep(first)
