@@ -365,4 +365,31 @@ describe("DevelopmentMode", () => {
     expect(onProcessComplete).toHaveBeenCalledTimes(2)
     expect(onProcessComplete).toHaveBeenLastCalledWith(1)
   })
+
+  it("fires onProcessComplete again after reset from complete when skipping to complete", () => {
+    const onProcessComplete = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={600}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
+    expect(screen.getByText("DEVELOPMENT COMPLETE")).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText("Reset"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+
+    expect(onProcessComplete).toHaveBeenCalledTimes(2)
+    expect(screen.getByText("DEVELOPMENT COMPLETE")).toBeInTheDocument()
+  })
 })

@@ -237,8 +237,20 @@ export function DevelopmentMode({
     setShouldShake(shouldShakeSpiralTank(agStep, elapsedSeconds, stepTotal))
   }, [currentStep, isRunning, seconds, devDuration, stopDuration, fixDuration])
 
+  const beginNewSessionIfNeeded = () => {
+    if (!processCompleteFiredRef.current) return
+    sessionCounterRef.current += 1
+    currentSessionIdRef.current = sessionCounterRef.current
+    devCompleteFiredRef.current = false
+    processCompleteFiredRef.current = false
+    sessionStartedRef.current = true
+  }
+
   // Reset development process
   const resetDevelopment = () => {
+    if (currentStep === "complete") {
+      beginNewSessionIfNeeded()
+    }
     setIsRunning(false)
     const first: DarkroomStep = hasPreSoak ? "presoak" : "developer"
     setCurrentStep(first)
@@ -248,15 +260,6 @@ export function DevelopmentMode({
     // the dev-step diary log for this roll (resetTimer in useTimer does the same).
     sessionStartedRef.current = false
     setShouldShake(false)
-  }
-
-  const beginNewSessionIfNeeded = () => {
-    if (!processCompleteFiredRef.current) return
-    sessionCounterRef.current += 1
-    currentSessionIdRef.current = sessionCounterRef.current
-    devCompleteFiredRef.current = false
-    processCompleteFiredRef.current = false
-    sessionStartedRef.current = true
   }
 
   const ensureDevelopmentSession = () => {
