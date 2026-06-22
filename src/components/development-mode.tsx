@@ -244,10 +244,16 @@ export function DevelopmentMode({
     setCurrentStep(first)
     setSeconds(first === "presoak" ? preSoakDuration : devDuration)
     devCompleteFiredRef.current = false
-    // Keep the active session id so a wash-only finish after reset still matches
-    // the dev-step diary log for this roll (resetTimer in useTimer does the same).
     sessionStartedRef.current = false
     setShouldShake(false)
+    if (processCompleteFiredRef.current) {
+      // Finished roll — allocate a new session so the next completion can log again.
+      sessionCounterRef.current += 1
+      currentSessionIdRef.current = sessionCounterRef.current
+      processCompleteFiredRef.current = false
+    }
+    // Otherwise keep the active session id so a wash-only finish after reset still
+    // matches the dev-step diary log for this roll (resetTimer in useTimer does the same).
   }
 
   const beginNewSessionIfNeeded = () => {
