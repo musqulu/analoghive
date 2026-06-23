@@ -105,6 +105,42 @@ export function SaveFavoriteButton({ snapshot, className }: SaveFavoriteButtonPr
   )
 }
 
+type CalculatorSnapshotProps = {
+  filmName: string
+  filmFormat: FilmFormat
+  filmIso: string
+  developerName: string
+  optionKey: string
+  pushPullStops: number
+  totalVolume: number
+  temperatureUnit: string
+  constantAgitation: boolean
+  chartTemperature: number
+  chartTimeMinutes: number
+}
+
+/** Diary metadata when the temp field is empty — matches timer chart fallbacks. */
+export function buildDiaryCalcSnapshotFromCalculator(
+  props: CalculatorSnapshotProps & {
+    modifiedTemperature: number | null
+    correctedTimeMinutes: number | null
+  },
+): DevelopmentFavoriteSnapshot & { correctedTimeMinutes: number } {
+  return buildFavoriteSnapshotFromCalculator({
+    filmName: props.filmName,
+    filmFormat: props.filmFormat,
+    filmIso: props.filmIso,
+    developerName: props.developerName,
+    optionKey: props.optionKey,
+    pushPullStops: props.pushPullStops,
+    totalVolume: props.totalVolume,
+    temperatureUnit: props.temperatureUnit,
+    constantAgitation: props.constantAgitation,
+    modifiedTemperature: props.modifiedTemperature ?? props.chartTemperature,
+    correctedTimeMinutes: props.correctedTimeMinutes ?? props.chartTimeMinutes,
+  })
+}
+
 export function buildFavoriteSnapshotFromCalculator(props: {
   filmName: string
   filmFormat: FilmFormat

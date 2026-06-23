@@ -11,6 +11,7 @@ import { VolumeMixer } from "@/components/ui/volume-mixer"
 import { Timer, type DevelopmentSessionId } from "@/components/ui/timer"
 import {
   SaveFavoriteButton,
+  buildDiaryCalcSnapshotFromCalculator,
   buildFavoriteSnapshotFromCalculator,
 } from "@/components/develop/save-favorite-button"
 import { CreateRecipeFromButton } from "@/components/develop/create-recipe-button"
@@ -50,34 +51,56 @@ export function DevelopCalculator() {
 
   const isColor = selection.selectedFilmData?.type === "Color"
 
+  const calculatorSelectionReady =
+    Boolean(
+      selection.developmentInfo &&
+        selection.selectedIso &&
+        selection.selectedDilution &&
+        selection.selectedInfo,
+    )
+  const selectedInfo = selection.selectedInfo
+
+  const calculatorSnapshotProps = selectedInfo
+    ? {
+        filmName: selection.selectedFilm,
+        filmFormat: selection.selectedFormat,
+        filmIso: selection.selectedIso,
+        developerName: selection.selectedDeveloper,
+        optionKey: selectedInfo.optionKey,
+        pushPullStops: selection.pushPullStops,
+        totalVolume,
+        temperatureUnit: correction.temperatureUnit,
+        constantAgitation: correction.constantAgitation,
+        chartTemperature: selectedInfo.temperature,
+        chartTimeMinutes: selectedInfo.time,
+      }
+    : null
+
   const favoriteSnapshot =
-    selection.developmentInfo &&
-    selection.selectedIso &&
-    selection.selectedDilution &&
-    selection.selectedInfo &&
-    correction.modifiedTemperature !== null
+    calculatorSelectionReady &&
+    correction.modifiedTemperature !== null &&
+    calculatorSnapshotProps
       ? buildFavoriteSnapshotFromCalculator({
-          filmName: selection.selectedFilm,
-          filmFormat: selection.selectedFormat,
-          filmIso: selection.selectedIso,
-          developerName: selection.selectedDeveloper,
-          optionKey: selection.selectedInfo.optionKey,
-          pushPullStops: selection.pushPullStops,
-          totalVolume,
-          temperatureUnit: correction.temperatureUnit,
+          ...calculatorSnapshotProps,
           modifiedTemperature: correction.modifiedTemperature,
-          constantAgitation: correction.constantAgitation,
           correctedTimeMinutes:
-            correction.correctedTime !== null
-              ? correction.correctedTime
-              : selection.selectedInfo.time,
+            correction.correctedTime ?? calculatorSnapshotProps.chartTimeMinutes,
         })
       : null
 
-  const snapshotRef = React.useRef(favoriteSnapshot)
+  const diaryCalcSnapshot =
+    calculatorSelectionReady && calculatorSnapshotProps
+      ? buildDiaryCalcSnapshotFromCalculator({
+          ...calculatorSnapshotProps,
+          modifiedTemperature: correction.modifiedTemperature,
+          correctedTimeMinutes: correction.correctedTime,
+        })
+      : null
+
+  const snapshotRef = React.useRef(diaryCalcSnapshot)
   React.useEffect(() => {
-    snapshotRef.current = favoriteSnapshot
-  }, [favoriteSnapshot])
+    snapshotRef.current = diaryCalcSnapshot
+  }, [diaryCalcSnapshot])
 
   type CalcSnapshot = DevelopmentFavoriteSnapshot & { correctedTimeMinutes: number }
   const sessionLogContextRef = React.useRef(
