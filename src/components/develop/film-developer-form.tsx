@@ -35,6 +35,7 @@ interface FilmDeveloperFormProps {
   onPushPullChange: (stops: number, iso: string) => void
   temperatureUnit: string
   onTemperatureUnitChange: (value: string) => void
+  selectionLocked?: boolean
 }
 
 function PushPullToggle({
@@ -42,11 +43,13 @@ function PushPullToggle({
   availableIsoValues,
   pushPullStops,
   onPushPullChange,
+  disabled = false,
 }: {
   ratingIso: number
   availableIsoValues: number[]
   pushPullStops: number
   onPushPullChange: (stops: number, iso: string) => void
+  disabled?: boolean
 }) {
   const [enabled, setEnabled] = React.useState(pushPullStops !== 0)
 
@@ -68,8 +71,9 @@ function PushPullToggle({
         <input
           type="checkbox"
           checked={enabled}
+          disabled={disabled}
           onChange={(e) => handleToggle(e.target.checked)}
-          className="h-4 w-4 rounded border-border accent-primary"
+          className="h-4 w-4 rounded border-border accent-primary disabled:cursor-not-allowed disabled:opacity-50"
         />
         <span className="text-sm font-medium">Push / Pull</span>
       </label>
@@ -79,6 +83,7 @@ function PushPullToggle({
           availableIsoValues={availableIsoValues}
           pushPullStops={pushPullStops}
           onPushPullChange={onPushPullChange}
+          disabled={disabled}
         />
       )}
     </div>
@@ -105,6 +110,7 @@ export function FilmDeveloperForm({
   onPushPullChange,
   temperatureUnit,
   onTemperatureUnitChange,
+  selectionLocked = false,
 }: FilmDeveloperFormProps) {
   return (
     <div className="rounded-lg bg-card p-6 ds-card">
@@ -118,6 +124,7 @@ export function FilmDeveloperForm({
               value={selectedFilm}
               onChange={onFilmChange}
               placeholder="Search for a film..."
+              disabled={selectionLocked}
             />
           </div>
 
@@ -129,8 +136,9 @@ export function FilmDeveloperForm({
                   {availableFormats.includes("35mm") && (
                     <button
                       type="button"
+                      disabled={selectionLocked}
                       onClick={() => onFormatChange("35mm")}
-                      className={`py-2 px-3 rounded-md text-sm font-medium ${
+                      className={`py-2 px-3 rounded-md text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50 ${
                         selectedFormat === "35mm"
                           ? "bg-primary text-primary-foreground"
                           : "bg-muted hover:bg-muted/80"
@@ -142,8 +150,9 @@ export function FilmDeveloperForm({
                   {availableFormats.includes("120") && (
                     <button
                       type="button"
+                      disabled={selectionLocked}
                       onClick={() => onFormatChange("120")}
-                      className={`py-2 px-3 rounded-md text-sm font-medium ${
+                      className={`py-2 px-3 rounded-md text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50 ${
                         selectedFormat === "120"
                           ? "bg-primary text-primary-foreground"
                           : "bg-muted hover:bg-muted/80"
@@ -155,8 +164,9 @@ export function FilmDeveloperForm({
                   {availableFormats.includes("sheet") && (
                     <button
                       type="button"
+                      disabled={selectionLocked}
                       onClick={() => onFormatChange("sheet")}
-                      className={`py-2 px-3 rounded-md text-sm font-medium ${
+                      className={`py-2 px-3 rounded-md text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50 ${
                         selectedFormat === "sheet"
                           ? "bg-primary text-primary-foreground"
                           : "bg-muted hover:bg-muted/80"
@@ -182,6 +192,7 @@ export function FilmDeveloperForm({
                 }))}
                 value={selectedDeveloper}
                 onChange={onDeveloperChange}
+                disabled={selectionLocked}
                 placeholder={
                   availableDevelopers.length > 0
                     ? "Search for a developer..."
@@ -213,6 +224,7 @@ export function FilmDeveloperForm({
                 availableIsoValues={availableIsoValues}
                 pushPullStops={pushPullStops}
                 onPushPullChange={onPushPullChange}
+                disabled={selectionLocked}
               />
             )}
             <div>
@@ -220,7 +232,7 @@ export function FilmDeveloperForm({
               <Select
                 value={selectedIso}
                 onValueChange={onIsoChange}
-                disabled={!selectedFilmData || !selectedDeveloperData}
+                disabled={selectionLocked || !selectedFilmData || !selectedDeveloperData}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select ISO" />
@@ -249,6 +261,7 @@ export function FilmDeveloperForm({
             defaultValue="celsius"
             value={temperatureUnit}
             onValueChange={onTemperatureUnitChange}
+            disabled={selectionLocked}
             className="flex items-center space-x-8"
           >
             <div className="flex items-center space-x-2">

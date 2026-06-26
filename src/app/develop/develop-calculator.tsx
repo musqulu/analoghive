@@ -117,6 +117,7 @@ export function DevelopCalculator() {
     React.useState<DevelopmentProcessSnapshot | null>(null)
   const [celebrateDiarySummary, setCelebrateDiarySummary] =
     React.useState<DiaryCompletionSummary | null>(null)
+  const [selectionLocked, setSelectionLocked] = React.useState(false)
 
   const buildLogFn = React.useCallback(
     (ctx: { calcSnapshot: CalcSnapshot; processSnapshot: DevelopmentProcessSnapshot }) => () =>
@@ -204,8 +205,13 @@ export function DevelopCalculator() {
       setCelebrateSessionId(null)
       setCelebrateProcessSnapshot(null)
       setCelebrateDiarySummary(null)
+      setSelectionLocked(false)
       if (sessionId) sessionLogContextRef.current.delete(sessionId)
     }
+  }, [])
+
+  const handleRollActiveChange = React.useCallback((active: boolean) => {
+    setSelectionLocked(active)
   }, [])
 
   return (
@@ -234,6 +240,7 @@ export function DevelopCalculator() {
             onPushPullChange={selection.handlePushPullChange}
             temperatureUnit={correction.temperatureUnit}
             onTemperatureUnitChange={correction.handleTemperatureUnitChange}
+            selectionLocked={selectionLocked}
           />
 
           <DevelopmentSummary
@@ -245,6 +252,7 @@ export function DevelopCalculator() {
             selectedOptionKey={selection.selectedOptionKey}
             onOptionChange={selection.setSelectedOptionKey}
             temperatureUnit={correction.temperatureUnit}
+            selectionLocked={selectionLocked}
           />
 
           {favoriteSnapshot ? (
@@ -320,6 +328,7 @@ export function DevelopCalculator() {
                     onSessionStart={handleSessionStart}
                     onDevComplete={handleDevComplete}
                     onProcessComplete={handleProcessComplete}
+                    onRollActiveChange={handleRollActiveChange}
                   />
                 </div>
               </>

@@ -15,6 +15,7 @@ interface PushPullSelectorProps {
   availableIsoValues: number[]
   pushPullStops: number
   onPushPullChange: (stops: number, iso: string) => void
+  disabled?: boolean
 }
 
 function calculateTargetEI(ratingIso: number, stops: number): number {
@@ -26,6 +27,7 @@ export function PushPullSelector({
   availableIsoValues,
   pushPullStops,
   onPushPullChange,
+  disabled = false,
 }: PushPullSelectorProps) {
   const targetEI = calculateTargetEI(ratingIso, pushPullStops)
   const closestAvailable = findClosestAvailableIso(
@@ -58,8 +60,9 @@ export function PushPullSelector({
             <button
               key={opt.value}
               type="button"
+              disabled={disabled}
               onClick={() => handleStopChange(opt.value)}
-              className={`py-1.5 px-3 rounded-md text-xs font-medium transition-colors ${
+              className={`py-1.5 px-3 rounded-md text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                 pushPullStops === opt.value
                   ? "bg-primary text-primary-foreground"
                   : hasExact
