@@ -365,4 +365,20 @@ describe('Timer Component', () => {
     // Dilution should be displayed as 1+50 instead of 1:50
     expect(screen.getByText(/\(1\+50\)/)).toBeInTheDocument();
   });
-}); 
+
+  test('reports roll active state when a process step starts', () => {
+    const onRollActiveChange = jest.fn()
+    render(
+      <Timer
+        developmentTime={11}
+        temperature={20}
+        onRollActiveChange={onRollActiveChange}
+      />,
+    )
+
+    expect(onRollActiveChange).toHaveBeenCalledWith(false)
+
+    fireEvent.click(screen.getByTestId('start-button'))
+    expect(onRollActiveChange).toHaveBeenCalledWith(true)
+  })
+});

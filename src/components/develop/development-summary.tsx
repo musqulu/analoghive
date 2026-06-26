@@ -12,6 +12,7 @@ interface DevelopmentSummaryProps {
   selectedOptionKey: string
   onOptionChange: (value: string) => void
   temperatureUnit: string
+  selectionLocked?: boolean
 }
 
 export function DevelopmentSummary({
@@ -23,6 +24,7 @@ export function DevelopmentSummary({
   selectedOptionKey,
   onOptionChange,
   temperatureUnit,
+  selectionLocked = false,
 }: DevelopmentSummaryProps) {
   if (!selectedFilm && !selectedDeveloper && !developmentInfo) return null
 
@@ -58,6 +60,7 @@ export function DevelopmentSummary({
           temperatureUnit={temperatureUnit}
           isColor={isColor}
           selectedDeveloper={selectedDeveloper}
+          disabled={selectionLocked}
         />
       ) : null}
     </div>

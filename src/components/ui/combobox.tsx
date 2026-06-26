@@ -10,9 +10,16 @@ interface ComboboxProps {
   value: string
   onChange: (value: string) => void
   placeholder?: string
+  disabled?: boolean
 }
 
-export function Combobox({ options, value, onChange, placeholder = "Select an option..." }: ComboboxProps) {
+export function Combobox({
+  options,
+  value,
+  onChange,
+  placeholder = "Select an option...",
+  disabled = false,
+}: ComboboxProps) {
   const [open, setOpen] = React.useState(false)
   const [searchQuery, setSearchQuery] = React.useState("")
 
@@ -22,9 +29,16 @@ export function Combobox({ options, value, onChange, placeholder = "Select an op
   )
 
   return (
-    <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
+    <PopoverPrimitive.Root
+      open={disabled ? false : open}
+      onOpenChange={(next) => {
+        if (!disabled) setOpen(next)
+      }}
+    >
       <PopoverPrimitive.Trigger asChild>
         <button
+          type="button"
+          disabled={disabled}
           className={cn(
             "flex h-10 w-full items-center justify-between rounded-md bg-background px-3 py-2 text-sm shadow-ds ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
           )}

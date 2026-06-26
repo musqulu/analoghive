@@ -43,6 +43,8 @@ interface TimerProps {
   ) => void
   /** Fires when a new development session starts (pre-soak or dev). */
   onSessionStart?: (sessionId: DevelopmentSessionId) => void
+  /** Fires when any process step is active (started) vs idle. */
+  onRollActiveChange?: (active: boolean) => void
 }
 
 export function Timer({
@@ -62,6 +64,7 @@ export function Timer({
   onDevComplete,
   onProcessComplete,
   onSessionStart,
+  onRollActiveChange,
 }: TimerProps) {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false)
   const [isDevelopmentModeOpen, setIsDevelopmentModeOpen] = React.useState(false)
@@ -218,6 +221,15 @@ export function Timer({
       wakeLock.release()
     }
   }, [timer.isRunning, wakeLock])
+
+  const onRollActiveChangeRef = React.useRef(onRollActiveChange)
+  React.useEffect(() => {
+    onRollActiveChangeRef.current = onRollActiveChange
+  }, [onRollActiveChange])
+
+  React.useEffect(() => {
+    onRollActiveChangeRef.current?.(timer.currentStep !== null)
+  }, [timer.currentStep])
 
   return (
     <div className="space-y-6" data-testid="timer-component">

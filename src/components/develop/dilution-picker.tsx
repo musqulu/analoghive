@@ -25,6 +25,7 @@ interface DilutionPickerProps {
   isColor: boolean
   /** Used to show HC-110 G/J stand-development context */
   selectedDeveloper?: string
+  disabled?: boolean
 }
 
 export function DilutionPicker({
@@ -35,6 +36,7 @@ export function DilutionPicker({
   temperatureUnit,
   isColor,
   selectedDeveloper = "",
+  disabled = false,
 }: DilutionPickerProps) {
   if (!developmentInfo || !selectedIso) return null
 
@@ -47,8 +49,9 @@ export function DilutionPicker({
             <button
               key={info.optionKey}
               type="button"
+              disabled={disabled}
               onClick={() => onOptionChange(info.optionKey)}
-              className={`py-2 px-3 rounded-md text-sm font-medium text-left flex flex-col gap-1 ${
+              className={`py-2 px-3 rounded-md text-sm font-medium text-left flex flex-col gap-1 disabled:cursor-not-allowed disabled:opacity-50 ${
                 selectedOptionKey === info.optionKey
                   ? "bg-primary text-primary-foreground"
                   : "bg-muted hover:bg-muted/80"
@@ -120,8 +123,9 @@ export function DilutionPicker({
         </div>
         <button
           type="button"
+          disabled={disabled}
           onClick={() => onOptionChange(info.optionKey)}
-          className="mt-2 w-full py-2 px-3 rounded-md text-sm font-medium bg-secondary hover:bg-secondary/80 text-secondary-foreground transition-colors"
+          className="mt-2 w-full py-2 px-3 rounded-md text-sm font-medium bg-secondary hover:bg-secondary/80 text-secondary-foreground transition-colors disabled:cursor-not-allowed disabled:opacity-50"
         >
           Use These Settings
         </button>
