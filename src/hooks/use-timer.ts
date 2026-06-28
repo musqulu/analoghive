@@ -253,14 +253,13 @@ export function useTimer({
   }
 
   const resetTimer = () => {
-    if (currentStep) {
-      if (currentStep === "dev" || currentStep === "preSoak") {
-        devCompleteFiredRef.current = false
-      }
-      setTimeLeft(steps[currentStep].time)
-      setIsRunning(false)
-      setIsPaused(false)
+    if (currentStep === "dev" || currentStep === "preSoak") {
+      devCompleteFiredRef.current = false
     }
+    setCurrentStep(null)
+    setTimeLeft(idleFirstSeconds)
+    setIsRunning(false)
+    setIsPaused(false)
   }
 
   return {

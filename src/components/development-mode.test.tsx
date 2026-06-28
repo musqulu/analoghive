@@ -360,6 +360,24 @@ describe("DevelopmentMode", () => {
     expect(onProcessComplete).toHaveBeenLastCalledWith(1)
   })
 
+  it("reports roll active when a session starts in darkroom mode", () => {
+    const onRollActiveChange = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={120}
+        onRollActiveChange={onRollActiveChange}
+      />,
+    )
+
+    expect(onRollActiveChange).toHaveBeenCalledWith(false)
+    fireEvent.click(screen.getByText("Start"))
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(true)
+
+    fireEvent.click(screen.getByText("Reset"))
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(false)
+  })
+
   it("starts a new session when wash is rerun after completion and reset", () => {
     const onProcessComplete = jest.fn()
     render(

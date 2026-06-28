@@ -113,12 +113,13 @@ describe("useTimer", () => {
     expect(result.current.timeLeft).toBe(before - 2)
   })
 
-  it("resetTimer restores step time", () => {
+  it("resetTimer returns to idle so selection can unlock", () => {
     const { result } = createTimer()
     act(() => result.current.startTimer("dev"))
     act(() => jest.advanceTimersByTime(10000))
     act(() => result.current.resetTimer())
 
+    expect(result.current.currentStep).toBeNull()
     expect(result.current.timeLeft).toBe(600)
     expect(result.current.isRunning).toBe(false)
   })

@@ -68,6 +68,7 @@ export function Timer({
 }: TimerProps) {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false)
   const [isDevelopmentModeOpen, setIsDevelopmentModeOpen] = React.useState(false)
+  const [darkroomRollActive, setDarkroomRollActive] = React.useState(false)
   const [washingMethod, setWashingMethod] = React.useState<WashingMethod>(() => {
     if (initialWashingMethod) return initialWashingMethod
     return {
@@ -228,8 +229,8 @@ export function Timer({
   }, [onRollActiveChange])
 
   React.useEffect(() => {
-    onRollActiveChangeRef.current?.(timer.currentStep !== null)
-  }, [timer.currentStep])
+    onRollActiveChangeRef.current?.(timer.currentStep !== null || darkroomRollActive)
+  }, [timer.currentStep, darkroomRollActive])
 
   return (
     <div className="space-y-6" data-testid="timer-component">
@@ -334,6 +335,7 @@ export function Timer({
         sessionRefs={sessionRefs}
         onDevComplete={(sessionId) => emitDevComplete(formatSessionId(sessionId))}
         onProcessComplete={(sessionId) => emitProcessComplete(formatSessionId(sessionId))}
+        onRollActiveChange={setDarkroomRollActive}
       />
     </div>
   )

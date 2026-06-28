@@ -60,6 +60,8 @@ interface DevelopmentModeProps {
   onProcessComplete?: (sessionId: number) => void
   /** When set, shares session ids with the main timer on the same page. */
   sessionRefs?: TimerSessionRefs
+  /** Fires when a darkroom roll is in progress or just completed (before reset). */
+  onRollActiveChange?: (active: boolean) => void
 }
 
 export function DevelopmentMode({
@@ -77,6 +79,7 @@ export function DevelopmentMode({
   onDevComplete,
   onProcessComplete,
   sessionRefs,
+  onRollActiveChange,
 }: DevelopmentModeProps) {
   const devDuration = durationSeconds(time)
   const preSoakDuration = durationSeconds(preSoakSeconds)
@@ -102,6 +105,7 @@ export function DevelopmentMode({
   const previousStepRef = useRef<DarkroomStep>(hasPreSoak ? "presoak" : "developer")
   const onDevCompleteRef = useRef(onDevComplete)
   const onProcessCompleteRef = useRef(onProcessComplete)
+  const onRollActiveChangeRef = useRef(onRollActiveChange)
   const [shouldShake, setShouldShake] = useState(false)
 
   useEffect(() => {
@@ -111,6 +115,21 @@ export function DevelopmentMode({
   useEffect(() => {
     onProcessCompleteRef.current = onProcessComplete
   }, [onProcessComplete])
+
+  useEffect(() => {
+    onRollActiveChangeRef.current = onRollActiveChange
+  }, [onRollActiveChange])
+
+  const reportRollActive = () => {
+    const active =
+      (sessionStartedRef.current && !processCompleteFiredRef.current) ||
+      currentStep === "complete"
+    onRollActiveChangeRef.current?.(active)
+  }
+
+  useEffect(() => {
+    reportRollActive()
+  }, [currentStep, isRunning])
 
   // Save scroll position when opening and restore when closing
   useEffect(() => {
@@ -161,6 +180,7 @@ export function DevelopmentMode({
     }
     sessionStartedRef.current = false
     setShouldShake(false)
+    reportRollActive()
   }, [isOpen, devDuration, preSoakDuration, stopDuration, fixDuration, washDuration])
 
   // Format time as MM:SS
@@ -254,6 +274,7 @@ export function DevelopmentMode({
     }
     // Otherwise keep the active session id so a wash-only finish after reset still
     // matches the dev-step diary log for this roll (resetTimer in useTimer does the same).
+    reportRollActive()
   }
 
   const beginNewSessionIfNeeded = () => {
@@ -263,6 +284,7 @@ export function DevelopmentMode({
     devCompleteFiredRef.current = false
     processCompleteFiredRef.current = false
     sessionStartedRef.current = true
+    reportRollActive()
   }
 
   const ensureDevelopmentSession = () => {
@@ -271,17 +293,20 @@ export function DevelopmentMode({
     // so starting developer again mid-roll does not allocate a new session id.
     if (sessionRefs && currentSessionIdRef.current > 0) {
       sessionStartedRef.current = true
+      reportRollActive()
       return
     }
     sessionCounterRef.current += 1
     currentSessionIdRef.current = sessionCounterRef.current
     sessionStartedRef.current = true
+    reportRollActive()
   }
 
   const finishProcessIfNeeded = () => {
     if (processCompleteFiredRef.current) return
     processCompleteFiredRef.current = true
     onProcessCompleteRef.current?.(currentSessionIdRef.current)
+    reportRollActive()
   }
 
   // Handle close with scroll position preservation
