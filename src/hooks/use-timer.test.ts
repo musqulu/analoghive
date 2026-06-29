@@ -121,6 +121,7 @@ describe("useTimer", () => {
 
     expect(result.current.timeLeft).toBe(600)
     expect(result.current.isRunning).toBe(false)
+    expect(result.current.currentStep).toBeNull()
   })
 
   it("auto-advances through all steps dev -> stop -> fix -> wash -> stopped", () => {

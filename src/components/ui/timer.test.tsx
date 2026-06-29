@@ -381,4 +381,38 @@ describe('Timer Component', () => {
     fireEvent.click(screen.getByTestId('start-button'))
     expect(onRollActiveChange).toHaveBeenCalledWith(true)
   })
+
+  test('reports roll inactive after reset clears the active step', () => {
+    const onRollActiveChange = jest.fn()
+    render(
+      <Timer
+        developmentTime={11}
+        temperature={20}
+        onRollActiveChange={onRollActiveChange}
+      />,
+    )
+
+    fireEvent.click(screen.getByTestId('start-button'))
+    onRollActiveChange.mockClear()
+
+    fireEvent.click(screen.getByTitle('Reset Timer'))
+    expect(onRollActiveChange).toHaveBeenCalledWith(false)
+  })
+
+  test('reports roll active when darkroom mode is running without main timer', () => {
+    const onRollActiveChange = jest.fn()
+    render(
+      <Timer
+        developmentTime={11}
+        temperature={20}
+        onRollActiveChange={onRollActiveChange}
+      />,
+    )
+
+    onRollActiveChange.mockClear()
+    fireEvent.click(screen.getByText('Darkroom mode'))
+    fireEvent.click(screen.getByText('Start'))
+
+    expect(onRollActiveChange).toHaveBeenCalledWith(true)
+  })
 });

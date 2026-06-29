@@ -124,6 +124,42 @@ describe("DevelopmentMode", () => {
     expect(screen.getByText("DEVELOPMENT COMPLETE")).toBeInTheDocument()
   })
 
+  it("reports roll active while a session is in progress", () => {
+    const onRollActiveChange = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={60}
+        onRollActiveChange={onRollActiveChange}
+      />,
+    )
+
+    expect(onRollActiveChange).toHaveBeenCalledWith(false)
+
+    fireEvent.click(screen.getByText("Start"))
+    expect(onRollActiveChange).toHaveBeenCalledWith(true)
+
+    fireEvent.click(screen.getByText("Pause"))
+    expect(onRollActiveChange).toHaveBeenCalledWith(true)
+  })
+
+  it("reports roll inactive after reset from an in-progress session", () => {
+    const onRollActiveChange = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={60}
+        onRollActiveChange={onRollActiveChange}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    onRollActiveChange.mockClear()
+
+    fireEvent.click(screen.getByText("Reset"))
+    expect(onRollActiveChange).toHaveBeenCalledWith(false)
+  })
+
   it("reset restores to initial state", () => {
     render(<DevelopmentMode {...defaultProps} time={60} />)
     const startButton = screen.getByText("Start")

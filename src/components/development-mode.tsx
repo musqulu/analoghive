@@ -60,6 +60,8 @@ interface DevelopmentModeProps {
   onProcessComplete?: (sessionId: number) => void
   /** When set, shares session ids with the main timer on the same page. */
   sessionRefs?: TimerSessionRefs
+  /** Fires when a darkroom roll is in progress vs idle. */
+  onRollActiveChange?: (active: boolean) => void
 }
 
 export function DevelopmentMode({
@@ -77,6 +79,7 @@ export function DevelopmentMode({
   onDevComplete,
   onProcessComplete,
   sessionRefs,
+  onRollActiveChange,
 }: DevelopmentModeProps) {
   const devDuration = durationSeconds(time)
   const preSoakDuration = durationSeconds(preSoakSeconds)
@@ -102,6 +105,7 @@ export function DevelopmentMode({
   const previousStepRef = useRef<DarkroomStep>(hasPreSoak ? "presoak" : "developer")
   const onDevCompleteRef = useRef(onDevComplete)
   const onProcessCompleteRef = useRef(onProcessComplete)
+  const onRollActiveChangeRef = useRef(onRollActiveChange)
   const [shouldShake, setShouldShake] = useState(false)
 
   useEffect(() => {
@@ -111,6 +115,18 @@ export function DevelopmentMode({
   useEffect(() => {
     onProcessCompleteRef.current = onProcessComplete
   }, [onProcessComplete])
+
+  useEffect(() => {
+    onRollActiveChangeRef.current = onRollActiveChange
+  }, [onRollActiveChange])
+
+  useEffect(() => {
+    const active =
+      isRunning ||
+      currentStep === "complete" ||
+      (sessionStartedRef.current && currentStep !== "complete")
+    onRollActiveChangeRef.current?.(active)
+  }, [isRunning, currentStep])
 
   // Save scroll position when opening and restore when closing
   useEffect(() => {

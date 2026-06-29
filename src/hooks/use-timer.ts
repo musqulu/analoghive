@@ -260,6 +260,7 @@ export function useTimer({
       setTimeLeft(steps[currentStep].time)
       setIsRunning(false)
       setIsPaused(false)
+      setCurrentStep(null)
     }
   }
 

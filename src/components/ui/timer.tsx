@@ -222,14 +222,17 @@ export function Timer({
     }
   }, [timer.isRunning, wakeLock])
 
+  const [darkroomRollActive, setDarkroomRollActive] = React.useState(false)
+
   const onRollActiveChangeRef = React.useRef(onRollActiveChange)
   React.useEffect(() => {
     onRollActiveChangeRef.current = onRollActiveChange
   }, [onRollActiveChange])
 
   React.useEffect(() => {
-    onRollActiveChangeRef.current?.(timer.currentStep !== null)
-  }, [timer.currentStep])
+    const mainRollActive = timer.currentStep !== null
+    onRollActiveChangeRef.current?.(mainRollActive || darkroomRollActive)
+  }, [timer.currentStep, darkroomRollActive])
 
   return (
     <div className="space-y-6" data-testid="timer-component">
@@ -334,6 +337,7 @@ export function Timer({
         sessionRefs={sessionRefs}
         onDevComplete={(sessionId) => emitDevComplete(formatSessionId(sessionId))}
         onProcessComplete={(sessionId) => emitProcessComplete(formatSessionId(sessionId))}
+        onRollActiveChange={setDarkroomRollActive}
       />
     </div>
   )
