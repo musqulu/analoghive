@@ -381,4 +381,21 @@ describe('Timer Component', () => {
     fireEvent.click(screen.getByTestId('start-button'))
     expect(onRollActiveChange).toHaveBeenCalledWith(true)
   })
+
+  test('reports roll inactive after reset so calculator selection can unlock', () => {
+    const onRollActiveChange = jest.fn()
+    render(
+      <Timer
+        developmentTime={11}
+        temperature={20}
+        onRollActiveChange={onRollActiveChange}
+      />,
+    )
+
+    fireEvent.click(screen.getByTestId('start-button'))
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(true)
+
+    fireEvent.click(screen.getByTitle('Reset Timer'))
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(false)
+  })
 });

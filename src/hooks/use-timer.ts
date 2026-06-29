@@ -257,9 +257,9 @@ export function useTimer({
       if (currentStep === "dev" || currentStep === "preSoak") {
         devCompleteFiredRef.current = false
       }
-      setTimeLeft(steps[currentStep].time)
       setIsRunning(false)
       setIsPaused(false)
+      setCurrentStep(null)
     }
   }
 
