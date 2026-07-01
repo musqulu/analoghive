@@ -60,6 +60,10 @@ interface DevelopmentModeProps {
   onProcessComplete?: (sessionId: number) => void
   /** When set, shares session ids with the main timer on the same page. */
   sessionRefs?: TimerSessionRefs
+  /** Fires when a development session starts (pre-soak or developer). */
+  onSessionStart?: (sessionId: number) => void
+  /** Fires when any darkroom step is active vs idle. */
+  onRollActiveChange?: (active: boolean) => void
 }
 
 export function DevelopmentMode({
@@ -77,6 +81,8 @@ export function DevelopmentMode({
   onDevComplete,
   onProcessComplete,
   sessionRefs,
+  onSessionStart,
+  onRollActiveChange,
 }: DevelopmentModeProps) {
   const devDuration = durationSeconds(time)
   const preSoakDuration = durationSeconds(preSoakSeconds)
@@ -92,7 +98,9 @@ export function DevelopmentMode({
   )
   const scrollPositionRef = useRef<number>(0)
   const devCompleteFiredRef = useRef(false)
-  const processCompleteFiredRef = useRef(false)
+  const internalProcessCompleteFiredRef = useRef(false)
+  const processCompleteFiredRef =
+    sessionRefs?.processCompleteFired ?? internalProcessCompleteFiredRef
   const internalSessionCounterRef = useRef(0)
   const internalCurrentSessionIdRef = useRef(0)
   const sessionCounterRef = sessionRefs?.counter ?? internalSessionCounterRef
@@ -102,7 +110,11 @@ export function DevelopmentMode({
   const previousStepRef = useRef<DarkroomStep>(hasPreSoak ? "presoak" : "developer")
   const onDevCompleteRef = useRef(onDevComplete)
   const onProcessCompleteRef = useRef(onProcessComplete)
+  const onSessionStartRef = useRef(onSessionStart)
+  const onRollActiveChangeRef = useRef(onRollActiveChange)
   const [shouldShake, setShouldShake] = useState(false)
+  const initialStepRef = useRef<DarkroomStep>(hasPreSoak ? "presoak" : "developer")
+  const [hasStartedRoll, setHasStartedRoll] = useState(false)
 
   useEffect(() => {
     onDevCompleteRef.current = onDevComplete
@@ -111,6 +123,14 @@ export function DevelopmentMode({
   useEffect(() => {
     onProcessCompleteRef.current = onProcessComplete
   }, [onProcessComplete])
+
+  useEffect(() => {
+    onSessionStartRef.current = onSessionStart
+  }, [onSessionStart])
+
+  useEffect(() => {
+    onRollActiveChangeRef.current = onRollActiveChange
+  }, [onRollActiveChange])
 
   // Save scroll position when opening and restore when closing
   useEffect(() => {
@@ -150,18 +170,33 @@ export function DevelopmentMode({
     openedRef.current = true
     const presoak = preSoakDuration > 0
     const firstStep = presoak ? "presoak" : "developer"
+    initialStepRef.current = firstStep
     previousStepRef.current = firstStep
     setCurrentStep(firstStep)
     setSeconds(presoak ? preSoakDuration : devDuration)
     setIsRunning(false)
     devCompleteFiredRef.current = false
-    processCompleteFiredRef.current = false
+    if (!sessionRefs) {
+      processCompleteFiredRef.current = false
+    }
     if (!sessionRefs) {
       currentSessionIdRef.current = 0
     }
     sessionStartedRef.current = false
+    setHasStartedRoll(false)
     setShouldShake(false)
   }, [isOpen, devDuration, preSoakDuration, stopDuration, fixDuration, washDuration])
+
+  const rollActive =
+    isOpen &&
+    currentStep !== "complete" &&
+    (isRunning ||
+      hasStartedRoll ||
+      currentStep !== initialStepRef.current)
+
+  useEffect(() => {
+    onRollActiveChangeRef.current?.(rollActive)
+  }, [rollActive])
 
   // Format time as MM:SS
   const formatTime = (timeInSeconds: number) => {
@@ -245,6 +280,7 @@ export function DevelopmentMode({
     setSeconds(first === "presoak" ? preSoakDuration : devDuration)
     devCompleteFiredRef.current = false
     sessionStartedRef.current = false
+    setHasStartedRoll(false)
     setShouldShake(false)
     if (processCompleteFiredRef.current) {
       // Finished roll — allocate a new session so the next completion can log again.
@@ -263,6 +299,8 @@ export function DevelopmentMode({
     devCompleteFiredRef.current = false
     processCompleteFiredRef.current = false
     sessionStartedRef.current = true
+    setHasStartedRoll(true)
+    onSessionStartRef.current?.(currentSessionIdRef.current)
   }
 
   const ensureDevelopmentSession = () => {
@@ -271,11 +309,15 @@ export function DevelopmentMode({
     // so starting developer again mid-roll does not allocate a new session id.
     if (sessionRefs && currentSessionIdRef.current > 0) {
       sessionStartedRef.current = true
+      setHasStartedRoll(true)
+      onSessionStartRef.current?.(currentSessionIdRef.current)
       return
     }
     sessionCounterRef.current += 1
     currentSessionIdRef.current = sessionCounterRef.current
     sessionStartedRef.current = true
+    setHasStartedRoll(true)
+    onSessionStartRef.current?.(currentSessionIdRef.current)
   }
 
   const finishProcessIfNeeded = () => {

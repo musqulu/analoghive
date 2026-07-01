@@ -391,4 +391,55 @@ describe("DevelopmentMode", () => {
     expect(onProcessComplete).toHaveBeenCalledTimes(2)
     expect(onProcessComplete).toHaveBeenLastCalledWith(1)
   })
+
+  it("reports roll active state when development starts", () => {
+    const onRollActiveChange = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={120}
+        onRollActiveChange={onRollActiveChange}
+      />,
+    )
+
+    expect(onRollActiveChange).toHaveBeenCalledWith(false)
+
+    fireEvent.click(screen.getByText("Start"))
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(true)
+
+    fireEvent.click(screen.getByText("Reset"))
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(false)
+  })
+
+  it("allocates a new session when starting after shared process completion", () => {
+    const onProcessComplete = jest.fn()
+    const processCompleteFired = { current: true }
+    const sessionRefs = {
+      counter: { current: 1 },
+      current: { current: 1 },
+      processCompleteFired,
+    }
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        stopSeconds={3}
+        fixSeconds={3}
+        washSeconds={3}
+        sessionRefs={sessionRefs}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
+    expect(onProcessComplete).toHaveBeenLastCalledWith(2)
+    expect(processCompleteFired.current).toBe(true)
+  })
 })

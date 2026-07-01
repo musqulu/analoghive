@@ -124,6 +124,17 @@ describe("useTimer", () => {
     expect(result.current.isRunning).toBe(false)
   })
 
+  it("fires onSessionReset with the active session id when reset clears a step", () => {
+    const onSessionReset = jest.fn()
+    const { result } = createTimer({ onSessionReset })
+
+    act(() => result.current.startTimer("dev"))
+    act(() => result.current.resetTimer())
+
+    expect(onSessionReset).toHaveBeenCalledTimes(1)
+    expect(onSessionReset).toHaveBeenCalledWith(1)
+  })
+
   it("auto-advances through all steps dev -> stop -> fix -> wash -> stopped", () => {
     const times: ProcessTimes = { dev: 0, stop: 0.05, fix: 0.05, wash: 0.05 }
     const { result } = createTimer({

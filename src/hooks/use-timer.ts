@@ -14,6 +14,8 @@ interface StepConfig {
 export interface TimerSessionRefs {
   counter: React.MutableRefObject<number>
   current: React.MutableRefObject<number>
+  /** Shared between main timer and DevelopmentMode so post-completion rolls get new session ids. */
+  processCompleteFired?: React.MutableRefObject<boolean>
 }
 
 interface UseTimerOptions {
@@ -38,6 +40,8 @@ interface UseTimerOptions {
   onProcessComplete?: (sessionId: number) => void
   /** Fires when a new development session id is allocated (pre-soak or dev start). */
   onSessionStart?: (sessionId: number) => void
+  /** Fires when resetTimer clears an in-progress step (before session id may be reused). */
+  onSessionReset?: (sessionId: number) => void
 }
 
 function hasPreSoakDuration(customTimes: ProcessTimes): boolean {
@@ -60,6 +64,7 @@ export function useTimer({
   onDevComplete,
   onProcessComplete,
   onSessionStart,
+  onSessionReset,
 }: UseTimerOptions) {
   const [timeLeft, setTimeLeft] = React.useState(() =>
     initialIdleSeconds(customTimes, developmentTime),
@@ -198,11 +203,18 @@ export function useTimer({
     onSessionStartRef.current = onSessionStart
   }, [onSessionStart])
 
+  const onSessionResetRef = React.useRef(onSessionReset)
+  React.useEffect(() => {
+    onSessionResetRef.current = onSessionReset
+  }, [onSessionReset])
+
   // Guards `onDevComplete` to fire once per `startTimer("dev")` invocation; resets
   // when dev is started again (or via resetTimer mid-dev).
   const devCompleteFiredRef = React.useRef(false)
   /** Once per wash completion from the countdown (not skips). Reset with dev guard + resetTimer. */
-  const processCompleteFiredRef = React.useRef(false)
+  const internalProcessCompleteFiredRef = React.useRef(false)
+  const processCompleteFiredRef =
+    sessionRefs?.processCompleteFired ?? internalProcessCompleteFiredRef
   const internalSessionCounterRef = React.useRef(0)
   const internalCurrentSessionIdRef = React.useRef(0)
   const sessionCounterRef = sessionRefs?.counter ?? internalSessionCounterRef
@@ -257,6 +269,7 @@ export function useTimer({
       if (currentStep === "dev" || currentStep === "preSoak") {
         devCompleteFiredRef.current = false
       }
+      onSessionResetRef.current?.(currentSessionIdRef.current)
       setIsRunning(false)
       setIsPaused(false)
       setCurrentStep(null)
