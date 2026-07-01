@@ -43,6 +43,8 @@ interface TimerProps {
   ) => void
   /** Fires when a new development session starts (pre-soak or dev). */
   onSessionStart?: (sessionId: DevelopmentSessionId) => void
+  /** Fires when resetTimer clears an in-progress step. */
+  onSessionReset?: (sessionId: DevelopmentSessionId) => void
   /** Fires when any process step is active (started) vs idle. */
   onRollActiveChange?: (active: boolean) => void
 }
@@ -64,10 +66,12 @@ export function Timer({
   onDevComplete,
   onProcessComplete,
   onSessionStart,
+  onSessionReset,
   onRollActiveChange,
 }: TimerProps) {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false)
   const [isDevelopmentModeOpen, setIsDevelopmentModeOpen] = React.useState(false)
+  const [darkroomRollActive, setDarkroomRollActive] = React.useState(false)
   const [washingMethod, setWashingMethod] = React.useState<WashingMethod>(() => {
     if (initialWashingMethod) return initialWashingMethod
     return {
@@ -162,8 +166,13 @@ export function Timer({
 
   const sessionCounterRef = React.useRef(0)
   const currentSessionIdRef = React.useRef(0)
+  const processCompleteFiredRef = React.useRef(false)
   const sessionRefs = React.useMemo(
-    () => ({ counter: sessionCounterRef, current: currentSessionIdRef }),
+    () => ({
+      counter: sessionCounterRef,
+      current: currentSessionIdRef,
+      processCompleteFired: processCompleteFiredRef,
+    }),
     [],
   )
   const formatSessionId = React.useCallback(
@@ -176,6 +185,11 @@ export function Timer({
     onSessionStartRef.current = onSessionStart
   }, [onSessionStart])
 
+  const onSessionResetRef = React.useRef(onSessionReset)
+  React.useEffect(() => {
+    onSessionResetRef.current = onSessionReset
+  }, [onSessionReset])
+
   const timer = useTimer({
     developmentTime,
     temperature,
@@ -185,6 +199,9 @@ export function Timer({
     onSessionStart: (sessionId) => {
       sessionDevelopmentTimeRef.current.set(sessionId, developmentTime)
       onSessionStartRef.current?.(formatSessionId(sessionId))
+    },
+    onSessionReset: (sessionId) => {
+      onSessionResetRef.current?.(formatSessionId(sessionId))
     },
     onDevComplete: (sessionId) => emitDevComplete(formatSessionId(sessionId)),
     onProcessComplete: (sessionId) => emitProcessComplete(formatSessionId(sessionId)),
@@ -228,8 +245,8 @@ export function Timer({
   }, [onRollActiveChange])
 
   React.useEffect(() => {
-    onRollActiveChangeRef.current?.(timer.currentStep !== null)
-  }, [timer.currentStep])
+    onRollActiveChangeRef.current?.(timer.currentStep !== null || darkroomRollActive)
+  }, [timer.currentStep, darkroomRollActive])
 
   return (
     <div className="space-y-6" data-testid="timer-component">
@@ -332,6 +349,10 @@ export function Timer({
         fixSeconds={Math.round(customTimes.fix * 60)}
         washSeconds={Math.round(customTimes.wash * 60)}
         sessionRefs={sessionRefs}
+        onSessionStart={(sessionId) =>
+          onSessionStartRef.current?.(formatSessionId(sessionId))
+        }
+        onRollActiveChange={setDarkroomRollActive}
         onDevComplete={(sessionId) => emitDevComplete(formatSessionId(sessionId))}
         onProcessComplete={(sessionId) => emitProcessComplete(formatSessionId(sessionId))}
       />

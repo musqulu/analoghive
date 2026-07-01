@@ -398,4 +398,69 @@ describe('Timer Component', () => {
     fireEvent.click(screen.getByTitle('Reset Timer'))
     expect(onRollActiveChange).toHaveBeenLastCalledWith(false)
   })
+
+  test('reports roll active when darkroom mode starts without main timer', () => {
+    const onRollActiveChange = jest.fn()
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }}
+        onRollActiveChange={onRollActiveChange}
+      />,
+    )
+
+    expect(onRollActiveChange).toHaveBeenCalledWith(false)
+
+    fireEvent.click(screen.getByText(/Darkroom mode/))
+    fireEvent.click(screen.getByText('Start'))
+
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(true)
+  })
+
+  test('allocates a new session when darkroom starts after main timer process completes', () => {
+    const onDevComplete = jest.fn()
+    const onProcessComplete = jest.fn()
+    const shortWashMethod = {
+      type: 'running' as const,
+      runningWaterTime: 0.05,
+      ilfordInversions: { first: 5, second: 10, third: 20 },
+      custom: { totalTime: 0.05, waterChanges: 1 },
+    }
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }}
+        initialWashingMethod={shortWashMethod}
+        onDevComplete={onDevComplete}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByTestId('start-button'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
+    expect(onProcessComplete).toHaveBeenCalledWith(expect.any(Object), 'session:1')
+
+    fireEvent.click(screen.getByText(/Darkroom mode/))
+    fireEvent.click(screen.getByText('Start'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+
+    expect(onDevComplete).toHaveBeenCalledTimes(2)
+    expect(onDevComplete).toHaveBeenLastCalledWith(expect.any(Object), 'session:2')
+  })
 });

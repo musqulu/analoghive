@@ -161,6 +161,10 @@ export function DevelopCalculator() {
     freezeCalcSnapshot(sessionLogContextRef.current, sessionId, snapshotRef.current)
   }, [])
 
+  const handleSessionReset = React.useCallback((sessionId: DevelopmentSessionId) => {
+    sessionLogContextRef.current.delete(sessionId)
+  }, [])
+
   const handleDevComplete = React.useCallback(
     (processSnapshot: DevelopmentProcessSnapshot, sessionId: DevelopmentSessionId) => {
       freezeCalcSnapshot(sessionLogContextRef.current, sessionId, snapshotRef.current)
@@ -326,6 +330,7 @@ export function DevelopCalculator() {
                     temperatureUnit={correction.temperatureUnit}
                     isColor={isColor}
                     onSessionStart={handleSessionStart}
+                    onSessionReset={handleSessionReset}
                     onDevComplete={handleDevComplete}
                     onProcessComplete={handleProcessComplete}
                     onRollActiveChange={handleRollActiveChange}
