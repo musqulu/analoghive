@@ -64,6 +64,10 @@ interface DevelopmentModeProps {
   onSessionStart?: (sessionId: number) => void
   /** Fires when any darkroom step is active vs idle. */
   onRollActiveChange?: (active: boolean) => void
+  /** When true, the main timer still has an active step — do not abandon the shared session on close. */
+  mainTimerRollActive?: boolean
+  /** Fires when a darkroom-only roll is abandoned (overlay closed mid-roll). */
+  onSessionReset?: (sessionId: number) => void
 }
 
 export function DevelopmentMode({
@@ -83,6 +87,8 @@ export function DevelopmentMode({
   sessionRefs,
   onSessionStart,
   onRollActiveChange,
+  mainTimerRollActive = false,
+  onSessionReset,
 }: DevelopmentModeProps) {
   const devDuration = durationSeconds(time)
   const preSoakDuration = durationSeconds(preSoakSeconds)
@@ -112,9 +118,11 @@ export function DevelopmentMode({
   const onProcessCompleteRef = useRef(onProcessComplete)
   const onSessionStartRef = useRef(onSessionStart)
   const onRollActiveChangeRef = useRef(onRollActiveChange)
+  const onSessionResetRef = useRef(onSessionReset)
   const [shouldShake, setShouldShake] = useState(false)
   const initialStepRef = useRef<DarkroomStep>(hasPreSoak ? "presoak" : "developer")
   const [hasStartedRoll, setHasStartedRoll] = useState(false)
+  const prevIsOpenRef = useRef(false)
 
   useEffect(() => {
     onDevCompleteRef.current = onDevComplete
@@ -131,6 +139,40 @@ export function DevelopmentMode({
   useEffect(() => {
     onRollActiveChangeRef.current = onRollActiveChange
   }, [onRollActiveChange])
+
+  useEffect(() => {
+    onSessionResetRef.current = onSessionReset
+  }, [onSessionReset])
+
+  // Abandon darkroom-only rolls when the overlay closes mid-process so the next
+  // open gets a fresh session id (diary logging dedupes by session id).
+  useEffect(() => {
+    const wasOpen = prevIsOpenRef.current
+    prevIsOpenRef.current = isOpen
+    if (!wasOpen || isOpen) return
+
+    const hadRollInProgress =
+      currentStep !== "complete" &&
+      (isRunning ||
+        hasStartedRoll ||
+        currentStep !== initialStepRef.current)
+    if (!hadRollInProgress || mainTimerRollActive) return
+
+    if (currentSessionIdRef.current > 0) {
+      onSessionResetRef.current?.(currentSessionIdRef.current)
+    }
+    sessionCounterRef.current += 1
+    currentSessionIdRef.current = sessionCounterRef.current
+    devCompleteFiredRef.current = false
+    processCompleteFiredRef.current = false
+    sessionStartedRef.current = false
+  }, [
+    isOpen,
+    currentStep,
+    isRunning,
+    hasStartedRoll,
+    mainTimerRollActive,
+  ])
 
   // Save scroll position when opening and restore when closing
   useEffect(() => {

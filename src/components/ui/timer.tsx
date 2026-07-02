@@ -349,8 +349,12 @@ export function Timer({
         fixSeconds={Math.round(customTimes.fix * 60)}
         washSeconds={Math.round(customTimes.wash * 60)}
         sessionRefs={sessionRefs}
+        mainTimerRollActive={timer.currentStep !== null}
         onSessionStart={(sessionId) =>
           onSessionStartRef.current?.(formatSessionId(sessionId))
+        }
+        onSessionReset={(sessionId) =>
+          onSessionResetRef.current?.(formatSessionId(sessionId))
         }
         onRollActiveChange={setDarkroomRollActive}
         onDevComplete={(sessionId) => emitDevComplete(formatSessionId(sessionId))}
