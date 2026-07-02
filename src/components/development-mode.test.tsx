@@ -411,6 +411,96 @@ describe("DevelopmentMode", () => {
     expect(onRollActiveChange).toHaveBeenLastCalledWith(false)
   })
 
+  it("abandons a darkroom-only roll when closed mid-process so the next dev completion uses a new session id", () => {
+    const onDevComplete = jest.fn()
+    const onSessionReset = jest.fn()
+    const sessionRefs = {
+      counter: { current: 0 },
+      current: { current: 0 },
+      processCompleteFired: { current: false },
+    }
+    const { rerender } = render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        sessionRefs={sessionRefs}
+        onDevComplete={onDevComplete}
+        onSessionReset={onSessionReset}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+    expect(onDevComplete).toHaveBeenLastCalledWith(1)
+
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={false}
+        time={3}
+        sessionRefs={sessionRefs}
+        onDevComplete={onDevComplete}
+        onSessionReset={onSessionReset}
+      />,
+    )
+    expect(onSessionReset).toHaveBeenCalledWith(1)
+    expect(sessionRefs.counter.current).toBe(2)
+    expect(sessionRefs.current.current).toBe(2)
+
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={true}
+        time={3}
+        sessionRefs={sessionRefs}
+        onDevComplete={onDevComplete}
+        onSessionReset={onSessionReset}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+    expect(onDevComplete).toHaveBeenCalledTimes(2)
+    expect(onDevComplete).toHaveBeenLastCalledWith(2)
+  })
+
+  it("keeps the shared session id when closed mid-roll while the main timer is still active", () => {
+    const onSessionReset = jest.fn()
+    const sessionRefs = {
+      counter: { current: 1 },
+      current: { current: 1 },
+      processCompleteFired: { current: false },
+    }
+    const { rerender } = render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        sessionRefs={sessionRefs}
+        mainTimerRollActive
+        onSessionReset={onSessionReset}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={false}
+        time={3}
+        sessionRefs={sessionRefs}
+        mainTimerRollActive
+        onSessionReset={onSessionReset}
+      />,
+    )
+
+    expect(onSessionReset).not.toHaveBeenCalled()
+    expect(sessionRefs.counter.current).toBe(1)
+    expect(sessionRefs.current.current).toBe(1)
+  })
+
   it("allocates a new session when starting after shared process completion", () => {
     const onProcessComplete = jest.fn()
     const processCompleteFired = { current: true }
