@@ -104,6 +104,8 @@ export function DevelopmentMode({
   )
   const scrollPositionRef = useRef<number>(0)
   const devCompleteFiredRef = useRef(false)
+  /** Session id that already fired onDevComplete — rerunning developer needs a new session. */
+  const devCompletedSessionIdRef = useRef<number | null>(null)
   const internalProcessCompleteFiredRef = useRef(false)
   const processCompleteFiredRef =
     sessionRefs?.processCompleteFired ?? internalProcessCompleteFiredRef
@@ -164,6 +166,7 @@ export function DevelopmentMode({
     sessionCounterRef.current += 1
     currentSessionIdRef.current = sessionCounterRef.current
     devCompleteFiredRef.current = false
+    devCompletedSessionIdRef.current = null
     processCompleteFiredRef.current = false
     sessionStartedRef.current = false
   }, [
@@ -218,6 +221,7 @@ export function DevelopmentMode({
     setSeconds(presoak ? preSoakDuration : devDuration)
     setIsRunning(false)
     devCompleteFiredRef.current = false
+    devCompletedSessionIdRef.current = null
     if (!sessionRefs) {
       processCompleteFiredRef.current = false
     }
@@ -263,6 +267,7 @@ export function DevelopmentMode({
       else if (currentStep === "developer") {
         if (!devCompleteFiredRef.current) {
           devCompleteFiredRef.current = true
+          devCompletedSessionIdRef.current = currentSessionIdRef.current
           onDevCompleteRef.current?.(currentSessionIdRef.current)
         }
         setCurrentStep("stop")
@@ -329,6 +334,7 @@ export function DevelopmentMode({
       sessionCounterRef.current += 1
       currentSessionIdRef.current = sessionCounterRef.current
       processCompleteFiredRef.current = false
+      devCompletedSessionIdRef.current = null
     }
     // Otherwise keep the active session id so a wash-only finish after reset still
     // matches the dev-step diary log for this roll (resetTimer in useTimer does the same).
@@ -339,14 +345,32 @@ export function DevelopmentMode({
     sessionCounterRef.current += 1
     currentSessionIdRef.current = sessionCounterRef.current
     devCompleteFiredRef.current = false
+    devCompletedSessionIdRef.current = null
     processCompleteFiredRef.current = false
     sessionStartedRef.current = true
     setHasStartedRoll(true)
     onSessionStartRef.current?.(currentSessionIdRef.current)
   }
 
+  const allocateFreshSessionIfDevAlreadyCompleted = () => {
+    if (
+      devCompletedSessionIdRef.current !== currentSessionIdRef.current ||
+      currentSessionIdRef.current === 0
+    ) {
+      return
+    }
+    onSessionResetRef.current?.(currentSessionIdRef.current)
+    sessionCounterRef.current += 1
+    currentSessionIdRef.current = sessionCounterRef.current
+    devCompleteFiredRef.current = false
+    devCompletedSessionIdRef.current = null
+    processCompleteFiredRef.current = false
+    sessionStartedRef.current = false
+  }
+
   const ensureDevelopmentSession = () => {
     if (sessionStartedRef.current) return
+    allocateFreshSessionIfDevAlreadyCompleted()
     // Reuse the main timer's active session when darkroom shares session refs,
     // so starting developer again mid-roll does not allocate a new session id.
     if (sessionRefs && currentSessionIdRef.current > 0) {
