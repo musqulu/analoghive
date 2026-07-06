@@ -278,6 +278,39 @@ describe("DevelopmentMode", () => {
     expect(screen.getByText("DEVELOPMENT COMPLETE")).toBeInTheDocument()
   })
 
+  it("allocates a new session when developer is rerun after reset following dev completion", () => {
+    const onDevComplete = jest.fn()
+    const onSessionReset = jest.fn()
+    const sessionRefs = {
+      counter: { current: 0 },
+      current: { current: 0 },
+      processCompleteFired: { current: false },
+    }
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        sessionRefs={sessionRefs}
+        onDevComplete={onDevComplete}
+        onSessionReset={onSessionReset}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+    expect(onDevComplete).toHaveBeenLastCalledWith(1)
+
+    fireEvent.click(screen.getByText("Reset"))
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+
+    expect(onSessionReset).toHaveBeenCalledWith(1)
+    expect(onDevComplete).toHaveBeenCalledTimes(2)
+    expect(onDevComplete).toHaveBeenLastCalledWith(2)
+    expect(sessionRefs.current.current).toBe(2)
+  })
+
   it("reuses the dev session id when wash completes after reset without rerunning developer", () => {
     const onDevComplete = jest.fn()
     const onProcessComplete = jest.fn()
