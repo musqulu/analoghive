@@ -565,4 +565,62 @@ describe("DevelopmentMode", () => {
     expect(onProcessComplete).toHaveBeenLastCalledWith(2)
     expect(processCompleteFired.current).toBe(true)
   })
+
+  it("allocates a new session when developer is rerun after reopen with shared main timer session", () => {
+    const onDevComplete = jest.fn()
+    const onSessionReset = jest.fn()
+    const sessionRefs = {
+      counter: { current: 1 },
+      current: { current: 1 },
+      processCompleteFired: { current: false },
+    }
+    const { rerender } = render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        sessionRefs={sessionRefs}
+        mainTimerRollActive
+        onDevComplete={onDevComplete}
+        onSessionReset={onSessionReset}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+    expect(onDevComplete).toHaveBeenLastCalledWith(1)
+
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={false}
+        time={3}
+        sessionRefs={sessionRefs}
+        mainTimerRollActive
+        onDevComplete={onDevComplete}
+        onSessionReset={onSessionReset}
+      />,
+    )
+
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={true}
+        time={3}
+        sessionRefs={sessionRefs}
+        mainTimerRollActive
+        onDevComplete={onDevComplete}
+        onSessionReset={onSessionReset}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Reset"))
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+
+    expect(onSessionReset).toHaveBeenCalledWith(1)
+    expect(onDevComplete).toHaveBeenCalledTimes(2)
+    expect(onDevComplete).toHaveBeenLastCalledWith(2)
+    expect(sessionRefs.current.current).toBe(2)
+  })
 })

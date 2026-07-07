@@ -220,10 +220,14 @@ export function DevelopmentMode({
     setCurrentStep(firstStep)
     setSeconds(presoak ? preSoakDuration : devDuration)
     setIsRunning(false)
-    devCompleteFiredRef.current = false
-    devCompletedSessionIdRef.current = null
     if (!sessionRefs) {
+      devCompleteFiredRef.current = false
+      devCompletedSessionIdRef.current = null
       processCompleteFiredRef.current = false
+    } else if (
+      devCompletedSessionIdRef.current !== currentSessionIdRef.current
+    ) {
+      devCompleteFiredRef.current = false
     }
     if (!sessionRefs) {
       currentSessionIdRef.current = 0
