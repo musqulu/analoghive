@@ -245,8 +245,10 @@ export function Timer({
   }, [onRollActiveChange])
 
   React.useEffect(() => {
-    onRollActiveChangeRef.current?.(timer.currentStep !== null || darkroomRollActive)
-  }, [timer.currentStep, darkroomRollActive])
+    // Idle completed steps keep currentStep set (e.g. wash) but isRunning is false;
+    // only a running main timer or active darkroom roll should lock calculator selection.
+    onRollActiveChangeRef.current?.(timer.isRunning || darkroomRollActive)
+  }, [timer.isRunning, darkroomRollActive])
 
   return (
     <div className="space-y-6" data-testid="timer-component">
