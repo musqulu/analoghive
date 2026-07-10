@@ -117,7 +117,7 @@ export function DevelopCalculator() {
     React.useState<DevelopmentProcessSnapshot | null>(null)
   const [celebrateDiarySummary, setCelebrateDiarySummary] =
     React.useState<DiaryCompletionSummary | null>(null)
-  const [selectionLocked, setSelectionLocked] = React.useState(false)
+  const [rollActive, setRollActive] = React.useState(false)
 
   const buildLogFn = React.useCallback(
     (ctx: { calcSnapshot: CalcSnapshot; processSnapshot: DevelopmentProcessSnapshot }) => () =>
@@ -209,14 +209,15 @@ export function DevelopCalculator() {
       setCelebrateSessionId(null)
       setCelebrateProcessSnapshot(null)
       setCelebrateDiarySummary(null)
-      setSelectionLocked(false)
       if (sessionId) sessionLogContextRef.current.delete(sessionId)
     }
   }, [])
 
   const handleRollActiveChange = React.useCallback((active: boolean) => {
-    setSelectionLocked(active)
+    setRollActive(active)
   }, [])
+
+  const selectionLocked = rollActive || celebrateOpen
 
   return (
     <main className={cn("flex flex-col items-center", mainUnderNav, mainGutterX)}>
