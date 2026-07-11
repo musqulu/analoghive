@@ -15,7 +15,42 @@ const hc110LegacyHydration: DevelopmentFavoriteSnapshot = {
   constantAgitation: false,
 }
 
+const rodinalHydration: DevelopmentFavoriteSnapshot = {
+  filmName: "HP5 Plus",
+  filmFormat: "35mm",
+  filmIso: "400",
+  developerName: "Rodinal",
+  optionKey: "1+25|20",
+  pushPullStops: 0,
+  totalVolume: 500,
+  temperatureUnit: "celsius",
+  modifiedTemperature: 20,
+  constantAgitation: false,
+}
+
 describe("useDevelopmentSelection", () => {
+  it("does not apply new hydration while the caller passes null (roll-active guard)", async () => {
+    const { result, rerender } = renderHook(
+      ({ hydration }: { hydration: DevelopmentFavoriteSnapshot | null }) =>
+        useDevelopmentSelection(hydration),
+      { initialProps: { hydration: hc110LegacyHydration } },
+    )
+
+    await waitFor(() => {
+      expect(result.current.selectedFilm).toBe("Adox CHM")
+    })
+
+    rerender({ hydration: null })
+
+    expect(result.current.selectedFilm).toBe("Adox CHM")
+
+    rerender({ hydration: rodinalHydration })
+
+    await waitFor(() => {
+      expect(result.current.selectedFilm).toBe("HP5 Plus")
+    })
+  })
+
   it("finishes restore after mapping a legacy HC-110 option key", async () => {
     const { result } = renderHook(() =>
       useDevelopmentSelection(hc110LegacyHydration),
