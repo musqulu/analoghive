@@ -67,4 +67,11 @@ describe("VolumeMixer", () => {
     expect(screen.queryByText("9.8 ml")).not.toBeInTheDocument()
     expect(screen.queryByText(/NaN/)).not.toBeInTheDocument()
   })
+
+  it("disables inputs when disabled", () => {
+    render(<VolumeMixer {...defaultProps} disabled />)
+    const volumeInput = screen.getAllByRole("spinbutton")[2]
+    expect(volumeInput).toBeDisabled()
+    expect(screen.getByRole("button", { name: /calculate/i })).toBeDisabled()
+  })
 })
