@@ -6,9 +6,15 @@ interface VolumeMixerProps {
   dilution: string
   totalVolume: number
   onVolumeChange: (volume: number) => void
+  disabled?: boolean
 }
 
-export function VolumeMixer({ dilution, totalVolume, onVolumeChange }: VolumeMixerProps) {
+export function VolumeMixer({
+  dilution,
+  totalVolume,
+  onVolumeChange,
+  disabled = false,
+}: VolumeMixerProps) {
   const [volume, setVolume] = React.useState(totalVolume)
   const [result, setResult] = React.useState<{ developer: number; water: number } | null>(null)
   const [ratio1, setRatio1] = React.useState("1")
@@ -73,6 +79,7 @@ export function VolumeMixer({ dilution, totalVolume, onVolumeChange }: VolumeMix
               type="number"
               min="1"
               value={ratio1}
+              disabled={disabled}
               onChange={(e) => setRatio1(e.target.value)}
               className="ds-input w-20"
             />
@@ -81,6 +88,7 @@ export function VolumeMixer({ dilution, totalVolume, onVolumeChange }: VolumeMix
               type="number"
               min="0"
               value={ratio2}
+              disabled={disabled}
               onChange={(e) => setRatio2(e.target.value)}
               className="ds-input w-20"
             />
@@ -98,6 +106,7 @@ export function VolumeMixer({ dilution, totalVolume, onVolumeChange }: VolumeMix
               min="100"
               step="100"
               value={volume}
+              disabled={disabled}
               onChange={(e) => {
                 const newVolume = parseInt(e.target.value);
                 setVolume(newVolume);
@@ -108,7 +117,8 @@ export function VolumeMixer({ dilution, totalVolume, onVolumeChange }: VolumeMix
           </div>
           <button
             onClick={calculateMixture}
-            className="px-4 py-2 h-10 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+            disabled={disabled}
+            className="px-4 py-2 h-10 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
           >
             Calculate
           </button>

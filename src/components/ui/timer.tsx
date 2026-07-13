@@ -314,7 +314,8 @@ export function Timer({
 
         <button
           onClick={() => setIsEditModalOpen(true)}
-          className="mt-4 text-sm flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+          disabled={timer.isRunning || darkroomRollActive}
+          className="mt-4 text-sm flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Pencil size={14} /> Edit Process
         </button>
