@@ -15,6 +15,7 @@ interface TemperatureCorrectionProps {
   onConstantAgitationChange: (value: boolean) => void
   correctedTime: number | null
   pushPullLine: string
+  disabled?: boolean
 }
 
 function parseTemperatureInput(raw: string): number | null {
@@ -41,6 +42,7 @@ export function TemperatureCorrection({
   onConstantAgitationChange,
   correctedTime,
   pushPullLine,
+  disabled = false,
 }: TemperatureCorrectionProps) {
   const focusedRef = React.useRef(false)
   const optionKey = selectedInfo?.optionKey
@@ -119,6 +121,7 @@ export function TemperatureCorrection({
             inputMode="decimal"
             autoComplete="off"
             enterKeyHint="done"
+            disabled={disabled}
             value={text}
             aria-invalid={showError}
             aria-describedby={[
@@ -160,6 +163,7 @@ export function TemperatureCorrection({
             type="checkbox"
             id="constant-agitation"
             checked={constantAgitation}
+            disabled={disabled}
             onChange={(e) => onConstantAgitationChange(e.target.checked)}
             className="h-4 w-4 shrink-0 rounded border-input text-primary focus:ring-ring"
           />

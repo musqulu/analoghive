@@ -225,6 +225,14 @@ describe('Timer Component', () => {
     expect(screen.getByText(/Edit Process Times/)).toBeInTheDocument();
   });
 
+  test('disables edit process while the main timer is running', () => {
+    render(<Timer developmentTime={0.05} temperature={20} />)
+
+    fireEvent.click(screen.getByTestId('start-button'))
+
+    expect(screen.getByText(/Edit Process/)).toBeDisabled()
+  })
+
   // Test for dilution normalization
   test('calls onProcessComplete when darkroom mode is stepped through to complete', () => {
     const onProcessComplete = jest.fn()

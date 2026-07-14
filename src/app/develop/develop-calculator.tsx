@@ -41,13 +41,19 @@ export function DevelopCalculator() {
     [searchKey],
   )
 
-  const selection = useDevelopmentSelection(hydration)
-  const correction = useCorrectedTime(selection.selectedInfo, hydration)
+  const [rollActive, setRollActive] = React.useState(false)
+  const [celebrateOpen, setCelebrateOpen] = React.useState(false)
+  const selectionLocked = rollActive || celebrateOpen
+  const effectiveHydration = selectionLocked ? null : hydration
+
+  const selection = useDevelopmentSelection(effectiveHydration)
+  const correction = useCorrectedTime(selection.selectedInfo, effectiveHydration)
   const [totalVolume, setTotalVolume] = React.useState(500)
 
   React.useLayoutEffect(() => {
+    if (selectionLocked) return
     if (hydration) setTotalVolume(hydration.totalVolume)
-  }, [hydration])
+  }, [hydration, selectionLocked])
 
   const isColor = selection.selectedFilmData?.type === "Color"
 
@@ -111,13 +117,11 @@ export function DevelopCalculator() {
   const celebrateSessionRef = React.useRef<DevelopmentSessionId | null>(null)
   const [celebrateSessionId, setCelebrateSessionId] =
     React.useState<DevelopmentSessionId | null>(null)
-  const [celebrateOpen, setCelebrateOpen] = React.useState(false)
   const [celebrateLogId, setCelebrateLogId] = React.useState<string | null>(null)
   const [celebrateProcessSnapshot, setCelebrateProcessSnapshot] =
     React.useState<DevelopmentProcessSnapshot | null>(null)
   const [celebrateDiarySummary, setCelebrateDiarySummary] =
     React.useState<DiaryCompletionSummary | null>(null)
-  const [rollActive, setRollActive] = React.useState(false)
 
   const buildLogFn = React.useCallback(
     (ctx: { calcSnapshot: CalcSnapshot; processSnapshot: DevelopmentProcessSnapshot }) => () =>
@@ -217,8 +221,6 @@ export function DevelopCalculator() {
     setRollActive(active)
   }, [])
 
-  const selectionLocked = rollActive || celebrateOpen
-
   return (
     <main className={cn("flex flex-col items-center", mainUnderNav, mainGutterX)}>
       <div className="w-full max-w-md space-y-8">
@@ -282,6 +284,7 @@ export function DevelopCalculator() {
                     dilution={selection.selectedDilution}
                     totalVolume={totalVolume}
                     onVolumeChange={setTotalVolume}
+                    disabled={selectionLocked}
                   />
                 </div>
 
@@ -294,6 +297,7 @@ export function DevelopCalculator() {
                   onConstantAgitationChange={correction.setConstantAgitation}
                   correctedTime={correction.correctedTime}
                   pushPullLine={selection.pushPullLine}
+                  disabled={selectionLocked}
                 />
 
                 <div className="rounded-lg bg-card p-6 ds-card">
