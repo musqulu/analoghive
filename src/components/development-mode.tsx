@@ -224,6 +224,14 @@ export function DevelopmentMode({
       devCompleteFiredRef.current = false
       devCompletedSessionIdRef.current = null
       processCompleteFiredRef.current = false
+    } else if (processCompleteFiredRef.current) {
+      // Prior roll finished on the main timer — allocate a fresh session so
+      // skip-to-complete or a new darkroom run can log again.
+      sessionCounterRef.current += 1
+      currentSessionIdRef.current = sessionCounterRef.current
+      processCompleteFiredRef.current = false
+      devCompleteFiredRef.current = false
+      devCompletedSessionIdRef.current = null
     } else if (
       devCompletedSessionIdRef.current !== currentSessionIdRef.current
     ) {
