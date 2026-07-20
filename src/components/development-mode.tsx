@@ -325,6 +325,11 @@ export function DevelopmentMode({
 
   // Reset development process
   const resetDevelopment = () => {
+    const shouldAbandonSession =
+      sessionStartedRef.current &&
+      !devCompleteFiredRef.current &&
+      currentSessionIdRef.current > 0
+
     setIsRunning(false)
     const first: DarkroomStep = hasPreSoak ? "presoak" : "developer"
     setCurrentStep(first)
@@ -333,6 +338,9 @@ export function DevelopmentMode({
     sessionStartedRef.current = false
     setHasStartedRoll(false)
     setShouldShake(false)
+    if (shouldAbandonSession) {
+      onSessionResetRef.current?.(currentSessionIdRef.current)
+    }
     if (processCompleteFiredRef.current) {
       // Finished roll — allocate a new session so the next completion can log again.
       sessionCounterRef.current += 1
