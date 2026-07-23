@@ -311,6 +311,55 @@ describe("DevelopmentMode", () => {
     expect(sessionRefs.current.current).toBe(2)
   })
 
+  it("fires onSessionReset when reset before developer completes so diary metadata can refresh", () => {
+    const onSessionStart = jest.fn()
+    const onSessionReset = jest.fn()
+    const sessionRefs = {
+      counter: { current: 0 },
+      current: { current: 0 },
+      processCompleteFired: { current: false },
+    }
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={120}
+        sessionRefs={sessionRefs}
+        onSessionStart={onSessionStart}
+        onSessionReset={onSessionReset}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    act(() => jest.advanceTimersByTime(5000))
+    expect(onSessionStart).toHaveBeenCalledWith(1)
+
+    fireEvent.click(screen.getByText("Reset"))
+    expect(onSessionReset).toHaveBeenCalledWith(1)
+
+    fireEvent.click(screen.getByText("Start"))
+    expect(onSessionStart).toHaveBeenLastCalledWith(1)
+  })
+
+  it("does not fire onSessionReset when reset after developer completes for wash-only finish", () => {
+    const onDevComplete = jest.fn()
+    const onSessionReset = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        onDevComplete={onDevComplete}
+        onSessionReset={onSessionReset}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+
+    fireEvent.click(screen.getByText("Reset"))
+    expect(onSessionReset).not.toHaveBeenCalled()
+  })
+
   it("reuses the dev session id when wash completes after reset without rerunning developer", () => {
     const onDevComplete = jest.fn()
     const onProcessComplete = jest.fn()
@@ -564,6 +613,43 @@ describe("DevelopmentMode", () => {
     expect(onProcessComplete).toHaveBeenCalledTimes(1)
     expect(onProcessComplete).toHaveBeenLastCalledWith(2)
     expect(processCompleteFired.current).toBe(true)
+  })
+
+  it("calls onProcessComplete when reopening darkroom after shared completion and skipping to complete", () => {
+    const onProcessComplete = jest.fn()
+    const processCompleteFired = { current: true }
+    const sessionRefs = {
+      counter: { current: 1 },
+      current: { current: 1 },
+      processCompleteFired,
+    }
+    const { rerender } = render(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={false}
+        time={600}
+        sessionRefs={sessionRefs}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={true}
+        time={600}
+        sessionRefs={sessionRefs}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
+    expect(onProcessComplete).toHaveBeenLastCalledWith(2)
   })
 
   it("allocates a new session when developer is rerun after reopen with shared main timer session", () => {

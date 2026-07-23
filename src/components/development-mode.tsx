@@ -224,6 +224,14 @@ export function DevelopmentMode({
       devCompleteFiredRef.current = false
       devCompletedSessionIdRef.current = null
       processCompleteFiredRef.current = false
+    } else if (processCompleteFiredRef.current) {
+      // Prior roll finished on the main timer — allocate a fresh session so
+      // skip-to-complete or a new darkroom run can log again.
+      sessionCounterRef.current += 1
+      currentSessionIdRef.current = sessionCounterRef.current
+      processCompleteFiredRef.current = false
+      devCompleteFiredRef.current = false
+      devCompletedSessionIdRef.current = null
     } else if (
       devCompletedSessionIdRef.current !== currentSessionIdRef.current
     ) {
@@ -325,6 +333,11 @@ export function DevelopmentMode({
 
   // Reset development process
   const resetDevelopment = () => {
+    const shouldAbandonSession =
+      sessionStartedRef.current &&
+      !devCompleteFiredRef.current &&
+      currentSessionIdRef.current > 0
+
     setIsRunning(false)
     const first: DarkroomStep = hasPreSoak ? "presoak" : "developer"
     setCurrentStep(first)
@@ -333,6 +346,9 @@ export function DevelopmentMode({
     sessionStartedRef.current = false
     setHasStartedRoll(false)
     setShouldShake(false)
+    if (shouldAbandonSession) {
+      onSessionResetRef.current?.(currentSessionIdRef.current)
+    }
     if (processCompleteFiredRef.current) {
       // Finished roll — allocate a new session so the next completion can log again.
       sessionCounterRef.current += 1
