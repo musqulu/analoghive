@@ -566,6 +566,43 @@ describe("DevelopmentMode", () => {
     expect(processCompleteFired.current).toBe(true)
   })
 
+  it("calls onProcessComplete when reopening darkroom after shared completion and skipping to complete", () => {
+    const onProcessComplete = jest.fn()
+    const processCompleteFired = { current: true }
+    const sessionRefs = {
+      counter: { current: 1 },
+      current: { current: 1 },
+      processCompleteFired,
+    }
+    const { rerender } = render(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={false}
+        time={600}
+        sessionRefs={sessionRefs}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={true}
+        time={600}
+        sessionRefs={sessionRefs}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
+    expect(onProcessComplete).toHaveBeenLastCalledWith(2)
+  })
+
   it("allocates a new session when developer is rerun after reopen with shared main timer session", () => {
     const onDevComplete = jest.fn()
     const onSessionReset = jest.fn()

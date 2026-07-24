@@ -243,10 +243,15 @@ export function useTimer({
   }, [isRunning, timeLeft, currentStep, steps, getNextStep])
 
   const startTimer = (step: Step) => {
+    const isRerunningCompletedWash =
+      step === "wash" &&
+      currentStep === "wash" &&
+      processCompleteFiredRef.current
     const shouldStartNewSession =
-      step === "dev" ||
-      step === "preSoak" ||
-      (!isRunning && processCompleteFiredRef.current)
+      (step === "dev" ||
+        step === "preSoak" ||
+        (!isRunning && processCompleteFiredRef.current)) &&
+      !isRerunningCompletedWash
     if (shouldStartNewSession) {
       sessionCounterRef.current += 1
       currentSessionIdRef.current = sessionCounterRef.current
