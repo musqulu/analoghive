@@ -347,6 +347,15 @@ export function DevelopmentMode({
       currentSessionIdRef.current = sessionCounterRef.current
       processCompleteFiredRef.current = false
       devCompletedSessionIdRef.current = null
+    } else if (
+      currentSessionIdRef.current > 0 &&
+      devCompletedSessionIdRef.current !== currentSessionIdRef.current
+    ) {
+      // Abandoning in-progress dev — clear stale frozen diary metadata before restart.
+      onSessionResetRef.current?.(currentSessionIdRef.current)
+      sessionCounterRef.current += 1
+      currentSessionIdRef.current = sessionCounterRef.current
+      devCompletedSessionIdRef.current = null
     }
     // Otherwise keep the active session id so a wash-only finish after reset still
     // matches the dev-step diary log for this roll (resetTimer in useTimer does the same).
