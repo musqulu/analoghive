@@ -278,6 +278,36 @@ describe("DevelopmentMode", () => {
     expect(screen.getByText("DEVELOPMENT COMPLETE")).toBeInTheDocument()
   })
 
+  it("calls onSessionReset when resetting before developer completes", () => {
+    const onSessionReset = jest.fn()
+    const onSessionStart = jest.fn()
+    const sessionRefs = {
+      counter: { current: 0 },
+      current: { current: 0 },
+      processCompleteFired: { current: false },
+    }
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        sessionRefs={sessionRefs}
+        onSessionReset={onSessionReset}
+        onSessionStart={onSessionStart}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    expect(onSessionStart).toHaveBeenCalledWith(1)
+
+    fireEvent.click(screen.getByText("Reset"))
+
+    expect(onSessionReset).toHaveBeenCalledWith(1)
+    expect(sessionRefs.current.current).toBe(2)
+
+    fireEvent.click(screen.getByText("Start"))
+    expect(onSessionStart).toHaveBeenLastCalledWith(2)
+  })
+
   it("allocates a new session when developer is rerun after reset following dev completion", () => {
     const onDevComplete = jest.fn()
     const onSessionReset = jest.fn()
