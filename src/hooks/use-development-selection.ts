@@ -75,7 +75,8 @@ export function useDevelopmentSelection(
     if (!initialHydration) {
       hydrationSnapshotRef.current = null
       favoriteRestorePendingRef.current = false
-      lastAppliedHydrationJsonRef.current = null
+      // Keep lastAppliedHydrationJsonRef so a temporary null during selection lock
+      // does not re-apply the same favorite when unlock restores the prop.
       return
     }
     const key = JSON.stringify(initialHydration)
