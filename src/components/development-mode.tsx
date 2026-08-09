@@ -333,6 +333,17 @@ export function DevelopmentMode({
 
   // Reset development process
   const resetDevelopment = () => {
+    const devWasCompleted = devCompleteFiredRef.current
+    const processWasComplete = processCompleteFiredRef.current
+    const abandoningBeforeDevComplete =
+      !processWasComplete &&
+      !devWasCompleted &&
+      currentSessionIdRef.current > 0 &&
+      (sessionStartedRef.current ||
+        hasStartedRoll ||
+        isRunning ||
+        currentStep !== initialStepRef.current)
+
     setIsRunning(false)
     const first: DarkroomStep = hasPreSoak ? "presoak" : "developer"
     setCurrentStep(first)
@@ -341,6 +352,9 @@ export function DevelopmentMode({
     sessionStartedRef.current = false
     setHasStartedRoll(false)
     setShouldShake(false)
+    if (abandoningBeforeDevComplete) {
+      onSessionResetRef.current?.(currentSessionIdRef.current)
+    }
     if (processCompleteFiredRef.current) {
       // Finished roll — allocate a new session so the next completion can log again.
       sessionCounterRef.current += 1
@@ -380,12 +394,9 @@ export function DevelopmentMode({
     sessionStartedRef.current = false
   }
 
-  const ensureDevelopmentSession = () => {
+  const ensureActiveSessionForLogging = () => {
     if (sessionStartedRef.current) return
-    allocateFreshSessionIfDevAlreadyCompleted()
-    // Reuse the main timer's active session when darkroom shares session refs,
-    // so starting developer again mid-roll does not allocate a new session id.
-    if (sessionRefs && currentSessionIdRef.current > 0) {
+    if (currentSessionIdRef.current > 0) {
       sessionStartedRef.current = true
       setHasStartedRoll(true)
       onSessionStartRef.current?.(currentSessionIdRef.current)
@@ -398,8 +409,15 @@ export function DevelopmentMode({
     onSessionStartRef.current?.(currentSessionIdRef.current)
   }
 
+  const ensureDevelopmentSession = () => {
+    if (sessionStartedRef.current) return
+    allocateFreshSessionIfDevAlreadyCompleted()
+    ensureActiveSessionForLogging()
+  }
+
   const finishProcessIfNeeded = () => {
     if (processCompleteFiredRef.current) return
+    ensureActiveSessionForLogging()
     processCompleteFiredRef.current = true
     onProcessCompleteRef.current?.(currentSessionIdRef.current)
   }
@@ -490,6 +508,8 @@ export function DevelopmentMode({
                   beginNewSessionIfNeeded()
                   if (currentStep === "presoak" || currentStep === "developer") {
                     ensureDevelopmentSession()
+                  } else {
+                    ensureActiveSessionForLogging()
                   }
                   setIsRunning(true)
                 }

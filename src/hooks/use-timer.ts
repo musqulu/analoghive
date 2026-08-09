@@ -273,8 +273,11 @@ export function useTimer({
     if (currentStep) {
       if (currentStep === "dev" || currentStep === "preSoak") {
         devCompleteFiredRef.current = false
+        // Abandon in-progress roll before dev completes — drop frozen diary context.
+        onSessionResetRef.current?.(currentSessionIdRef.current)
       }
-      onSessionResetRef.current?.(currentSessionIdRef.current)
+      // Post-dev resets keep the session id and frozen diary context so a
+      // wash-only finish still matches the dev-step log for this roll.
       setIsRunning(false)
       setIsPaused(false)
       setCurrentStep(null)
