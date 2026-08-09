@@ -51,6 +51,28 @@ describe("useDevelopmentSelection", () => {
     })
   })
 
+  it("does not re-apply the same hydration after a temporary null (selection unlock)", async () => {
+    const { result, rerender } = renderHook(
+      ({ hydration }: { hydration: DevelopmentFavoriteSnapshot | null }) =>
+        useDevelopmentSelection(hydration),
+      { initialProps: { hydration: hc110LegacyHydration } },
+    )
+
+    await waitFor(() => {
+      expect(result.current.selectedFilm).toBe("Adox CHM")
+    })
+
+    act(() => {
+      result.current.setSelectedFilm("HP5 Plus")
+    })
+    expect(result.current.selectedFilm).toBe("HP5 Plus")
+
+    rerender({ hydration: null })
+    rerender({ hydration: hc110LegacyHydration })
+
+    expect(result.current.selectedFilm).toBe("HP5 Plus")
+  })
+
   it("finishes restore after mapping a legacy HC-110 option key", async () => {
     const { result } = renderHook(() =>
       useDevelopmentSelection(hc110LegacyHydration),

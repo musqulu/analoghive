@@ -49,10 +49,14 @@ export function DevelopCalculator() {
   const selection = useDevelopmentSelection(effectiveHydration)
   const correction = useCorrectedTime(selection.selectedInfo, effectiveHydration)
   const [totalVolume, setTotalVolume] = React.useState(500)
+  const lastAppliedVolumeHydrationKeyRef = React.useRef<string | null>(null)
 
   React.useLayoutEffect(() => {
-    if (selectionLocked) return
-    if (hydration) setTotalVolume(hydration.totalVolume)
+    if (selectionLocked || !hydration) return
+    const key = JSON.stringify(hydration)
+    if (key === lastAppliedVolumeHydrationKeyRef.current) return
+    lastAppliedVolumeHydrationKeyRef.current = key
+    setTotalVolume(hydration.totalVolume)
   }, [hydration, selectionLocked])
 
   const isColor = selection.selectedFilmData?.type === "Color"
