@@ -126,4 +126,39 @@ describe("useCorrectedTime", () => {
 
     expect(result.current.modifiedTemperature).toBe(20)
   })
+
+  it("does not re-apply the same hydration correction after a temporary null", () => {
+    const snap: DevelopmentFavoriteSnapshot = {
+      filmName: "HP5 Plus",
+      filmFormat: "35mm",
+      filmIso: "400",
+      developerName: "Rodinal",
+      optionKey: "1+25|20",
+      pushPullStops: 0,
+      totalVolume: 500,
+      temperatureUnit: "celsius",
+      modifiedTemperature: 22,
+      constantAgitation: true,
+    }
+
+    const { result, rerender } = renderHook(
+      ({ hydration }: { hydration: DevelopmentFavoriteSnapshot | null }) =>
+        useCorrectedTime(baseInfo, hydration),
+      { initialProps: { hydration: snap } },
+    )
+
+    expect(result.current.modifiedTemperature).toBe(22)
+    expect(result.current.constantAgitation).toBe(true)
+
+    act(() => {
+      result.current.setModifiedTemperature(24)
+      result.current.setConstantAgitation(false)
+    })
+
+    rerender({ hydration: null })
+    rerender({ hydration: snap })
+
+    expect(result.current.modifiedTemperature).toBe(24)
+    expect(result.current.constantAgitation).toBe(false)
+  })
 })
