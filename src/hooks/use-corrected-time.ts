@@ -35,12 +35,17 @@ export function useCorrectedTime(
 
   /** While set, block chart-row defaulting so saved correction values win after dilution resolves. */
   const pendingCorrectionSnapRef = React.useRef<DevelopmentFavoriteSnapshot | null>(null)
+  const lastAppliedCorrectionJsonRef = React.useRef<string | null>(null)
 
   React.useLayoutEffect(() => {
     if (!initialHydration) {
-      pendingCorrectionSnapRef.current = null
+      // Keep lastAppliedCorrectionJsonRef so a temporary null during selection lock
+      // does not re-apply the same favorite correction when unlock restores the prop.
       return
     }
+    const key = JSON.stringify(initialHydration)
+    if (key === lastAppliedCorrectionJsonRef.current) return
+    lastAppliedCorrectionJsonRef.current = key
     pendingCorrectionSnapRef.current = initialHydration
     setTemperatureUnit(initialHydration.temperatureUnit)
     setModifiedTemperature(initialHydration.modifiedTemperature)
