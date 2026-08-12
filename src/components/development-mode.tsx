@@ -115,6 +115,8 @@ export function DevelopmentMode({
   const currentSessionIdRef = sessionRefs?.current ?? internalCurrentSessionIdRef
   const sessionStartedRef = useRef(false)
   const openedRef = useRef(false)
+  const openedAfterSharedCompleteRef = useRef(false)
+  const sessionIdBeforeSharedCompleteOpenRef = useRef(0)
   const previousStepRef = useRef<DarkroomStep>(hasPreSoak ? "presoak" : "developer")
   const onDevCompleteRef = useRef(onDevComplete)
   const onProcessCompleteRef = useRef(onProcessComplete)
@@ -152,6 +154,19 @@ export function DevelopmentMode({
     const wasOpen = prevIsOpenRef.current
     prevIsOpenRef.current = isOpen
     if (!wasOpen || isOpen) return
+
+    if (
+      openedAfterSharedCompleteRef.current &&
+      !processCompleteFiredRef.current
+    ) {
+      processCompleteFiredRef.current = true
+      currentSessionIdRef.current = sessionIdBeforeSharedCompleteOpenRef.current
+      openedAfterSharedCompleteRef.current = false
+      devCompleteFiredRef.current = false
+      devCompletedSessionIdRef.current = null
+      sessionStartedRef.current = false
+      return
+    }
 
     const hadRollInProgress =
       currentStep !== "complete" &&
@@ -224,9 +239,12 @@ export function DevelopmentMode({
       devCompleteFiredRef.current = false
       devCompletedSessionIdRef.current = null
       processCompleteFiredRef.current = false
+      openedAfterSharedCompleteRef.current = false
     } else if (processCompleteFiredRef.current) {
       // Prior roll finished on the main timer — allocate a fresh session so
       // skip-to-complete or a new darkroom run can log again.
+      sessionIdBeforeSharedCompleteOpenRef.current = currentSessionIdRef.current
+      openedAfterSharedCompleteRef.current = true
       sessionCounterRef.current += 1
       currentSessionIdRef.current = sessionCounterRef.current
       processCompleteFiredRef.current = false
@@ -333,6 +351,13 @@ export function DevelopmentMode({
 
   // Reset development process
   const resetDevelopment = () => {
+    const abandoningBeforeDevComplete =
+      sessionStartedRef.current &&
+      devCompletedSessionIdRef.current !== currentSessionIdRef.current &&
+      currentSessionIdRef.current > 0
+    if (abandoningBeforeDevComplete) {
+      onSessionResetRef.current?.(currentSessionIdRef.current)
+    }
     setIsRunning(false)
     const first: DarkroomStep = hasPreSoak ? "presoak" : "developer"
     setCurrentStep(first)

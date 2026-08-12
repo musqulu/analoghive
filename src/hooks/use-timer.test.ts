@@ -135,6 +135,21 @@ describe("useTimer", () => {
     expect(onSessionReset).toHaveBeenCalledWith(1)
   })
 
+  it("does not fire onSessionReset when reset clears a post-dev step", () => {
+    const onSessionReset = jest.fn()
+    const onDevComplete = jest.fn()
+    const times: ProcessTimes = { dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }
+    const { result } = createTimer({ onSessionReset, onDevComplete, customTimes: times, developmentTime: 0.05 })
+
+    act(() => result.current.startTimer("dev"))
+    act(() => jest.advanceTimersByTime(3500))
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+    expect(result.current.currentStep).toBe("stop")
+
+    act(() => result.current.resetTimer())
+    expect(onSessionReset).not.toHaveBeenCalled()
+  })
+
   it("auto-advances through all steps dev -> stop -> fix -> wash -> stopped", () => {
     const times: ProcessTimes = { dev: 0, stop: 0.05, fix: 0.05, wash: 0.05 }
     const { result } = createTimer({

@@ -534,6 +534,64 @@ describe("DevelopmentMode", () => {
     expect(sessionRefs.current.current).toBe(1)
   })
 
+  it("does not abandon shared session when closed mid-roll after main timer completed", () => {
+    const onSessionReset = jest.fn()
+    const processCompleteFired = { current: true }
+    const sessionRefs = {
+      counter: { current: 1 },
+      current: { current: 1 },
+      processCompleteFired,
+    }
+    const { rerender } = render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        sessionRefs={sessionRefs}
+        mainTimerRollActive
+        onSessionReset={onSessionReset}
+      />,
+    )
+
+    expect(processCompleteFired.current).toBe(false)
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={false}
+        time={3}
+        sessionRefs={sessionRefs}
+        mainTimerRollActive
+        onSessionReset={onSessionReset}
+      />,
+    )
+
+    expect(onSessionReset).not.toHaveBeenCalled()
+    expect(sessionRefs.counter.current).toBe(2)
+    expect(sessionRefs.current.current).toBe(1)
+    expect(processCompleteFired.current).toBe(true)
+  })
+
+  it("calls onSessionReset when reset abandons an in-progress developer step", () => {
+    const onSessionReset = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        onSessionReset={onSessionReset}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    act(() => jest.advanceTimersByTime(2000))
+    fireEvent.click(screen.getByText("Reset"))
+
+    expect(onSessionReset).toHaveBeenCalledTimes(1)
+    expect(onSessionReset).toHaveBeenCalledWith(1)
+  })
+
   it("allocates a new session when starting after shared process completion", () => {
     const onProcessComplete = jest.fn()
     const processCompleteFired = { current: true }
