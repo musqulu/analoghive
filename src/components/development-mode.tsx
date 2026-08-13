@@ -106,9 +106,9 @@ export function DevelopmentMode({
   const devCompleteFiredRef = useRef(false)
   /** Session id that already fired onDevComplete — rerunning developer needs a new session. */
   const devCompletedSessionIdRef = useRef<number | null>(null)
-  const internalProcessCompleteFiredRef = useRef(false)
-  const processCompleteFiredRef =
-    sessionRefs?.processCompleteFired ?? internalProcessCompleteFiredRef
+  /** Darkroom-only completion guard — do not clear the shared main-timer guard on open/close. */
+  const darkroomProcessCompleteFiredRef = useRef(false)
+  const sharedProcessCompleteFiredRef = sessionRefs?.processCompleteFired
   const internalSessionCounterRef = useRef(0)
   const internalCurrentSessionIdRef = useRef(0)
   const sessionCounterRef = sessionRefs?.counter ?? internalSessionCounterRef
@@ -167,7 +167,7 @@ export function DevelopmentMode({
     currentSessionIdRef.current = sessionCounterRef.current
     devCompleteFiredRef.current = false
     devCompletedSessionIdRef.current = null
-    processCompleteFiredRef.current = false
+    darkroomProcessCompleteFiredRef.current = false
     sessionStartedRef.current = false
   }, [
     isOpen,
@@ -223,15 +223,16 @@ export function DevelopmentMode({
     if (!sessionRefs) {
       devCompleteFiredRef.current = false
       devCompletedSessionIdRef.current = null
-      processCompleteFiredRef.current = false
-    } else if (processCompleteFiredRef.current) {
+      darkroomProcessCompleteFiredRef.current = false
+    } else if (sharedProcessCompleteFiredRef?.current) {
       // Prior roll finished on the main timer — allocate a fresh session so
-      // skip-to-complete or a new darkroom run can log again.
+      // skip-to-complete or a new darkroom run can log again. Keep the shared
+      // processCompleteFired guard so the main timer cannot re-fire wash completion.
       sessionCounterRef.current += 1
       currentSessionIdRef.current = sessionCounterRef.current
-      processCompleteFiredRef.current = false
       devCompleteFiredRef.current = false
       devCompletedSessionIdRef.current = null
+      darkroomProcessCompleteFiredRef.current = false
     } else if (
       devCompletedSessionIdRef.current !== currentSessionIdRef.current
     ) {
@@ -341,11 +342,11 @@ export function DevelopmentMode({
     sessionStartedRef.current = false
     setHasStartedRoll(false)
     setShouldShake(false)
-    if (processCompleteFiredRef.current) {
-      // Finished roll — allocate a new session so the next completion can log again.
+    if (darkroomProcessCompleteFiredRef.current) {
+      // Finished roll in darkroom — allocate a new session so the next completion can log again.
       sessionCounterRef.current += 1
       currentSessionIdRef.current = sessionCounterRef.current
-      processCompleteFiredRef.current = false
+      darkroomProcessCompleteFiredRef.current = false
       devCompletedSessionIdRef.current = null
     }
     // Otherwise keep the active session id so a wash-only finish after reset still
@@ -353,12 +354,12 @@ export function DevelopmentMode({
   }
 
   const beginNewSessionIfNeeded = () => {
-    if (!processCompleteFiredRef.current) return
+    if (!darkroomProcessCompleteFiredRef.current) return
     sessionCounterRef.current += 1
     currentSessionIdRef.current = sessionCounterRef.current
     devCompleteFiredRef.current = false
     devCompletedSessionIdRef.current = null
-    processCompleteFiredRef.current = false
+    darkroomProcessCompleteFiredRef.current = false
     sessionStartedRef.current = true
     setHasStartedRoll(true)
     onSessionStartRef.current?.(currentSessionIdRef.current)
@@ -376,7 +377,7 @@ export function DevelopmentMode({
     currentSessionIdRef.current = sessionCounterRef.current
     devCompleteFiredRef.current = false
     devCompletedSessionIdRef.current = null
-    processCompleteFiredRef.current = false
+    darkroomProcessCompleteFiredRef.current = false
     sessionStartedRef.current = false
   }
 
@@ -399,8 +400,11 @@ export function DevelopmentMode({
   }
 
   const finishProcessIfNeeded = () => {
-    if (processCompleteFiredRef.current) return
-    processCompleteFiredRef.current = true
+    if (darkroomProcessCompleteFiredRef.current) return
+    darkroomProcessCompleteFiredRef.current = true
+    if (sharedProcessCompleteFiredRef) {
+      sharedProcessCompleteFiredRef.current = true
+    }
     onProcessCompleteRef.current?.(currentSessionIdRef.current)
   }
 
