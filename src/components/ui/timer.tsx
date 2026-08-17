@@ -250,6 +250,14 @@ export function Timer({
     onRollActiveChangeRef.current?.(timer.isRunning || darkroomRollActive)
   }, [timer.isRunning, darkroomRollActive])
 
+  React.useEffect(() => {
+    // An already-open edit modal stays interactive after the roll starts; close it so
+    // mid-roll process edits cannot corrupt the frozen diary process snapshot.
+    if (timer.isRunning || darkroomRollActive) {
+      setIsEditModalOpen(false)
+    }
+  }, [timer.isRunning, darkroomRollActive])
+
   return (
     <div className="space-y-6" data-testid="timer-component">
       <TimerDisplay
