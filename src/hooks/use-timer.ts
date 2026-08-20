@@ -273,8 +273,11 @@ export function useTimer({
     if (currentStep) {
       if (currentStep === "dev" || currentStep === "preSoak") {
         devCompleteFiredRef.current = false
+        // Abandon in-progress dev/pre-soak only — once dev has completed, keep the
+        // session id and frozen diary context so wash-only finish still logs (same
+        // as resetDevelopment in darkroom mode).
+        onSessionResetRef.current?.(currentSessionIdRef.current)
       }
-      onSessionResetRef.current?.(currentSessionIdRef.current)
       setIsRunning(false)
       setIsPaused(false)
       setCurrentStep(null)

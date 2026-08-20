@@ -233,6 +233,62 @@ describe('Timer Component', () => {
     expect(screen.getByText(/Edit Process/)).toBeDisabled()
   })
 
+  test('closes edit modal when timer starts to prevent mid-roll process edits', () => {
+    render(<Timer developmentTime={11} temperature={20} />)
+
+    fireEvent.click(screen.getByText(/Edit Process/))
+    expect(screen.getByText(/Edit Process Times/)).toBeInTheDocument()
+
+    fireEvent.click(screen.getByTestId('start-button'))
+
+    expect(screen.queryByText(/Edit Process Times/)).not.toBeInTheDocument()
+  })
+
+  test('closes edit modal when darkroom roll starts', () => {
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }}
+      />,
+    )
+
+    fireEvent.click(screen.getByText(/Edit Process/))
+    expect(screen.getByText(/Edit Process Times/)).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText(/Darkroom mode/))
+    fireEvent.click(screen.getByText('Start'))
+
+    expect(screen.queryByText(/Edit Process Times/)).not.toBeInTheDocument()
+  })
+
+  test('dev completion snapshot keeps session-start process times when edit modal was open at start', () => {
+    const onDevComplete = jest.fn()
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 1, fix: 5, wash: 5 }}
+        onDevComplete={onDevComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText(/Edit Process/))
+    fireEvent.click(screen.getByTestId('start-button'))
+
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+    expect(onDevComplete).toHaveBeenCalledWith(
+      expect.objectContaining({
+        processTimes: expect.objectContaining({ stop: 1, fix: 5, wash: 5 }),
+      }),
+      'session:1',
+    )
+  })
+
   // Test for dilution normalization
   test('calls onProcessComplete when darkroom mode is stepped through to complete', () => {
     const onProcessComplete = jest.fn()
