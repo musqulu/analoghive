@@ -19,6 +19,8 @@ interface TimerDisplayProps {
   isRunning: boolean
   isPaused: boolean
   shouldShake: boolean
+  /** When true, start/reset are disabled (e.g. darkroom shares the same session). */
+  disabled?: boolean
   onStart: () => void
   onToggle: () => void
   onReset: () => void
@@ -30,6 +32,7 @@ export function TimerDisplay({
   isRunning,
   isPaused,
   shouldShake,
+  disabled = false,
   onStart,
   onToggle,
   onReset,
@@ -70,7 +73,8 @@ export function TimerDisplay({
             </button>
             <button
               onClick={onReset}
-              className="p-2 rounded-full hover:bg-gray-800 transition-colors"
+              disabled={disabled}
+              className="p-2 rounded-full hover:bg-gray-800 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
               title="Reset Timer"
             >
               <RotateCcw className="w-8 h-8" />
@@ -81,7 +85,8 @@ export function TimerDisplay({
             type="button"
             data-testid="start-button"
             onClick={onStart}
-            className="rounded-full bg-white p-4 text-black transition-colors hover:bg-gray-200"
+            disabled={disabled}
+            className="rounded-full bg-white p-4 text-black transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
             title="Start Timer"
           >
             <Play className="w-8 h-8" />
