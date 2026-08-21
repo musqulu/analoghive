@@ -16,6 +16,8 @@ interface StepIndicatorProps {
   stepOrder: Step[]
   currentStep: Step | null
   isRunning: boolean
+  /** When true, step jumps are disabled (e.g. darkroom shares the same session). */
+  disabled?: boolean
   onStartStep: (step: Step) => void
 }
 
@@ -32,16 +34,22 @@ export function StepIndicator({
   stepOrder,
   currentStep,
   isRunning,
+  disabled = false,
   onStartStep,
 }: StepIndicatorProps) {
+  const stepControlsDisabled = disabled || isRunning
   return (
     <div className="space-y-3 mt-4">
       {stepOrder.map((step) => (
         <div
           key={step}
           data-testid={STEP_TEST_IDS[step]}
-          className="flex cursor-pointer items-center gap-3 rounded-md p-3 hover:bg-muted"
-          onClick={() => !isRunning && onStartStep(step)}
+          className={`flex items-center gap-3 rounded-md p-3 ${
+            stepControlsDisabled
+              ? "cursor-not-allowed opacity-50"
+              : "cursor-pointer hover:bg-muted"
+          }`}
+          onClick={() => !stepControlsDisabled && onStartStep(step)}
         >
           <PlayCircle
             className={`h-6 w-6 ${currentStep === step ? "text-link" : "text-muted-foreground"}`}

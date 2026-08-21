@@ -289,6 +289,29 @@ describe('Timer Component', () => {
     )
   })
 
+  test('does not start main timer steps while darkroom roll is active', () => {
+    const onProcessComplete = jest.fn()
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText(/Darkroom mode/))
+    fireEvent.click(screen.getByText('Start'))
+
+    fireEvent.click(screen.getByTestId('washing-step'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+
+    expect(onProcessComplete).not.toHaveBeenCalled()
+    expect(screen.getByTestId('start-button')).toBeDisabled()
+  })
+
   // Test for dilution normalization
   test('calls onProcessComplete when darkroom mode is stepped through to complete', () => {
     const onProcessComplete = jest.fn()

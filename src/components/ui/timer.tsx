@@ -266,6 +266,7 @@ export function Timer({
         isRunning={timer.isRunning}
         isPaused={timer.isPaused}
         shouldShake={timer.shouldShake}
+        disabled={darkroomRollActive}
         onStart={() => timer.startTimer(firstStep)}
         onToggle={timer.toggleTimer}
         onReset={timer.resetTimer}
@@ -317,6 +318,7 @@ export function Timer({
           stepOrder={stepOrder}
           currentStep={timer.currentStep}
           isRunning={timer.isRunning}
+          disabled={darkroomRollActive}
           onStartStep={timer.startTimer}
         />
 
