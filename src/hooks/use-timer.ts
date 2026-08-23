@@ -273,8 +273,8 @@ export function useTimer({
     if (currentStep) {
       if (currentStep === "dev" || currentStep === "preSoak") {
         devCompleteFiredRef.current = false
+        onSessionResetRef.current?.(currentSessionIdRef.current)
       }
-      onSessionResetRef.current?.(currentSessionIdRef.current)
       setIsRunning(false)
       setIsPaused(false)
       setCurrentStep(null)
