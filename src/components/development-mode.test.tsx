@@ -138,6 +138,46 @@ describe("DevelopmentMode", () => {
     expect(screen.getByText("DEVELOPER STEP")).toBeInTheDocument()
   })
 
+  it("calls onSessionReset when reset abandons developer before dev completes", () => {
+    const onSessionReset = jest.fn()
+    const onSessionStart = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={120}
+        onSessionReset={onSessionReset}
+        onSessionStart={onSessionStart}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    expect(onSessionStart).toHaveBeenCalledTimes(1)
+
+    fireEvent.click(screen.getByText("Reset"))
+    expect(onSessionReset).toHaveBeenCalledTimes(1)
+    expect(onSessionReset).toHaveBeenCalledWith(1)
+  })
+
+  it("does not call onSessionReset when reset after dev completes for wash-only finish", () => {
+    const onSessionReset = jest.fn()
+    const onDevComplete = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        onSessionReset={onSessionReset}
+        onDevComplete={onDevComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+
+    fireEvent.click(screen.getByText("Reset"))
+    expect(onSessionReset).not.toHaveBeenCalled()
+  })
+
   it("calls onClose when close button is clicked", () => {
     render(<DevelopmentMode {...defaultProps} />)
     const closeButton = screen.getByLabelText("Close development mode")
@@ -439,6 +479,49 @@ describe("DevelopmentMode", () => {
 
     fireEvent.click(screen.getByText("Start"))
     expect(onRollActiveChange).toHaveBeenLastCalledWith(true)
+
+    fireEvent.click(screen.getByText("Reset"))
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(false)
+  })
+
+  it("keeps roll active after reset when developer finished but process is incomplete", () => {
+    const onRollActiveChange = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        onRollActiveChange={onRollActiveChange}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+
+    fireEvent.click(screen.getByText("Reset"))
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(true)
+  })
+
+  it("releases roll active after reset following a completed process", () => {
+    const onRollActiveChange = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        stopSeconds={3}
+        fixSeconds={3}
+        washSeconds={3}
+        onRollActiveChange={onRollActiveChange}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(false)
 
     fireEvent.click(screen.getByText("Reset"))
     expect(onRollActiveChange).toHaveBeenLastCalledWith(false)

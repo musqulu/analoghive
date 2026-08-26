@@ -246,9 +246,11 @@ export function Timer({
 
   React.useEffect(() => {
     // Idle completed steps keep currentStep set (e.g. wash) but isRunning is false;
-    // only a running main timer or active darkroom roll should lock calculator selection.
-    onRollActiveChangeRef.current?.(timer.isRunning || darkroomRollActive)
-  }, [timer.isRunning, darkroomRollActive])
+    // post-dev reset also idles the main timer while the roll is still finishing.
+    onRollActiveChangeRef.current?.(
+      timer.isRunning || darkroomRollActive || timer.postDevRollPending,
+    )
+  }, [timer.isRunning, darkroomRollActive, timer.postDevRollPending])
 
   return (
     <div className="space-y-6" data-testid="timer-component">
