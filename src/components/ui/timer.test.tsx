@@ -233,6 +233,85 @@ describe('Timer Component', () => {
     expect(screen.getByText(/Edit Process/)).toBeDisabled()
   })
 
+  test('closes edit modal when timer starts to prevent mid-roll process edits', () => {
+    render(<Timer developmentTime={11} temperature={20} />)
+
+    fireEvent.click(screen.getByText(/Edit Process/))
+    expect(screen.getByText(/Edit Process Times/)).toBeInTheDocument()
+
+    fireEvent.click(screen.getByTestId('start-button'))
+
+    expect(screen.queryByText(/Edit Process Times/)).not.toBeInTheDocument()
+  })
+
+  test('closes edit modal when darkroom roll starts', () => {
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }}
+      />,
+    )
+
+    fireEvent.click(screen.getByText(/Edit Process/))
+    expect(screen.getByText(/Edit Process Times/)).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText(/Darkroom mode/))
+    fireEvent.click(screen.getByText('Start'))
+
+    expect(screen.queryByText(/Edit Process Times/)).not.toBeInTheDocument()
+  })
+
+  test('dev completion snapshot keeps session-start process times when edit modal was open at start', () => {
+    const onDevComplete = jest.fn()
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 1, fix: 5, wash: 5 }}
+        onDevComplete={onDevComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText(/Edit Process/))
+    fireEvent.click(screen.getByTestId('start-button'))
+
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+    expect(onDevComplete).toHaveBeenCalledWith(
+      expect.objectContaining({
+        processTimes: expect.objectContaining({ stop: 1, fix: 5, wash: 5 }),
+      }),
+      'session:1',
+    )
+  })
+
+  test('does not start main timer steps while darkroom roll is active', () => {
+    const onProcessComplete = jest.fn()
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText(/Darkroom mode/))
+    fireEvent.click(screen.getByText('Start'))
+
+    fireEvent.click(screen.getByTestId('washing-step'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+
+    expect(onProcessComplete).not.toHaveBeenCalled()
+    expect(screen.getByTestId('start-button')).toBeDisabled()
+  })
+
   // Test for dilution normalization
   test('calls onProcessComplete when darkroom mode is stepped through to complete', () => {
     const onProcessComplete = jest.fn()
@@ -407,6 +486,34 @@ describe('Timer Component', () => {
     expect(onRollActiveChange).toHaveBeenLastCalledWith(false)
   })
 
+  test('keeps roll active after reset during post-dev steps so selection stays locked', () => {
+    const onRollActiveChange = jest.fn()
+    const shortWashMethod = {
+      type: 'running' as const,
+      runningWaterTime: 0.05,
+      ilfordInversions: { first: 5, second: 10, third: 20 },
+      custom: { totalTime: 0.05, waterChanges: 1 },
+    }
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }}
+        initialWashingMethod={shortWashMethod}
+        onRollActiveChange={onRollActiveChange}
+      />,
+    )
+
+    fireEvent.click(screen.getByTestId('start-button'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(true)
+
+    fireEvent.click(screen.getByTitle('Reset Timer'))
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(true)
+  })
+
   test('reports roll active when darkroom mode starts without main timer', () => {
     const onRollActiveChange = jest.fn()
     render(
@@ -470,6 +577,50 @@ describe('Timer Component', () => {
 
     expect(onDevComplete).toHaveBeenCalledTimes(2)
     expect(onDevComplete).toHaveBeenLastCalledWith(expect.any(Object), 'session:2')
+  })
+
+  test('does not fire onProcessComplete again after opening and closing darkroom post-completion', () => {
+    const onProcessComplete = jest.fn()
+    const shortWashMethod = {
+      type: 'running' as const,
+      runningWaterTime: 0.05,
+      ilfordInversions: { first: 5, second: 10, third: 20 },
+      custom: { totalTime: 0.05, waterChanges: 1 },
+    }
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }}
+        initialWashingMethod={shortWashMethod}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByTestId('start-button'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
+
+    fireEvent.click(screen.getByText(/Darkroom mode/))
+    fireEvent.click(screen.getByLabelText('Close development mode'))
+
+    fireEvent.click(screen.getByTestId('washing-step'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
   })
 
   test('reports roll inactive after natural process completion so selection can unlock', () => {
