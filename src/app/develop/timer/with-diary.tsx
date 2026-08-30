@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { DiaryCompletionDialog } from "@/components/development-diary/completion-dialog"
-import { Timer, type DevelopmentSessionId } from "@/components/ui/timer"
+import { Timer, type DevelopmentSessionId, type TimerSessionRefs } from "@/components/ui/timer"
 import { freezeProcessSnapshotOnly } from "@/lib/diary-session-log-context"
 import { createDiarySessionLogTracker } from "@/lib/diary-session-logging"
 import { logDevelopmentRun } from "@/lib/log-development-run"
@@ -48,6 +48,17 @@ export function TimerPageWithDiary({
     new Map<DevelopmentSessionId, DevelopmentProcessSnapshot>(),
   )
   const logTrackerRef = React.useRef(createDiarySessionLogTracker())
+  const sessionCounterRef = React.useRef(0)
+  const currentSessionIdRef = React.useRef(0)
+  const processCompleteFiredRef = React.useRef(false)
+  const timerSessionRefs = React.useMemo<TimerSessionRefs>(
+    () => ({
+      counter: sessionCounterRef,
+      current: currentSessionIdRef,
+      processCompleteFired: processCompleteFiredRef,
+    }),
+    [],
+  )
   const celebrateSessionRef = React.useRef<DevelopmentSessionId | null>(null)
   const [celebrateSessionId, setCelebrateSessionId] =
     React.useState<DevelopmentSessionId | null>(null)
@@ -208,6 +219,7 @@ export function TimerPageWithDiary({
         initialWashingMethod={replaySnapshot?.washingMethod}
         onDevComplete={handleDevComplete}
         onProcessComplete={handleProcessComplete}
+        sessionRefs={timerSessionRefs}
       />
     </>
   )
