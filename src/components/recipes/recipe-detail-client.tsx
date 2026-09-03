@@ -5,7 +5,7 @@ import Link from "next/link"
 import * as Dialog from "@radix-ui/react-dialog"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
-import { Timer, type DevelopmentSessionId } from "@/components/ui/timer"
+import { Timer, type DevelopmentSessionId, type TimerSessionRefs } from "@/components/ui/timer"
 import { DiaryCompletionDialog } from "@/components/development-diary/completion-dialog"
 import { Button } from "@/components/landing/button"
 import { recipePayloadToTimerProps, type RecipePayloadV1 } from "@/types/recipe"
@@ -63,6 +63,17 @@ export function RecipeDetailClient({
     new Map<DevelopmentSessionId, DevelopmentProcessSnapshot>(),
   )
   const logTrackerRef = React.useRef(createDiarySessionLogTracker())
+  const sessionCounterRef = React.useRef(0)
+  const currentSessionIdRef = React.useRef(0)
+  const processCompleteFiredRef = React.useRef(false)
+  const timerSessionRefs = React.useMemo<TimerSessionRefs>(
+    () => ({
+      counter: sessionCounterRef,
+      current: currentSessionIdRef,
+      processCompleteFired: processCompleteFiredRef,
+    }),
+    [],
+  )
   const celebrateSessionRef = React.useRef<DevelopmentSessionId | null>(null)
   const [celebrateSessionId, setCelebrateSessionId] =
     React.useState<DevelopmentSessionId | null>(null)
@@ -187,6 +198,7 @@ export function RecipeDetailClient({
         recipeNotes={combinedNotes}
         onDevComplete={handleDevComplete}
         onProcessComplete={handleProcessComplete}
+        sessionRefs={timerSessionRefs}
       />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
