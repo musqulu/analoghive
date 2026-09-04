@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { PlayCircle, Pencil } from "lucide-react"
-import { useTimer } from "@/hooks/use-timer"
+import { useTimer, type TimerSessionRefs } from "@/hooks/use-timer"
 import { useWakeLock } from "@/hooks/use-wake-lock"
 import { normalizeDilutionDisplay } from "@/utils/normalize-dilution"
 import { TimerDisplay } from "@/components/timer/timer-display"
@@ -14,6 +14,7 @@ import type { DevelopmentProcessSnapshot } from "@/types/development-log"
 import type { ProcessTimes, WashingMethod, Step } from "@/types/development"
 
 export type DevelopmentSessionId = string
+export type { TimerSessionRefs }
 
 interface TimerProps {
   developmentTime: number
@@ -47,6 +48,11 @@ interface TimerProps {
   onSessionReset?: (sessionId: DevelopmentSessionId) => void
   /** Fires when any process step is active (started) vs idle. */
   onRollActiveChange?: (active: boolean) => void
+  /**
+   * When set, session ids survive Timer remounts (e.g. calculator selection changes).
+   * Must live in the same parent as the diary log tracker.
+   */
+  sessionRefs?: TimerSessionRefs
 }
 
 export function Timer({
@@ -68,6 +74,7 @@ export function Timer({
   onSessionStart,
   onSessionReset,
   onRollActiveChange,
+  sessionRefs: externalSessionRefs,
 }: TimerProps) {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false)
   const [isDevelopmentModeOpen, setIsDevelopmentModeOpen] = React.useState(false)
@@ -164,16 +171,17 @@ export function Timer({
     [buildCurrentSnapshot, onProcessComplete, parseNumericSessionId],
   )
 
-  const sessionCounterRef = React.useRef(0)
-  const currentSessionIdRef = React.useRef(0)
-  const processCompleteFiredRef = React.useRef(false)
+  const internalSessionCounterRef = React.useRef(0)
+  const internalCurrentSessionIdRef = React.useRef(0)
+  const internalProcessCompleteFiredRef = React.useRef(false)
   const sessionRefs = React.useMemo(
-    () => ({
-      counter: sessionCounterRef,
-      current: currentSessionIdRef,
-      processCompleteFired: processCompleteFiredRef,
-    }),
-    [],
+    () =>
+      externalSessionRefs ?? {
+        counter: internalSessionCounterRef,
+        current: internalCurrentSessionIdRef,
+        processCompleteFired: internalProcessCompleteFiredRef,
+      },
+    [externalSessionRefs],
   )
   const formatSessionId = React.useCallback(
     (sessionId: number): DevelopmentSessionId => `session:${sessionId}`,
@@ -246,9 +254,11 @@ export function Timer({
 
   React.useEffect(() => {
     // Idle completed steps keep currentStep set (e.g. wash) but isRunning is false;
-    // only a running main timer or active darkroom roll should lock calculator selection.
-    onRollActiveChangeRef.current?.(timer.isRunning || darkroomRollActive)
-  }, [timer.isRunning, darkroomRollActive])
+    // post-dev reset also idles the main timer while the roll is still finishing.
+    onRollActiveChangeRef.current?.(
+      timer.isRunning || darkroomRollActive || timer.postDevRollPending,
+    )
+  }, [timer.isRunning, darkroomRollActive, timer.postDevRollPending])
 
   return (
     <div className="space-y-6" data-testid="timer-component">
@@ -352,7 +362,7 @@ export function Timer({
         fixSeconds={Math.round(customTimes.fix * 60)}
         washSeconds={Math.round(customTimes.wash * 60)}
         sessionRefs={sessionRefs}
-        mainTimerRollActive={timer.isRunning}
+        mainTimerRollActive={timer.isRunning || timer.postDevRollPending}
         onSessionStart={(sessionId) =>
           onSessionStartRef.current?.(formatSessionId(sessionId))
         }
