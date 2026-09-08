@@ -1,7 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { Timer } from './timer';
+import { Timer, type TimerSessionRefs } from './timer';
+import { createDiarySessionLogTracker } from '@/lib/diary-session-logging';
 
 // Mock timers for testing
 jest.useFakeTimers();
@@ -407,6 +408,34 @@ describe('Timer Component', () => {
     expect(onRollActiveChange).toHaveBeenLastCalledWith(false)
   })
 
+  test('keeps roll active after reset during post-dev steps so selection stays locked', () => {
+    const onRollActiveChange = jest.fn()
+    const shortWashMethod = {
+      type: 'running' as const,
+      runningWaterTime: 0.05,
+      ilfordInversions: { first: 5, second: 10, third: 20 },
+      custom: { totalTime: 0.05, waterChanges: 1 },
+    }
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }}
+        initialWashingMethod={shortWashMethod}
+        onRollActiveChange={onRollActiveChange}
+      />,
+    )
+
+    fireEvent.click(screen.getByTestId('start-button'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(true)
+
+    fireEvent.click(screen.getByTitle('Reset Timer'))
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(true)
+  })
+
   test('reports roll active when darkroom mode starts without main timer', () => {
     const onRollActiveChange = jest.fn()
     render(
@@ -470,6 +499,50 @@ describe('Timer Component', () => {
 
     expect(onDevComplete).toHaveBeenCalledTimes(2)
     expect(onDevComplete).toHaveBeenLastCalledWith(expect.any(Object), 'session:2')
+  })
+
+  test('does not fire onProcessComplete again after opening and closing darkroom post-completion', () => {
+    const onProcessComplete = jest.fn()
+    const shortWashMethod = {
+      type: 'running' as const,
+      runningWaterTime: 0.05,
+      ilfordInversions: { first: 5, second: 10, third: 20 },
+      custom: { totalTime: 0.05, waterChanges: 1 },
+    }
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }}
+        initialWashingMethod={shortWashMethod}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByTestId('start-button'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
+
+    fireEvent.click(screen.getByText(/Darkroom mode/))
+    fireEvent.click(screen.getByLabelText('Close development mode'))
+
+    fireEvent.click(screen.getByTestId('washing-step'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
   })
 
   test('reports roll inactive after natural process completion so selection can unlock', () => {
@@ -546,5 +619,115 @@ describe('Timer Component', () => {
 
     fireEvent.click(screen.getByLabelText('Close development mode'))
     expect(onRollActiveChange).toHaveBeenLastCalledWith(false)
+  })
+
+  test('parent-owned session refs keep monotonic ids across timer remount', () => {
+    const onProcessComplete = jest.fn()
+    const shortWashMethod = {
+      type: 'running' as const,
+      runningWaterTime: 0.05,
+      ilfordInversions: { first: 5, second: 10, third: 20 },
+      custom: { totalTime: 0.05, waterChanges: 1 },
+    }
+    const sessionRefs: TimerSessionRefs = {
+      counter: { current: 0 },
+      current: { current: 0 },
+      processCompleteFired: { current: false },
+    }
+    const timerProps = {
+      developmentTime: 0.05,
+      temperature: 20,
+      initialProcessTimes: { dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 },
+      initialWashingMethod: shortWashMethod,
+      onProcessComplete,
+      sessionRefs,
+    }
+
+    const completeRoll = () => {
+      fireEvent.click(screen.getByTestId('start-button'))
+      act(() => {
+        jest.advanceTimersByTime(4000)
+      })
+      act(() => {
+        jest.advanceTimersByTime(4000)
+      })
+      act(() => {
+        jest.advanceTimersByTime(4000)
+      })
+      act(() => {
+        jest.advanceTimersByTime(4000)
+      })
+    }
+
+    const { unmount } = render(<Timer {...timerProps} />)
+    completeRoll()
+    expect(onProcessComplete).toHaveBeenCalledWith(expect.any(Object), 'session:1')
+
+    unmount()
+    render(<Timer {...timerProps} />)
+    completeRoll()
+    expect(onProcessComplete).toHaveBeenLastCalledWith(expect.any(Object), 'session:2')
+  })
+
+  test('diary tracker logs each roll after timer remount when session refs are parent-owned', async () => {
+    const tracker = createDiarySessionLogTracker()
+    const logFn = jest
+      .fn()
+      .mockResolvedValueOnce({ id: 'log-1' })
+      .mockResolvedValueOnce({ id: 'log-2' })
+    const sessionRefs: TimerSessionRefs = {
+      counter: { current: 0 },
+      current: { current: 0 },
+      processCompleteFired: { current: false },
+    }
+    const shortWashMethod = {
+      type: 'running' as const,
+      runningWaterTime: 0.05,
+      ilfordInversions: { first: 5, second: 10, third: 20 },
+      custom: { totalTime: 0.05, waterChanges: 1 },
+    }
+    const timerProps = {
+      developmentTime: 0.05,
+      temperature: 20,
+      initialProcessTimes: { dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 },
+      initialWashingMethod: shortWashMethod,
+      sessionRefs,
+      onProcessComplete: (_snapshot: unknown, sessionId: string) => {
+        tracker.scheduleLog(sessionId, logFn)
+      },
+    }
+
+    const completeRoll = async () => {
+      fireEvent.click(screen.getByTestId('start-button'))
+      act(() => {
+        jest.advanceTimersByTime(4000)
+      })
+      act(() => {
+        jest.advanceTimersByTime(4000)
+      })
+      act(() => {
+        jest.advanceTimersByTime(4000)
+      })
+      act(() => {
+        jest.advanceTimersByTime(4000)
+      })
+      await act(async () => {
+        await Promise.resolve()
+      })
+    }
+
+    let showTimer = true
+    const { rerender } = render(showTimer ? <Timer {...timerProps} /> : null)
+    await completeRoll()
+    expect(logFn).toHaveBeenCalledTimes(1)
+
+    showTimer = false
+    rerender(null)
+    showTimer = true
+    rerender(<Timer {...timerProps} />)
+    await completeRoll()
+    expect(logFn).toHaveBeenCalledTimes(2)
+    expect(tracker.hasLogged('session:1')).toBe(true)
+    expect(tracker.hasLogged('session:2')).toBe(true)
   })
 });
