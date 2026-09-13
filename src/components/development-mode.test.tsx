@@ -566,6 +566,45 @@ describe("DevelopmentMode", () => {
     expect(processCompleteFired.current).toBe(true)
   })
 
+  it("does not clear shared processCompleteFired when darkroom opens and closes without interaction", () => {
+    const processCompleteFired = { current: true }
+    const sessionRefs = {
+      counter: { current: 1 },
+      current: { current: 1 },
+      processCompleteFired,
+    }
+    const { rerender } = render(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={false}
+        time={600}
+        sessionRefs={sessionRefs}
+      />,
+    )
+
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={true}
+        time={600}
+        sessionRefs={sessionRefs}
+      />,
+    )
+
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={false}
+        time={600}
+        sessionRefs={sessionRefs}
+      />,
+    )
+
+    expect(processCompleteFired.current).toBe(true)
+    expect(sessionRefs.current.current).toBe(1)
+    expect(sessionRefs.counter.current).toBe(1)
+  })
+
   it("calls onProcessComplete when reopening darkroom after shared completion and skipping to complete", () => {
     const onProcessComplete = jest.fn()
     const processCompleteFired = { current: true }
