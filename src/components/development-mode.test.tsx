@@ -566,6 +566,45 @@ describe("DevelopmentMode", () => {
     expect(processCompleteFired.current).toBe(true)
   })
 
+  it("does not allocate a new session when reopening after shared completion without starting a roll", () => {
+    const processCompleteFired = { current: true }
+    const sessionRefs = {
+      counter: { current: 1 },
+      current: { current: 1 },
+      processCompleteFired,
+    }
+    const { rerender } = render(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={false}
+        time={600}
+        sessionRefs={sessionRefs}
+      />,
+    )
+
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={true}
+        time={600}
+        sessionRefs={sessionRefs}
+      />,
+    )
+
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={false}
+        time={600}
+        sessionRefs={sessionRefs}
+      />,
+    )
+
+    expect(sessionRefs.counter.current).toBe(1)
+    expect(sessionRefs.current.current).toBe(1)
+    expect(processCompleteFired.current).toBe(true)
+  })
+
   it("calls onProcessComplete when reopening darkroom after shared completion and skipping to complete", () => {
     const onProcessComplete = jest.fn()
     const processCompleteFired = { current: true }
