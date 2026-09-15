@@ -250,6 +250,10 @@ export function Timer({
     onRollActiveChangeRef.current?.(timer.isRunning || darkroomRollActive)
   }, [timer.isRunning, darkroomRollActive])
 
+  const mainTimerRollActive =
+    timer.currentStep !== null &&
+    (timer.isRunning || !processCompleteFiredRef.current)
+
   return (
     <div className="space-y-6" data-testid="timer-component">
       <TimerDisplay
@@ -352,7 +356,7 @@ export function Timer({
         fixSeconds={Math.round(customTimes.fix * 60)}
         washSeconds={Math.round(customTimes.wash * 60)}
         sessionRefs={sessionRefs}
-        mainTimerRollActive={timer.isRunning}
+        mainTimerRollActive={mainTimerRollActive}
         onSessionStart={(sessionId) =>
           onSessionStartRef.current?.(formatSessionId(sessionId))
         }
