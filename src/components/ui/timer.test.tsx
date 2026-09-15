@@ -507,6 +507,93 @@ describe('Timer Component', () => {
     expect(onRollActiveChange).toHaveBeenLastCalledWith(false)
   })
 
+  test('does not duplicate process completion when peeking darkroom after main timer completes', () => {
+    const onProcessComplete = jest.fn()
+    const shortWashMethod = {
+      type: 'running' as const,
+      runningWaterTime: 0.05,
+      ilfordInversions: { first: 5, second: 10, third: 20 },
+      custom: { totalTime: 0.05, waterChanges: 1 },
+    }
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }}
+        initialWashingMethod={shortWashMethod}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByTestId('start-button'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
+
+    fireEvent.click(screen.getByText(/Darkroom mode/))
+    fireEvent.click(screen.getByLabelText('Close development mode'))
+
+    fireEvent.click(screen.getByTestId('washing-step'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+
+    expect(onProcessComplete).toHaveBeenCalledTimes(1)
+  })
+
+  test('preserves shared session when darkroom closes while main timer is paused mid-roll', () => {
+    const onSessionReset = jest.fn()
+    const onDevComplete = jest.fn()
+    render(
+      <Timer
+        developmentTime={0.05}
+        temperature={20}
+        initialProcessTimes={{ dev: 0.05, stop: 0.05, fix: 0.05, wash: 0.05 }}
+        initialWashingMethod={{
+          type: 'running' as const,
+          runningWaterTime: 0.05,
+          ilfordInversions: { first: 5, second: 10, third: 20 },
+          custom: { totalTime: 0.05, waterChanges: 1 },
+        }}
+        onSessionReset={onSessionReset}
+        onDevComplete={onDevComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByTestId('start-button'))
+    act(() => {
+      jest.advanceTimersByTime(2000)
+    })
+    fireEvent.click(screen.getByTitle('Pause Timer'))
+
+    fireEvent.click(screen.getByText(/Darkroom mode/))
+    fireEvent.click(screen.getByText('Start'))
+    act(() => {
+      jest.advanceTimersByTime(2000)
+    })
+    fireEvent.click(screen.getByLabelText('Close development mode'))
+
+    expect(onSessionReset).not.toHaveBeenCalled()
+
+    fireEvent.click(screen.getByTitle('Resume Timer'))
+    act(() => {
+      jest.advanceTimersByTime(4000)
+    })
+
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+    expect(onDevComplete).toHaveBeenCalledWith(expect.any(Object), 'session:1')
+  })
+
   test('does not re-lock selection after completion when darkroom is opened and closed', () => {
     const onRollActiveChange = jest.fn()
     const shortWashMethod = {
