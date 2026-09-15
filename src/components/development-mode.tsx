@@ -153,6 +153,8 @@ export function DevelopmentMode({
     prevIsOpenRef.current = isOpen
     if (!wasOpen || isOpen) return
 
+    setIsRunning(false)
+
     const hadRollInProgress =
       currentStep !== "complete" &&
       (isRunning ||
@@ -224,14 +226,6 @@ export function DevelopmentMode({
       devCompleteFiredRef.current = false
       devCompletedSessionIdRef.current = null
       processCompleteFiredRef.current = false
-    } else if (processCompleteFiredRef.current) {
-      // Prior roll finished on the main timer — allocate a fresh session so
-      // skip-to-complete or a new darkroom run can log again.
-      sessionCounterRef.current += 1
-      currentSessionIdRef.current = sessionCounterRef.current
-      processCompleteFiredRef.current = false
-      devCompleteFiredRef.current = false
-      devCompletedSessionIdRef.current = null
     } else if (
       devCompletedSessionIdRef.current !== currentSessionIdRef.current
     ) {
@@ -503,6 +497,7 @@ export function DevelopmentMode({
           {!isRunning && currentStep !== "complete" && (
             <button
               onClick={() => {
+                beginNewSessionIfNeeded()
                 if (currentStep === "presoak") setCurrentStep("developer")
                 else if (currentStep === "developer") setCurrentStep("stop")
                 else if (currentStep === "stop") setCurrentStep("fixer")
