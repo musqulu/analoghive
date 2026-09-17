@@ -787,4 +787,24 @@ describe("DevelopmentMode", () => {
     expect(onDevComplete).toHaveBeenLastCalledWith(2)
     expect(sessionRefs.current.current).toBe(2)
   })
+
+  it("stops the darkroom countdown when the overlay closes so callbacks cannot fire in the background", () => {
+    const onDevComplete = jest.fn()
+    const { rerender } = render(
+      <DevelopmentMode {...defaultProps} time={3} onDevComplete={onDevComplete} />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={false}
+        time={3}
+        onDevComplete={onDevComplete}
+      />,
+    )
+
+    act(() => jest.advanceTimersByTime(5000))
+    expect(onDevComplete).not.toHaveBeenCalled()
+  })
 })
