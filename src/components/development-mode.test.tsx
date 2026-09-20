@@ -444,6 +444,49 @@ describe("DevelopmentMode", () => {
     expect(onRollActiveChange).toHaveBeenLastCalledWith(false)
   })
 
+  it("calls onSessionReset when reset abandons an in-progress roll before dev completes", () => {
+    const onSessionReset = jest.fn()
+    const onSessionStart = jest.fn()
+    const sessionRefs = {
+      counter: { current: 0 },
+      current: { current: 0 },
+    }
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={600}
+        sessionRefs={sessionRefs}
+        onSessionReset={onSessionReset}
+        onSessionStart={onSessionStart}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    expect(onSessionStart).toHaveBeenCalledWith(1)
+
+    fireEvent.click(screen.getByText("Reset"))
+
+    expect(onSessionReset).toHaveBeenCalledWith(1)
+  })
+
+  it("does not call onSessionReset when reset follows dev completion before wash finishes", () => {
+    const onSessionReset = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        onSessionReset={onSessionReset}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+
+    fireEvent.click(screen.getByText("Reset"))
+
+    expect(onSessionReset).not.toHaveBeenCalled()
+  })
+
   it("abandons a darkroom-only roll when closed mid-process so the next dev completion uses a new session id", () => {
     const onDevComplete = jest.fn()
     const onSessionReset = jest.fn()
