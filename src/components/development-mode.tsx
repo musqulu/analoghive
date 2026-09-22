@@ -125,6 +125,8 @@ export function DevelopmentMode({
   const initialStepRef = useRef<DarkroomStep>(hasPreSoak ? "presoak" : "developer")
   const [hasStartedRoll, setHasStartedRoll] = useState(false)
   const prevIsOpenRef = useRef(false)
+  /** One new session bump after main-timer completion when darkroom logging starts. */
+  const pendingSharedNewSessionRef = useRef(false)
 
   useEffect(() => {
     onDevCompleteRef.current = onDevComplete
@@ -226,6 +228,9 @@ export function DevelopmentMode({
       devCompleteFiredRef.current = false
       devCompletedSessionIdRef.current = null
       darkroomProcessCompleteFiredRef.current = false
+      pendingSharedNewSessionRef.current = false
+    } else if (sharedProcessCompleteFiredRef?.current) {
+      pendingSharedNewSessionRef.current = true
     } else if (
       devCompletedSessionIdRef.current !== currentSessionIdRef.current
     ) {
@@ -355,8 +360,9 @@ export function DevelopmentMode({
   }
 
   const beginNewSessionIfNeeded = () => {
-    const sharedComplete = sharedProcessCompleteFiredRef?.current ?? false
-    if (!darkroomProcessCompleteFiredRef.current && !sharedComplete) return
+    const sharedPending = pendingSharedNewSessionRef.current
+    if (!darkroomProcessCompleteFiredRef.current && !sharedPending) return
+    if (sharedPending) pendingSharedNewSessionRef.current = false
     sessionCounterRef.current += 1
     currentSessionIdRef.current = sessionCounterRef.current
     devCompleteFiredRef.current = false

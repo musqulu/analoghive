@@ -262,7 +262,8 @@ export function Timer({
 
   const mainTimerRollActive =
     timer.currentStep !== null &&
-    (timer.isRunning || !processCompleteFiredRef.current)
+    (timer.isRunning ||
+      !(sessionRefs.processCompleteFired?.current ?? false))
 
   return (
     <div className="space-y-6" data-testid="timer-component">
