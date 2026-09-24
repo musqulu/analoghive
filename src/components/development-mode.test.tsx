@@ -138,6 +138,46 @@ describe("DevelopmentMode", () => {
     expect(screen.getByText("DEVELOPER STEP")).toBeInTheDocument()
   })
 
+  it("calls onSessionReset when reset abandons developer before dev completes", () => {
+    const onSessionReset = jest.fn()
+    const onSessionStart = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={120}
+        onSessionReset={onSessionReset}
+        onSessionStart={onSessionStart}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    expect(onSessionStart).toHaveBeenCalledTimes(1)
+
+    fireEvent.click(screen.getByText("Reset"))
+    expect(onSessionReset).toHaveBeenCalledTimes(1)
+    expect(onSessionReset).toHaveBeenCalledWith(1)
+  })
+
+  it("does not call onSessionReset when reset after dev completes for wash-only finish", () => {
+    const onSessionReset = jest.fn()
+    const onDevComplete = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        onSessionReset={onSessionReset}
+        onDevComplete={onDevComplete}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+    expect(onDevComplete).toHaveBeenCalledTimes(1)
+
+    fireEvent.click(screen.getByText("Reset"))
+    expect(onSessionReset).not.toHaveBeenCalled()
+  })
+
   it("calls onClose when close button is clicked", () => {
     render(<DevelopmentMode {...defaultProps} />)
     const closeButton = screen.getByLabelText("Close development mode")
@@ -444,6 +484,49 @@ describe("DevelopmentMode", () => {
     expect(onRollActiveChange).toHaveBeenLastCalledWith(false)
   })
 
+  it("keeps roll active after reset when developer finished but process is incomplete", () => {
+    const onRollActiveChange = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        onRollActiveChange={onRollActiveChange}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+
+    fireEvent.click(screen.getByText("Reset"))
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(true)
+  })
+
+  it("releases roll active after reset following a completed process", () => {
+    const onRollActiveChange = jest.fn()
+    render(
+      <DevelopmentMode
+        {...defaultProps}
+        time={3}
+        stopSeconds={3}
+        fixSeconds={3}
+        washSeconds={3}
+        onRollActiveChange={onRollActiveChange}
+      />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Next Step"))
+    fireEvent.click(screen.getByText("Start"))
+    for (let i = 0; i < 4; i++) act(() => jest.advanceTimersByTime(1000))
+
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(false)
+
+    fireEvent.click(screen.getByText("Reset"))
+    expect(onRollActiveChange).toHaveBeenLastCalledWith(false)
+  })
+
   it("abandons a darkroom-only roll when closed mid-process so the next dev completion uses a new session id", () => {
     const onDevComplete = jest.fn()
     const onSessionReset = jest.fn()
@@ -566,6 +649,50 @@ describe("DevelopmentMode", () => {
     expect(processCompleteFired.current).toBe(true)
   })
 
+  it("does not bump session when reopening after shared completion without starting a roll", () => {
+    const onProcessComplete = jest.fn()
+    const processCompleteFired = { current: true }
+    const sessionRefs = {
+      counter: { current: 1 },
+      current: { current: 1 },
+      processCompleteFired,
+    }
+    const { rerender } = render(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={false}
+        time={600}
+        sessionRefs={sessionRefs}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={true}
+        time={600}
+        sessionRefs={sessionRefs}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={false}
+        time={600}
+        sessionRefs={sessionRefs}
+        onProcessComplete={onProcessComplete}
+      />,
+    )
+
+    expect(sessionRefs.counter.current).toBe(1)
+    expect(sessionRefs.current.current).toBe(1)
+    expect(processCompleteFired.current).toBe(true)
+    expect(onProcessComplete).not.toHaveBeenCalled()
+  })
+
   it("calls onProcessComplete when reopening darkroom after shared completion and skipping to complete", () => {
     const onProcessComplete = jest.fn()
     const processCompleteFired = { current: true }
@@ -659,5 +786,25 @@ describe("DevelopmentMode", () => {
     expect(onDevComplete).toHaveBeenCalledTimes(2)
     expect(onDevComplete).toHaveBeenLastCalledWith(2)
     expect(sessionRefs.current.current).toBe(2)
+  })
+
+  it("stops the darkroom countdown when the overlay closes so callbacks cannot fire in the background", () => {
+    const onDevComplete = jest.fn()
+    const { rerender } = render(
+      <DevelopmentMode {...defaultProps} time={3} onDevComplete={onDevComplete} />,
+    )
+
+    fireEvent.click(screen.getByText("Start"))
+    rerender(
+      <DevelopmentMode
+        {...defaultProps}
+        isOpen={false}
+        time={3}
+        onDevComplete={onDevComplete}
+      />,
+    )
+
+    act(() => jest.advanceTimersByTime(5000))
+    expect(onDevComplete).not.toHaveBeenCalled()
   })
 })
