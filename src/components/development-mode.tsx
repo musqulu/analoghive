@@ -106,9 +106,9 @@ export function DevelopmentMode({
   const devCompleteFiredRef = useRef(false)
   /** Session id that already fired onDevComplete — rerunning developer needs a new session. */
   const devCompletedSessionIdRef = useRef<number | null>(null)
-  const internalProcessCompleteFiredRef = useRef(false)
-  const processCompleteFiredRef =
-    sessionRefs?.processCompleteFired ?? internalProcessCompleteFiredRef
+  /** Darkroom-only completion guard — do not clear the shared main-timer guard on open/close. */
+  const darkroomProcessCompleteFiredRef = useRef(false)
+  const sharedProcessCompleteFiredRef = sessionRefs?.processCompleteFired
   const internalSessionCounterRef = useRef(0)
   const internalCurrentSessionIdRef = useRef(0)
   const sessionCounterRef = sessionRefs?.counter ?? internalSessionCounterRef
@@ -125,6 +125,8 @@ export function DevelopmentMode({
   const initialStepRef = useRef<DarkroomStep>(hasPreSoak ? "presoak" : "developer")
   const [hasStartedRoll, setHasStartedRoll] = useState(false)
   const prevIsOpenRef = useRef(false)
+  /** One new session bump after main-timer completion when darkroom logging starts. */
+  const pendingSharedNewSessionRef = useRef(false)
 
   useEffect(() => {
     onDevCompleteRef.current = onDevComplete
@@ -153,6 +155,8 @@ export function DevelopmentMode({
     prevIsOpenRef.current = isOpen
     if (!wasOpen || isOpen) return
 
+    setIsRunning(false)
+
     const hadRollInProgress =
       currentStep !== "complete" &&
       (isRunning ||
@@ -167,7 +171,7 @@ export function DevelopmentMode({
     currentSessionIdRef.current = sessionCounterRef.current
     devCompleteFiredRef.current = false
     devCompletedSessionIdRef.current = null
-    processCompleteFiredRef.current = false
+    darkroomProcessCompleteFiredRef.current = false
     sessionStartedRef.current = false
   }, [
     isOpen,
@@ -223,15 +227,10 @@ export function DevelopmentMode({
     if (!sessionRefs) {
       devCompleteFiredRef.current = false
       devCompletedSessionIdRef.current = null
-      processCompleteFiredRef.current = false
-    } else if (processCompleteFiredRef.current) {
-      // Prior roll finished on the main timer — allocate a fresh session so
-      // skip-to-complete or a new darkroom run can log again.
-      sessionCounterRef.current += 1
-      currentSessionIdRef.current = sessionCounterRef.current
-      processCompleteFiredRef.current = false
-      devCompleteFiredRef.current = false
-      devCompletedSessionIdRef.current = null
+      darkroomProcessCompleteFiredRef.current = false
+      pendingSharedNewSessionRef.current = false
+    } else if (sharedProcessCompleteFiredRef?.current) {
+      pendingSharedNewSessionRef.current = true
     } else if (
       devCompletedSessionIdRef.current !== currentSessionIdRef.current
     ) {
@@ -333,32 +332,42 @@ export function DevelopmentMode({
 
   // Reset development process
   const resetDevelopment = () => {
+    const devWasCompletedForSession =
+      devCompletedSessionIdRef.current === currentSessionIdRef.current &&
+      currentSessionIdRef.current > 0
+    const hadStartedSession = sessionStartedRef.current
+
     setIsRunning(false)
     const first: DarkroomStep = hasPreSoak ? "presoak" : "developer"
     setCurrentStep(first)
     setSeconds(first === "presoak" ? preSoakDuration : devDuration)
     devCompleteFiredRef.current = false
     sessionStartedRef.current = false
-    setHasStartedRoll(false)
     setShouldShake(false)
-    if (processCompleteFiredRef.current) {
-      // Finished roll — allocate a new session so the next completion can log again.
+    if (darkroomProcessCompleteFiredRef.current) {
+      // Finished roll in darkroom — allocate a new session so the next completion can log again.
       sessionCounterRef.current += 1
       currentSessionIdRef.current = sessionCounterRef.current
-      processCompleteFiredRef.current = false
+      darkroomProcessCompleteFiredRef.current = false
       devCompletedSessionIdRef.current = null
+      setHasStartedRoll(false)
+    } else if (!devWasCompletedForSession && hadStartedSession && currentSessionIdRef.current > 0) {
+      onSessionResetRef.current?.(currentSessionIdRef.current)
+      setHasStartedRoll(false)
     }
     // Otherwise keep the active session id so a wash-only finish after reset still
     // matches the dev-step diary log for this roll (resetTimer in useTimer does the same).
   }
 
   const beginNewSessionIfNeeded = () => {
-    if (!processCompleteFiredRef.current) return
+    const sharedPending = pendingSharedNewSessionRef.current
+    if (!darkroomProcessCompleteFiredRef.current && !sharedPending) return
+    if (sharedPending) pendingSharedNewSessionRef.current = false
     sessionCounterRef.current += 1
     currentSessionIdRef.current = sessionCounterRef.current
     devCompleteFiredRef.current = false
     devCompletedSessionIdRef.current = null
-    processCompleteFiredRef.current = false
+    darkroomProcessCompleteFiredRef.current = false
     sessionStartedRef.current = true
     setHasStartedRoll(true)
     onSessionStartRef.current?.(currentSessionIdRef.current)
@@ -376,7 +385,7 @@ export function DevelopmentMode({
     currentSessionIdRef.current = sessionCounterRef.current
     devCompleteFiredRef.current = false
     devCompletedSessionIdRef.current = null
-    processCompleteFiredRef.current = false
+    darkroomProcessCompleteFiredRef.current = false
     sessionStartedRef.current = false
   }
 
@@ -399,8 +408,11 @@ export function DevelopmentMode({
   }
 
   const finishProcessIfNeeded = () => {
-    if (processCompleteFiredRef.current) return
-    processCompleteFiredRef.current = true
+    if (darkroomProcessCompleteFiredRef.current) return
+    darkroomProcessCompleteFiredRef.current = true
+    if (sharedProcessCompleteFiredRef) {
+      sharedProcessCompleteFiredRef.current = true
+    }
     onProcessCompleteRef.current?.(currentSessionIdRef.current)
   }
 
@@ -503,6 +515,7 @@ export function DevelopmentMode({
           {!isRunning && currentStep !== "complete" && (
             <button
               onClick={() => {
+                beginNewSessionIfNeeded()
                 if (currentStep === "presoak") setCurrentStep("developer")
                 else if (currentStep === "developer") setCurrentStep("stop")
                 else if (currentStep === "stop") setCurrentStep("fixer")
