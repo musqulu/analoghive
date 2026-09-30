@@ -211,6 +211,11 @@ export function useTimer({
   // Guards `onDevComplete` to fire once per `startTimer("dev")` invocation; resets
   // when dev is started again (or via resetTimer mid-dev).
   const devCompleteFiredRef = React.useRef(false)
+  /**
+   * Dev finished for the active session but wash has not completed naturally yet.
+   * Keeps calculator selection locked after post-dev reset until the roll ends.
+   */
+  const [postDevRollPending, setPostDevRollPending] = React.useState(false)
   /** Once per wash completion from the countdown (not skips). Reset with dev guard + resetTimer. */
   const internalProcessCompleteFiredRef = React.useRef(false)
   const processCompleteFiredRef =
@@ -226,6 +231,7 @@ export function useTimer({
     if (currentStep) {
       if (currentStep === "dev" && !devCompleteFiredRef.current) {
         devCompleteFiredRef.current = true
+        setPostDevRollPending(true)
         onDevCompleteRef.current?.(currentSessionIdRef.current)
       }
       const next = getNextStep(currentStep)
@@ -235,6 +241,7 @@ export function useTimer({
       } else {
         if (currentStep === "wash" && !processCompleteFiredRef.current) {
           processCompleteFiredRef.current = true
+          setPostDevRollPending(false)
           onProcessCompleteRef.current?.(currentSessionIdRef.current)
         }
         setIsRunning(false)
@@ -257,6 +264,7 @@ export function useTimer({
       currentSessionIdRef.current = sessionCounterRef.current
       devCompleteFiredRef.current = false
       processCompleteFiredRef.current = false
+      setPostDevRollPending(false)
       onSessionStartRef.current?.(currentSessionIdRef.current)
     }
     setCurrentStep(step)
@@ -273,8 +281,9 @@ export function useTimer({
     if (currentStep) {
       if (currentStep === "dev" || currentStep === "preSoak") {
         devCompleteFiredRef.current = false
+        setPostDevRollPending(false)
+        onSessionResetRef.current?.(currentSessionIdRef.current)
       }
-      onSessionResetRef.current?.(currentSessionIdRef.current)
       setIsRunning(false)
       setIsPaused(false)
       setCurrentStep(null)
@@ -287,6 +296,7 @@ export function useTimer({
     isPaused,
     currentStep,
     shouldShake,
+    postDevRollPending,
     steps,
     startTimer,
     toggleTimer,
